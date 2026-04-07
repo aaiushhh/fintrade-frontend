@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+
+# Environment (secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.vs/
+
+# Debug / logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage
+coverage/
+
+# Guidelines (not needed in deploy)
+guidelines/
