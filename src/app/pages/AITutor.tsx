@@ -84,14 +84,14 @@ export function AITutor() {
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="border-b border-[#334155] bg-[#111827] p-6">
+      <div className="border-b border-[var(--ft-border)] bg-[var(--ft-surface)] p-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-[#00D1B2]/10 flex items-center justify-center">
-            <Sparkles className="h-5 w-5 text-[#00D1B2]" />
+          <div className="w-10 h-10 rounded-lg bg-[var(--ft-red)]/10 flex items-center justify-center">
+            <Sparkles className="h-5 w-5 text-[var(--ft-red)]" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-[#E5E7EB]">AI Trading Tutor</h1>
-            <p className="text-sm text-[#9CA3AF]">Ask me anything about trading concepts</p>
+            <h1 className="text-lg font-medium text-[var(--ft-charcoal)]">AI Trading Tutor</h1>
+            <p className="text-sm text-[var(--ft-muted)]">Ask me anything about trading concepts</p>
           </div>
         </div>
       </div>
@@ -104,12 +104,12 @@ export function AITutor() {
               <div className={`max-w-[80%] ${msg.role === 'user' ? 'order-2' : 'order-1'}`}>
                 <div className={`rounded-lg p-4 ${
                   msg.role === 'user'
-                    ? 'bg-[#00D1B2] text-[#0F172A]'
-                    : 'bg-[#111827] border border-[#334155] text-[#E5E7EB]'
+                    ? 'bg-[var(--ft-red)] text-white'
+                    : 'bg-[var(--ft-surface)] border border-[var(--ft-border)] text-[var(--ft-charcoal)]'
                 }`}>
                   <p className="text-sm whitespace-pre-line">{msg.message}</p>
                 </div>
-                <div className={`text-xs text-[#9CA3AF] mt-1 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                <div className={`text-xs text-[var(--ft-muted)] mt-1 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                   {msg.time}
                 </div>
               </div>
@@ -119,16 +119,16 @@ export function AITutor() {
       </div>
 
       {/* Suggested Topics */}
-      <div className="border-t border-[#334155] bg-[#111827] p-4">
+      <div className="border-t border-[var(--ft-border)] bg-[var(--ft-surface)] p-4">
         <div className="max-w-3xl mx-auto">
-          <div className="text-xs text-[#9CA3AF] mb-3">Suggested topics:</div>
+          <div className="text-xs text-[var(--ft-muted)] mb-3">Suggested topics:</div>
           <div className="flex flex-wrap gap-2 mb-4">
             {suggestedTopics.map((topic, index) => (
               <button
                 key={index}
                 onClick={() => handleSend(topic)}
                 disabled={loading}
-                className="px-3 py-1.5 rounded-full bg-[#1F2937] border border-[#334155] text-xs text-[#E5E7EB] hover:border-[#00D1B2] hover:bg-[#00D1B2]/10 transition-colors disabled:opacity-50"
+                className="px-3 py-1.5 rounded-full bg-[var(--ft-surface)] border border-[var(--ft-border)] text-xs text-[var(--ft-charcoal)] hover:border-[var(--ft-red)] hover:bg-[var(--ft-red)]/10 transition-colors disabled:opacity-50"
               >
                 {topic}
               </button>
@@ -145,18 +145,18 @@ export function AITutor() {
               }}
               disabled={loading}
               placeholder="Ask about trading concepts..."
-              className="flex-1 bg-[#1F2937] border-[#334155] text-[#E5E7EB] placeholder:text-[#9CA3AF]"
+              className="flex-1 bg-[var(--ft-surface)] border-[var(--ft-border)] text-[var(--ft-charcoal)] placeholder:text-[var(--ft-muted)]"
             />
             <Button
               onClick={() => handleSend(inputValue)}
               disabled={loading || !inputValue.trim()}
-              className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90">
+              className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>
 
           <div className="mt-4 text-center">
-            <Button variant="outline" className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#1F2937] text-xs">
+            <Button variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)] text-xs">
               Escalate to Human Tutor
             </Button>
           </div>

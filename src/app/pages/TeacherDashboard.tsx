@@ -71,7 +71,7 @@ export function TeacherDashboard() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-[#00D1B2] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[var(--ft-red)] animate-spin" />
       </div>
     );
   }
@@ -79,50 +79,50 @@ export function TeacherDashboard() {
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#E5E7EB] mb-1">Teacher Dashboard</h1>
-        <p className="text-sm text-[#9CA3AF]">Welcome back, {user?.full_name || user?.name || 'Teacher'}</p>
+        <h1 className="text-2xl font-medium text-[var(--ft-charcoal)] mb-1">Teacher Dashboard</h1>
+        <p className="text-sm text-[var(--ft-muted)]">Welcome back, {user?.full_name || user?.name || 'Teacher'}</p>
       </div>
 
       {error && (
-        <div className="mb-6 text-red-400 text-sm p-4 bg-red-500/10 rounded-lg border border-red-500/20">
+        <div className="mb-6 text-red-400 text-sm p-4 bg-[var(--ft-danger)]/10 rounded-lg border border-[var(--ft-danger)]/20">
           {error}
         </div>
       )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-4 gap-6 mb-8">
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Active Students</div>
-          <div className="text-3xl font-bold text-[#E5E7EB] mb-1 font-mono">{pendingStudentsCount}</div>
-          <div className="text-xs text-[#9CA3AF]">Enrolled in your courses</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Active Students</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] mb-1 font-mono">{pendingStudentsCount}</div>
+          <div className="text-xs text-[var(--ft-muted)]">Enrolled in your courses</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">My Courses</div>
-          <div className="text-3xl font-bold text-[#E5E7EB] mb-1 font-mono">{courses.length}</div>
-          <div className="text-xs text-[#9CA3AF]">Total courses</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">My Courses</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] mb-1 font-mono">{courses.length}</div>
+          <div className="text-xs text-[var(--ft-muted)]">Total courses</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Upcoming Lectures</div>
-          <div className="text-3xl font-bold text-[#E5E7EB] mb-1 font-mono">{upcomingLectures.length}</div>
-          <div className="text-xs text-[#9CA3AF]">Scheduled</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Upcoming Lectures</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] mb-1 font-mono">{upcomingLectures.length}</div>
+          <div className="text-xs text-[var(--ft-muted)]">Scheduled</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Total Lectures</div>
-          <div className="text-3xl font-bold text-[#00D1B2] mb-1 font-mono">{lectures.length}</div>
-          <div className="text-xs text-[#9CA3AF]">All time</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Total Lectures</div>
+          <div className="text-3xl font-medium text-[var(--ft-red)] mb-1 font-mono">{lectures.length}</div>
+          <div className="text-xs text-[var(--ft-muted)]">All time</div>
         </div>
       </div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-2 gap-6 mb-8">
         {/* Upcoming Lectures */}
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[#E5E7EB]">Upcoming Lectures</h2>
-            <Button className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90 h-9">
+            <h2 className="text-lg font-semibold text-[var(--ft-charcoal)]">Upcoming Lectures</h2>
+            <Button className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90 h-9">
               <Plus className="h-4 w-4 mr-2" />
               Schedule
             </Button>
@@ -130,20 +130,20 @@ export function TeacherDashboard() {
 
           <div className="space-y-3">
             {upcomingLectures.length === 0 ? (
-              <div className="text-center text-sm text-[#9CA3AF] py-6">No upcoming lectures</div>
+              <div className="text-center text-sm text-[var(--ft-muted)] py-6">No upcoming lectures</div>
             ) : (
               upcomingLectures.slice(0, 5).map((lecture) => (
-                <div key={lecture.id} className="bg-[#1F2937] border border-[#334155] rounded-lg p-4">
+                <div key={lecture.id} className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
-                      <h3 className="text-sm font-medium text-[#E5E7EB] mb-1">{lecture.title}</h3>
-                      <p className="text-xs text-[#9CA3AF]">{lecture.duration_minutes} min</p>
+                      <h3 className="text-sm font-medium text-[var(--ft-charcoal)] mb-1">{lecture.title}</h3>
+                      <p className="text-xs text-[var(--ft-muted)]">{lecture.duration_minutes} min</p>
                     </div>
                     {lecture.is_live && (
-                      <span className="text-xs px-2 py-1 rounded-full bg-[#EF4444]/10 text-[#EF4444]">LIVE</span>
+                      <span className="text-xs px-2 py-1 rounded-full bg-[var(--ft-danger)]/10 text-[var(--ft-danger)]">LIVE</span>
                     )}
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-[#9CA3AF]">
+                  <div className="flex items-center gap-4 text-xs text-[var(--ft-muted)]">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
                       <span>{new Date(lecture.scheduled_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
@@ -157,23 +157,23 @@ export function TeacherDashboard() {
         </div>
 
         {/* My Courses */}
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[#E5E7EB]">My Courses</h2>
+            <h2 className="text-lg font-semibold text-[var(--ft-charcoal)]">My Courses</h2>
           </div>
 
           <div className="space-y-3">
             {courses.length === 0 ? (
-              <div className="text-center text-sm text-[#9CA3AF] py-6">No courses assigned</div>
+              <div className="text-center text-sm text-[var(--ft-muted)] py-6">No courses assigned</div>
             ) : (
               courses.map((course) => (
-                <div key={course.id} className="bg-[#1F2937] border border-[#334155] rounded-lg p-4">
+                <div key={course.id} className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
-                      <h3 className="text-sm font-medium text-[#E5E7EB] mb-1">{course.title}</h3>
-                      <p className="text-xs text-[#9CA3AF] capitalize">{course.difficulty_level} • {course.modules?.length || 0} modules</p>
+                      <h3 className="text-sm font-medium text-[var(--ft-charcoal)] mb-1">{course.title}</h3>
+                      <p className="text-xs text-[var(--ft-muted)] capitalize">{course.difficulty_level} • {course.modules?.length || 0} modules</p>
                     </div>
-                    <span className={`text-xs px-2 py-1 rounded-full ${course.is_published ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-[#EF4444]/10 text-[#EF4444]'}`}>
+                    <span className={`text-xs px-2 py-1 rounded-full ${course.is_published ? 'bg-[var(--ft-success)]/10 text-[var(--ft-success)]' : 'bg-[var(--ft-danger)]/10 text-[var(--ft-danger)]'}`}>
                       {course.is_published ? 'Published' : 'Draft'}
                     </span>
                   </div>
@@ -185,10 +185,10 @@ export function TeacherDashboard() {
       </div>
 
       {/* Student Performance Table */}
-      <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
+      <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-[#E5E7EB]">Student List</h2>
-          <Button variant="outline" className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#1F2937] h-9">
+          <h2 className="text-lg font-semibold text-[var(--ft-charcoal)]">Student List</h2>
+          <Button variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)] h-9">
             Export Report
           </Button>
         </div>
@@ -196,23 +196,23 @@ export function TeacherDashboard() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#334155]">
-                <th className="text-left text-xs text-[#9CA3AF] pb-3">Student Name</th>
-                <th className="text-left text-xs text-[#9CA3AF] pb-3">Email</th>
-                <th className="text-left text-xs text-[#9CA3AF] pb-3">Course</th>
-                <th className="text-left text-xs text-[#9CA3AF] pb-3">Enrolled</th>
+              <tr className="border-b border-[var(--ft-border)]">
+                <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Student Name</th>
+                <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Email</th>
+                <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Course</th>
+                <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Enrolled</th>
               </tr>
             </thead>
             <tbody>
               {students.length === 0 ? (
-                <tr><td colSpan={4} className="py-8 text-center text-sm text-[#9CA3AF]">No students enrolled</td></tr>
+                <tr><td colSpan={4} className="py-8 text-center text-sm text-[var(--ft-muted)]">No students enrolled</td></tr>
               ) : (
                 students.map((student, index) => (
-                  <tr key={index} className="border-b border-[#334155]">
-                    <td className="py-4 text-sm text-[#E5E7EB]">{student.student_name}</td>
-                    <td className="py-4 text-sm text-[#9CA3AF]">{student.student_email}</td>
-                    <td className="py-4 text-sm text-[#9CA3AF]">{student.course_title}</td>
-                    <td className="py-4 text-sm text-[#9CA3AF]">{new Date(student.enrolled_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                  <tr key={index} className="border-b border-[var(--ft-border)]">
+                    <td className="py-4 text-sm text-[var(--ft-charcoal)]">{student.student_name}</td>
+                    <td className="py-4 text-sm text-[var(--ft-muted)]">{student.student_email}</td>
+                    <td className="py-4 text-sm text-[var(--ft-muted)]">{student.course_title}</td>
+                    <td className="py-4 text-sm text-[var(--ft-muted)]">{new Date(student.enrolled_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
                   </tr>
                 ))
               )}

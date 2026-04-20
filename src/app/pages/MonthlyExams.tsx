@@ -83,7 +83,7 @@ export function MonthlyExams() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[50vh]">
-        <Loader2 className="h-8 w-8 text-[#00D1B2] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[var(--ft-red)] animate-spin" />
       </div>
     );
   }
@@ -97,74 +97,74 @@ export function MonthlyExams() {
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#E5E7EB] mb-1">Exams</h1>
-        <p className="text-sm text-[#9CA3AF]">Take active exams and view your results</p>
+        <h1 className="text-2xl font-medium text-[var(--ft-charcoal)] mb-1">Exams</h1>
+        <p className="text-sm text-[var(--ft-muted)]">Take active exams and view your results</p>
       </div>
 
       {error && (
-        <div className="mb-6 text-red-400 text-sm p-4 bg-red-500/10 rounded-lg border border-red-500/20 relative">
+        <div className="mb-6 text-red-400 text-sm p-4 bg-[var(--ft-danger)]/10 rounded-lg border border-[var(--ft-danger)]/20 relative">
           {error}
-          <button onClick={() => setError('')} className="absolute top-4 right-4 text-[#9CA3AF] hover:text-[#E5E7EB]">dismiss</button>
+          <button onClick={() => setError('')} className="absolute top-4 right-4 text-[var(--ft-muted)] hover:text-[var(--ft-charcoal)]">dismiss</button>
         </div>
       )}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-6 mb-8">
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Exams Passed</div>
-          <div className="text-3xl font-bold text-[#10B981] mb-1 font-mono">{passedExams} / {exams.length}</div>
-          <div className="text-xs text-[#9CA3AF]">Current Pass Volume</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Exams Passed</div>
+          <div className="text-3xl font-medium text-[var(--ft-success)] mb-1 font-mono">{passedExams} / {exams.length}</div>
+          <div className="text-xs text-[var(--ft-muted)]">Current Pass Volume</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Average Score</div>
-          <div className="text-3xl font-bold text-[#E5E7EB] mb-1 font-mono">{avgScore}%</div>
-          <div className="text-xs text-[#9CA3AF]">Across recorded attempts</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Average Score</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] mb-1 font-mono">{avgScore}%</div>
+          <div className="text-xs text-[var(--ft-muted)]">Across recorded attempts</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Total Exam Actions</div>
-          <div className="text-3xl font-bold text-[#E5E7EB] mb-1 font-mono">{attempts}</div>
-          <div className="text-xs text-[#9CA3AF]">Including passed / failed</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Total Exam Actions</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] mb-1 font-mono">{attempts}</div>
+          <div className="text-xs text-[var(--ft-muted)]">Including passed / failed</div>
         </div>
       </div>
 
       {/* Exam Cards */}
       <div className="space-y-6">
         {exams.length === 0 ? (
-           <div className="text-center text-sm text-[#9CA3AF] py-8">No active exams are available at the moment.</div>
+           <div className="text-center text-sm text-[var(--ft-muted)] py-8">No active exams are available at the moment.</div>
         ) : (
           exams.map((exam) => {
             const status = getStatus(exam.id);
             const result = results[exam.id];
             
             return (
-              <div key={exam.id} className="bg-[#111827] border border-[#334155] rounded-lg overflow-hidden">
+              <div key={exam.id} className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg overflow-hidden">
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-xs font-mono text-[#9CA3AF]">Exam #{exam.id}</span>
+                        <span className="text-xs font-mono text-[var(--ft-muted)]">Exam #{exam.id}</span>
                         {status === 'passed' ? (
-                          <div className="flex items-center gap-1 bg-[#10B981]/10 border border-[#10B981] text-[#10B981] text-xs px-2 py-1 rounded">
+                          <div className="flex items-center gap-1 bg-[var(--ft-success)]/10 border border-[var(--ft-success)] text-[var(--ft-success)] text-xs px-2 py-1 rounded">
                             <CheckCircle2 className="h-3 w-3" />
                             <span>Passed</span>
                           </div>
                         ) : status === 'failed' ? (
-                          <div className="flex items-center gap-1 bg-[#EF4444]/10 border border-[#EF4444] text-[#EF4444] text-xs px-2 py-1 rounded">
+                          <div className="flex items-center gap-1 bg-[var(--ft-danger)]/10 border border-[var(--ft-danger)] text-[var(--ft-danger)] text-xs px-2 py-1 rounded">
                             <XCircle className="h-3 w-3" />
                             <span>Failed</span>
                           </div>
                         ) : (
-                           <div className="flex items-center gap-1 bg-[#3B82F6]/10 border border-[#3B82F6] text-[#3B82F6] text-xs px-2 py-1 rounded">
+                           <div className="flex items-center gap-1 bg-[var(--ft-red-tint)] border border-[var(--ft-red)] text-[var(--ft-red)] text-xs px-2 py-1 rounded">
                              <Clock className="h-3 w-3" />
                              <span>New</span>
                            </div>
                         )}
                       </div>
-                      <h3 className="text-lg font-semibold text-[#E5E7EB] mb-2">{exam.title}</h3>
-                      <p className="text-sm text-[#9CA3AF] mb-3">{exam.description || 'No description provided.'}</p>
-                      <div className="flex gap-6 text-sm text-[#9CA3AF]">
+                      <h3 className="text-lg font-semibold text-[var(--ft-charcoal)] mb-2">{exam.title}</h3>
+                      <p className="text-sm text-[var(--ft-muted)] mb-3">{exam.description || 'No description provided.'}</p>
+                      <div className="flex gap-6 text-sm text-[var(--ft-muted)]">
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4" />
                           <span>{exam.duration_minutes} minutes</span>
@@ -179,10 +179,10 @@ export function MonthlyExams() {
                     <div className="text-right">
                       {status !== 'unattempted' && result && (
                         <>
-                          <div className={`text-4xl font-bold font-mono mb-1 ${result.passed ? 'text-[#10B981]' : 'text-[#EF4444]'}`}>
+                          <div className={`text-4xl font-medium font-mono mb-1 ${result.passed ? 'text-[var(--ft-success)]' : 'text-[var(--ft-danger)]'}`}>
                             {result.score}%
                           </div>
-                          <div className="text-xs text-[#9CA3AF] mb-1">
+                          <div className="text-xs text-[var(--ft-muted)] mb-1">
                             {new Date(result.completed_at).toLocaleDateString()}
                           </div>
                         </>
@@ -191,16 +191,16 @@ export function MonthlyExams() {
                   </div>
 
                   {(status === 'failed' || status === 'unattempted') && (
-                    <div className="border-t border-[#334155] pt-4 mt-4 text-right">
-                      <Button onClick={() => handleStartExam(exam.id)} className="bg-[#3B82F6] text-[#E5E7EB] hover:bg-[#3B82F6]/90">
+                    <div className="border-t border-[var(--ft-border)] pt-4 mt-4 text-right">
+                      <Button onClick={() => handleStartExam(exam.id)} className="bg-[var(--ft-red)] text-[var(--ft-charcoal)] hover:bg-[var(--ft-red)]/90">
                         {status === 'failed' ? 'Retake Exam' : 'Take Exam'}
                       </Button>
                     </div>
                   )}
 
                   {status === 'passed' && (
-                    <div className="border-t border-[#334155] pt-4 mt-4">
-                      <Button onClick={() => handleStartExam(exam.id)} variant="outline" className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#1F2937]">
+                    <div className="border-t border-[var(--ft-border)] pt-4 mt-4">
+                      <Button onClick={() => handleStartExam(exam.id)} variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)]">
                         Retake for Higher Score
                       </Button>
                     </div>

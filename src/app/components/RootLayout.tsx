@@ -1,13 +1,21 @@
 import { Outlet } from 'react-router';
 import { AuthProvider } from '../context/AuthContext';
+import { useEffect } from 'react';
 
 /**
  * Root layout that provides AuthContext to all routes.
- * This is necessary because createBrowserRouter creates its own React tree,
- * so wrapping <RouterProvider> with <AuthProvider> does NOT propagate context
- * to route components. Instead, we use this layout route as the root.
+ * Also initializes the theme from localStorage.
  */
 export function RootLayout() {
+  useEffect(() => {
+    const saved = localStorage.getItem('ft-theme');
+    if (saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <Outlet />

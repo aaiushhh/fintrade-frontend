@@ -91,7 +91,7 @@ export function TeacherLectures() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[500px]">
-        <Loader2 className="h-8 w-8 text-[#00D1B2] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[var(--ft-red)] animate-spin" />
       </div>
     );
   }
@@ -102,47 +102,47 @@ export function TeacherLectures() {
 
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#E5E7EB] mb-1">Lectures</h1>
-          <p className="text-sm text-[#9CA3AF]">Manage live and recorded lectures</p>
+          <h1 className="text-2xl font-medium text-[var(--ft-charcoal)] mb-1">Lectures</h1>
+          <p className="text-sm text-[var(--ft-muted)]">Manage live and recorded lectures</p>
         </div>
-        <Button onClick={() => setIsCreateOpen(true)} className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90 h-9">
+        <Button onClick={() => setIsCreateOpen(true)} className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90 h-9">
           <Plus className="h-4 w-4 mr-2" />
           Schedule Lecture
         </Button>
       </div>
 
       {error && (
-        <div className="mb-6 text-red-400 text-sm p-4 bg-red-500/10 rounded-lg border border-red-500/20">{error}</div>
+        <div className="mb-6 text-red-400 text-sm p-4 bg-[var(--ft-danger)]/10 rounded-lg border border-[var(--ft-danger)]/20">{error}</div>
       )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-4 gap-6 mb-8">
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Total Lectures</div>
-          <div className="text-3xl font-bold text-[#E5E7EB] font-mono">{lectures.length}</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Total Lectures</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] font-mono">{lectures.length}</div>
         </div>
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Upcoming</div>
-          <div className="text-3xl font-bold text-[#00D1B2] font-mono">{upcomingLectures.length}</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Upcoming</div>
+          <div className="text-3xl font-medium text-[var(--ft-red)] font-mono">{upcomingLectures.length}</div>
         </div>
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Completed</div>
-          <div className="text-3xl font-bold text-[#3B82F6] font-mono">{completedLectures.length}</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Completed</div>
+          <div className="text-3xl font-medium text-[var(--ft-red)] font-mono">{completedLectures.length}</div>
         </div>
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">With Recordings</div>
-          <div className="text-3xl font-bold text-[#10B981] font-mono">{lectures.filter(l => l.recordings?.length > 0).length}</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">With Recordings</div>
+          <div className="text-3xl font-medium text-[var(--ft-success)] font-mono">{lectures.filter(l => l.recordings?.length > 0).length}</div>
         </div>
       </div>
 
       {/* Tabs for Live and Recorded */}
-      <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
+      <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
         <Tabs defaultValue="live" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-[#1F2937] border border-[#334155] mb-6">
-            <TabsTrigger value="live" className="data-[state=active]:bg-[#00D1B2] data-[state=active]:text-[#0F172A]">
+          <TabsList className="grid w-full grid-cols-2 bg-[var(--ft-surface)] border border-[var(--ft-border)] mb-6">
+            <TabsTrigger value="live" className="data-[state=active]:bg-[var(--ft-red)] data-[state=active]:text-white">
               Upcoming ({upcomingLectures.length})
             </TabsTrigger>
-            <TabsTrigger value="recorded" className="data-[state=active]:bg-[#00D1B2] data-[state=active]:text-[#0F172A]">
+            <TabsTrigger value="recorded" className="data-[state=active]:bg-[var(--ft-red)] data-[state=active]:text-white">
               Completed ({completedLectures.length})
             </TabsTrigger>
           </TabsList>
@@ -150,45 +150,45 @@ export function TeacherLectures() {
           <TabsContent value="live">
             <div className="space-y-4">
               {upcomingLectures.length === 0 ? (
-                <div className="text-center text-sm text-[#9CA3AF] py-8">No upcoming lectures. Schedule one above.</div>
+                <div className="text-center text-sm text-[var(--ft-muted)] py-8">No upcoming lectures. Schedule one above.</div>
               ) : (
                 upcomingLectures.map((lecture) => (
-                  <div key={lecture.id} className="bg-[#1F2937] border border-[#334155] rounded-lg p-6">
+                  <div key={lecture.id} className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
-                        <h3 className="text-base font-semibold text-[#E5E7EB] mb-2">{lecture.title}</h3>
-                        {lecture.description && <div className="text-sm text-[#9CA3AF] mb-3">{lecture.description}</div>}
+                        <h3 className="text-base font-semibold text-[var(--ft-charcoal)] mb-2">{lecture.title}</h3>
+                        {lecture.description && <div className="text-sm text-[var(--ft-muted)] mb-3">{lecture.description}</div>}
                         
                         <div className="flex items-center gap-6 text-sm">
-                          <div className="flex items-center gap-2 text-[#9CA3AF]">
+                          <div className="flex items-center gap-2 text-[var(--ft-muted)]">
                             <Calendar className="h-4 w-4" />
                             <span>{new Date(lecture.scheduled_at).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-[#9CA3AF]">
+                          <div className="flex items-center gap-2 text-[var(--ft-muted)]">
                             <Clock className="h-4 w-4" />
                             <span>{new Date(lecture.scheduled_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>
                           </div>
-                          <div className="text-[#9CA3AF]">{lecture.duration_minutes} min</div>
+                          <div className="text-[var(--ft-muted)]">{lecture.duration_minutes} min</div>
                         </div>
                       </div>
                       
                       {lecture.is_live ? (
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-[#EF4444]/10 text-[#EF4444]">LIVE NOW</span>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-[var(--ft-danger)]/10 text-[var(--ft-danger)]">LIVE NOW</span>
                       ) : (
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-[#3B82F6]/10 text-[#3B82F6]">Scheduled</span>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-[var(--ft-red-tint)] text-[var(--ft-red)]">Scheduled</span>
                       )}
                     </div>
                     
                     <div className="flex gap-3">
                       {lecture.meeting_link && (
                         <a href={lecture.meeting_link} target="_blank" rel="noopener noreferrer">
-                          <Button className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90">
+                          <Button className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90">
                             <Play className="h-4 w-4 mr-2" />
                             {lecture.is_live ? 'Join Live' : 'Start Lecture'}
                           </Button>
                         </a>
                       )}
-                      <Button onClick={() => handleEndLecture(lecture.id)} disabled={actionLoading === lecture.id} variant="outline" className="border-[#EF4444]/20 text-[#EF4444] hover:bg-[#EF4444]/10 bg-transparent">
+                      <Button onClick={() => handleEndLecture(lecture.id)} disabled={actionLoading === lecture.id} variant="outline" className="border-[var(--ft-danger)]/20 text-[var(--ft-danger)] hover:bg-[var(--ft-danger)]/10 bg-transparent">
                          {actionLoading === lecture.id ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : 'End Lecture'}
                       </Button>
                     </div>
@@ -201,19 +201,19 @@ export function TeacherLectures() {
           <TabsContent value="recorded">
             <div className="space-y-4">
               {completedLectures.length === 0 ? (
-                <div className="text-center text-sm text-[#9CA3AF] py-8">No completed lectures yet.</div>
+                <div className="text-center text-sm text-[var(--ft-muted)] py-8">No completed lectures yet.</div>
               ) : (
                 completedLectures.map((lecture) => (
-                  <div key={lecture.id} className="bg-[#1F2937] border border-[#334155] rounded-lg p-6">
+                  <div key={lecture.id} className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
                     <div className="flex items-start gap-6">
-                      <div className="w-48 h-28 bg-[#0F172A] border border-[#334155] rounded-lg flex items-center justify-center shrink-0">
-                        <Video className="h-8 w-8 text-[#9CA3AF]" />
+                      <div className="w-48 h-28 bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg flex items-center justify-center shrink-0">
+                        <Video className="h-8 w-8 text-[var(--ft-muted)]" />
                       </div>
                       
                       <div className="flex-1">
-                        <h3 className="text-base font-semibold text-[#E5E7EB] mb-2">{lecture.title}</h3>
+                        <h3 className="text-base font-semibold text-[var(--ft-charcoal)] mb-2">{lecture.title}</h3>
                         
-                        <div className="flex items-center gap-6 text-sm text-[#9CA3AF] mb-4">
+                        <div className="flex items-center gap-6 text-sm text-[var(--ft-muted)] mb-4">
                           <div className="flex items-center gap-2">
                             <Calendar className="h-4 w-4" />
                             <span>{new Date(lecture.scheduled_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
@@ -229,7 +229,7 @@ export function TeacherLectures() {
                             <div className="flex gap-3">
                               {lecture.recordings.map((rec) => (
                                 <a key={rec.id} href={getFullUrl(rec.recording_url)} target="_blank" rel="noopener noreferrer">
-                                  <Button variant="outline" className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#1F2937]">
+                                  <Button variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)]">
                                     <Play className="h-4 w-4 mr-2" />
                                     View Recording
                                   </Button>
@@ -239,7 +239,7 @@ export function TeacherLectures() {
                           )}
                           <div className="relative overflow-hidden inline-block">
                             <input type="file" accept="video/*" onChange={(e) => handleUploadRecording(e, lecture.id)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Upload Recording" />
-                            <Button disabled={actionLoading === lecture.id} variant="outline" className="border-[#00D1B2]/20 text-[#00D1B2] hover:bg-[#00D1B2]/10 bg-transparent relative z-0">
+                            <Button disabled={actionLoading === lecture.id} variant="outline" className="border-[var(--ft-red)]/20 text-[var(--ft-red)] hover:bg-[var(--ft-red)]/10 bg-transparent relative z-0">
                               {actionLoading === lecture.id ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
                               Upload Recording
                             </Button>

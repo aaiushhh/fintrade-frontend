@@ -69,25 +69,25 @@ export function CourseEnrollment() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F172A]">
+    <div className="min-h-screen bg-[var(--ft-bg)]">
       {/* Header */}
-      <nav className="border-b border-[#334155] bg-[#111827]">
+      <nav className="border-b border-[var(--ft-border)] bg-[var(--ft-surface)]">
         <div className="mx-auto max-w-7xl px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-6 w-6 text-[#00D1B2]" />
-              <span className="text-xl font-bold text-[#E5E7EB]">FinTrade</span>
+              <TrendingUp className="h-6 w-6 text-[var(--ft-red)]" />
+              <span className="text-xl font-medium text-[var(--ft-charcoal)]">FinTrade</span>
             </div>
             <div className="flex items-center gap-4">
               {isAuthenticated ? (
                 <>
                   <Link to={getDashboardPath()}>
-                    <Button variant="outline" className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#1F2937]">
+                    <Button variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)]">
                       <ChevronLeft className="h-4 w-4 mr-2" />
                       Back to Dashboard
                     </Button>
                   </Link>
-                  <Button onClick={handleLogout} variant="outline" className="border-[#334155] bg-transparent text-[#EF4444] hover:bg-[#1F2937]">
+                  <Button onClick={handleLogout} variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-danger)] hover:bg-[var(--ft-surface)]">
                     <LogOut className="h-4 w-4 mr-2" />
                     Logout
                   </Button>
@@ -95,12 +95,12 @@ export function CourseEnrollment() {
               ) : (
                 <>
                   <Link to="/login">
-                    <Button variant="outline" className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#1F2937]">
+                    <Button variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)]">
                       Login
                     </Button>
                   </Link>
                   <Link to="/signup">
-                    <Button className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90">
+                    <Button className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90">
                       Sign Up
                     </Button>
                   </Link>
@@ -113,66 +113,66 @@ export function CourseEnrollment() {
 
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="mb-12">
-          <h1 className="text-3xl font-bold text-[#E5E7EB] mb-2">Choose Your Course</h1>
-          <p className="text-[#9CA3AF]">Select a course that matches your trading experience level</p>
+          <h1 className="text-3xl font-medium text-[var(--ft-charcoal)] mb-2">Choose Your Course</h1>
+          <p className="text-[var(--ft-muted)]">Select a course that matches your trading experience level</p>
         </div>
 
         <div className="grid grid-cols-2 gap-6">
           {loading ? (
-            <div className="col-span-2 text-center text-[#E5E7EB] py-12">Loading courses...</div>
+            <div className="col-span-2 text-center text-[var(--ft-charcoal)] py-12">Loading courses...</div>
           ) : courses.length === 0 ? (
-            <div className="col-span-2 text-center text-[#9CA3AF] py-12">No courses found.</div>
+            <div className="col-span-2 text-center text-[var(--ft-muted)] py-12">No courses found.</div>
           ) : (
             courses.map((course) => (
-              <div key={course.id} className="bg-[#111827] border border-[#334155] rounded-lg overflow-hidden">
+              <div key={course.id} className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg overflow-hidden">
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h2 className="text-xl font-semibold text-[#E5E7EB] mb-1">{course.name || course.title}</h2>
-                      <div className="inline-block bg-[#00D1B2]/10 border border-[#00D1B2] text-[#00D1B2] text-xs px-2 py-1 rounded">
+                      <h2 className="text-xl font-semibold text-[var(--ft-charcoal)] mb-1">{course.name || course.title}</h2>
+                      <div className="inline-block bg-[var(--ft-red)]/10 border border-[var(--ft-red)] text-[var(--ft-red)] text-xs px-2 py-1 rounded">
                         {course.level || 'All Levels'}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-[#00D1B2] font-mono">₹{(course.price || 0).toLocaleString('en-IN')}</div>
-                      <div className="text-xs text-[#9CA3AF]">one-time fee</div>
+                      <div className="text-2xl font-medium text-[var(--ft-red)] font-mono">₹{(course.price || 0).toLocaleString('en-IN')}</div>
+                      <div className="text-xs text-[var(--ft-muted)]">one-time fee</div>
                     </div>
                   </div>
 
-                  <p className="text-sm text-[#9CA3AF] mb-6">{course.description}</p>
+                  <p className="text-sm text-[var(--ft-muted)] mb-6">{course.description}</p>
 
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-[#00D1B2]" />
+                      <Clock className="h-4 w-4 text-[var(--ft-red)]" />
                       <div>
-                        <div className="text-xs text-[#9CA3AF]">Duration</div>
-                        <div className="text-sm text-[#E5E7EB]">{course.duration || '3 months'}</div>
+                        <div className="text-xs text-[var(--ft-muted)]">Duration</div>
+                        <div className="text-sm text-[var(--ft-charcoal)]">{course.duration || '3 months'}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-[#00D1B2]" />
+                      <BookOpen className="h-4 w-4 text-[var(--ft-red)]" />
                       <div>
-                        <div className="text-xs text-[#9CA3AF]">Modules</div>
-                        <div className="text-sm text-[#E5E7EB]">{course.modules_count || course.modules || 0} modules</div>
+                        <div className="text-xs text-[var(--ft-muted)]">Modules</div>
+                        <div className="text-sm text-[var(--ft-charcoal)]">{course.modules_count || course.modules || 0} modules</div>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-2 mb-6">
-                    <div className="flex items-center gap-2 text-sm text-[#9CA3AF]">
-                      <CheckCircle2 className="h-4 w-4 text-[#00D1B2]" />
+                    <div className="flex items-center gap-2 text-sm text-[var(--ft-muted)]">
+                      <CheckCircle2 className="h-4 w-4 text-[var(--ft-red)]" />
                       <span>Video lectures & resources</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-[#9CA3AF]">
-                      <CheckCircle2 className="h-4 w-4 text-[#00D1B2]" />
+                    <div className="flex items-center gap-2 text-sm text-[var(--ft-muted)]">
+                      <CheckCircle2 className="h-4 w-4 text-[var(--ft-red)]" />
                       <span>AI tutor support</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-[#9CA3AF]">
-                      <CheckCircle2 className="h-4 w-4 text-[#00D1B2]" />
+                    <div className="flex items-center gap-2 text-sm text-[var(--ft-muted)]">
+                      <CheckCircle2 className="h-4 w-4 text-[var(--ft-red)]" />
                       <span>Monthly exams</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-[#9CA3AF]">
-                      <Award className="h-4 w-4 text-[#00D1B2]" />
+                    <div className="flex items-center gap-2 text-sm text-[var(--ft-muted)]">
+                      <Award className="h-4 w-4 text-[var(--ft-red)]" />
                       <span>Certification on completion</span>
                     </div>
                   </div>
@@ -185,29 +185,29 @@ export function CourseEnrollment() {
                         value={offerCodes[course.id] || ''}
                         onChange={(e) => setOfferCodes(prev => ({ ...prev, [course.id]: e.target.value.toUpperCase() }))}
                         placeholder="Offer / Referral Code"
-                        className="flex-1 bg-[#1F2937] border border-[#334155] rounded-lg px-3 py-2 text-sm text-[#E5E7EB] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#00D1B2] font-mono"
+                        className="flex-1 bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg px-3 py-2 text-sm text-[var(--ft-charcoal)] placeholder:text-[var(--ft-muted)] focus:outline-none focus:border-[var(--ft-red)] font-mono"
                       />
                       <button
                         onClick={() => handleApplyOffer(course.id)}
-                        className="px-3 py-2 rounded-lg bg-[#3B82F6]/10 border border-[#3B82F6]/30 text-[#3B82F6] text-xs hover:bg-[#3B82F6]/20 transition-colors"
+                        className="px-3 py-2 rounded-lg bg-[var(--ft-red-tint)] border border-[var(--ft-red)]/30 text-[var(--ft-red)] text-xs hover:bg-[var(--ft-red)]/20 transition-colors"
                       >
                         Apply
                       </button>
                     </div>
                     {offerResults[course.id] && (
-                      <div className="text-xs text-[#10B981] bg-[#10B981]/10 rounded p-2 border border-[#10B981]/20">
+                      <div className="text-xs text-[var(--ft-success)] bg-[var(--ft-success)]/10 rounded p-2 border border-[var(--ft-success)]/20">
                         {offerResults[course.id].message} — Save ₹{offerResults[course.id].discount_applied?.toLocaleString('en-IN')}
                       </div>
                     )}
                     {offerErrors[course.id] && (
-                      <div className="text-xs text-[#EF4444]">{offerErrors[course.id]}</div>
+                      <div className="text-xs text-[var(--ft-danger)]">{offerErrors[course.id]}</div>
                     )}
                   </div>
 
                   <Button 
                     onClick={() => handleEnroll(course.id)}
                     disabled={enrolling[course.id]}
-                    className="w-full bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90 h-11">
+                    className="w-full bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90 h-11">
                     {enrolling[course.id] ? 'Enrolling...' : 'Enroll Now'}
                   </Button>
                 </div>

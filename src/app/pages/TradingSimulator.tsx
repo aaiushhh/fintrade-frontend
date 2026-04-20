@@ -27,29 +27,29 @@ export function TradingSimulator() {
     <div className="p-6">
       {/* Top Stats Bar */}
       <div className="grid grid-cols-5 gap-4 mb-6">
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-4">
-          <div className="text-xs text-[#9CA3AF] mb-1">Available Capital</div>
-          <div className="text-xl font-bold text-[#E5E7EB] font-mono">₹5,06,217</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+          <div className="text-xs text-[var(--ft-muted)] mb-1">Available Capital</div>
+          <div className="text-xl font-medium text-[var(--ft-charcoal)] font-mono">₹5,06,217</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-4">
-          <div className="text-xs text-[#9CA3AF] mb-1">Today's P&L</div>
-          <div className="text-xl font-bold text-[#10B981] font-mono">+₹6,217</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+          <div className="text-xs text-[var(--ft-muted)] mb-1">Today's P&L</div>
+          <div className="text-xl font-medium text-[var(--ft-success)] font-mono">+₹6,217</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-4">
-          <div className="text-xs text-[#9CA3AF] mb-1">Total P&L</div>
-          <div className="text-xl font-bold text-[#10B981] font-mono">+₹6,217</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+          <div className="text-xs text-[var(--ft-muted)] mb-1">Total P&L</div>
+          <div className="text-xl font-medium text-[var(--ft-success)] font-mono">+₹6,217</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-4">
-          <div className="text-xs text-[#9CA3AF] mb-1">Win Rate</div>
-          <div className="text-xl font-bold text-[#E5E7EB] font-mono">75%</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+          <div className="text-xs text-[var(--ft-muted)] mb-1">Win Rate</div>
+          <div className="text-xl font-medium text-[var(--ft-charcoal)] font-mono">75%</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-4">
-          <div className="text-xs text-[#9CA3AF] mb-1">Daily Loss Limit</div>
-          <div className="text-xl font-bold text-[#EF4444] font-mono">₹10,000</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+          <div className="text-xs text-[var(--ft-muted)] mb-1">Daily Loss Limit</div>
+          <div className="text-xl font-medium text-[var(--ft-danger)] font-mono">₹10,000</div>
         </div>
       </div>
 
@@ -57,31 +57,31 @@ export function TradingSimulator() {
         {/* Chart & Instruments */}
         <div className="col-span-2 space-y-6">
           {/* Chart */}
-          <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
+          <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-lg font-bold text-[#E5E7EB]">{selectedInstrument.symbol}</h2>
+                <h2 className="text-lg font-medium text-[var(--ft-charcoal)]">{selectedInstrument.symbol}</h2>
                 <div className="flex items-center gap-3 mt-1">
-                  <span className="text-2xl font-bold text-[#E5E7EB] font-mono">{selectedInstrument.price.toFixed(2)}</span>
-                  <span className={`text-sm ${selectedInstrument.change > 0 ? 'text-[#10B981]' : 'text-[#EF4444]'}`}>
+                  <span className="text-2xl font-medium text-[var(--ft-charcoal)] font-mono">{selectedInstrument.price.toFixed(2)}</span>
+                  <span className={`text-sm ${selectedInstrument.change > 0 ? 'text-[var(--ft-success)]' : 'text-[var(--ft-danger)]'}`}>
                     {selectedInstrument.change > 0 ? '+' : ''}{selectedInstrument.change.toFixed(2)} ({selectedInstrument.changePercent > 0 ? '+' : ''}{selectedInstrument.changePercent}%)
                   </span>
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <div className="h-2 w-2 rounded-full bg-[#10B981]"></div>
-                <div className="text-xs text-[#9CA3AF]">Live</div>
+                <div className="h-2 w-2 rounded-full bg-[var(--ft-success)]"></div>
+                <div className="text-xs text-[var(--ft-muted)]">Live</div>
               </div>
             </div>
 
             {/* Candlestick Chart */}
-            <div className="h-80 border border-[#334155] rounded bg-[#0F172A] p-4">
+            <div className="h-80 border border-[var(--ft-border)] rounded bg-[var(--ft-bg)] p-4">
               <svg className="w-full h-full" viewBox="0 0 600 280">
                 {/* Grid lines */}
-                <line x1="0" y1="70" x2="600" y2="70" stroke="#334155" strokeWidth="1" />
-                <line x1="0" y1="140" x2="600" y2="140" stroke="#334155" strokeWidth="1" />
-                <line x1="0" y1="210" x2="600" y2="210" stroke="#334155" strokeWidth="1" />
+                <line x1="0" y1="70" x2="600" y2="70" stroke="var(--ft-border)" strokeWidth="1" />
+                <line x1="0" y1="140" x2="600" y2="140" stroke="var(--ft-border)" strokeWidth="1" />
+                <line x1="0" y1="210" x2="600" y2="210" stroke="var(--ft-border)" strokeWidth="1" />
 
                 {/* Candlesticks */}
                 {[
@@ -105,7 +105,7 @@ export function TradingSimulator() {
                       y1={candle.high}
                       x2={candle.x}
                       y2={candle.low}
-                      stroke={candle.bull ? "#10B981" : "#EF4444"}
+                      stroke={candle.bull ? "var(--ft-success)" : "var(--ft-danger)"}
                       strokeWidth="1"
                     />
                     <rect
@@ -113,7 +113,7 @@ export function TradingSimulator() {
                       y={Math.min(candle.open, candle.close)}
                       width="24"
                       height={Math.abs(candle.close - candle.open)}
-                      fill={candle.bull ? "#10B981" : "#EF4444"}
+                      fill={candle.bull ? "var(--ft-success)" : "var(--ft-danger)"}
                     />
                   </g>
                 ))}
@@ -122,43 +122,43 @@ export function TradingSimulator() {
           </div>
 
           {/* Trade History */}
-          <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-[#E5E7EB] mb-4">Trade History</h3>
+          <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-[var(--ft-charcoal)] mb-4">Trade History</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-[#334155]">
-                    <th className="text-left text-xs text-[#9CA3AF] pb-3">Symbol</th>
-                    <th className="text-left text-xs text-[#9CA3AF] pb-3">Type</th>
-                    <th className="text-right text-xs text-[#9CA3AF] pb-3">Qty</th>
-                    <th className="text-right text-xs text-[#9CA3AF] pb-3">Entry</th>
-                    <th className="text-right text-xs text-[#9CA3AF] pb-3">Exit</th>
-                    <th className="text-right text-xs text-[#9CA3AF] pb-3">P&L</th>
-                    <th className="text-right text-xs text-[#9CA3AF] pb-3">Date</th>
+                  <tr className="border-b border-[var(--ft-border)]">
+                    <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Symbol</th>
+                    <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Type</th>
+                    <th className="text-right text-xs text-[var(--ft-muted)] pb-3">Qty</th>
+                    <th className="text-right text-xs text-[var(--ft-muted)] pb-3">Entry</th>
+                    <th className="text-right text-xs text-[var(--ft-muted)] pb-3">Exit</th>
+                    <th className="text-right text-xs text-[var(--ft-muted)] pb-3">P&L</th>
+                    <th className="text-right text-xs text-[var(--ft-muted)] pb-3">Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tradeHistory.map((trade) => (
-                    <tr key={trade.id} className="border-b border-[#334155]">
-                      <td className="py-3 text-sm text-[#E5E7EB]">{trade.symbol}</td>
+                    <tr key={trade.id} className="border-b border-[var(--ft-border)]">
+                      <td className="py-3 text-sm text-[var(--ft-charcoal)]">{trade.symbol}</td>
                       <td className="py-3">
                         <span className={`text-xs px-2 py-1 rounded ${
                           trade.type === 'BUY'
-                            ? 'bg-[#10B981]/10 text-[#10B981]'
-                            : 'bg-[#EF4444]/10 text-[#EF4444]'
+                            ? 'bg-[var(--ft-success)]/10 text-[var(--ft-success)]'
+                            : 'bg-[var(--ft-danger)]/10 text-[var(--ft-danger)]'
                         }`}>
                           {trade.type}
                         </span>
                       </td>
-                      <td className="py-3 text-sm text-[#E5E7EB] text-right font-mono">{trade.qty}</td>
-                      <td className="py-3 text-sm text-[#E5E7EB] text-right font-mono">₹{trade.entry.toFixed(2)}</td>
-                      <td className="py-3 text-sm text-[#E5E7EB] text-right font-mono">₹{trade.exit.toFixed(2)}</td>
+                      <td className="py-3 text-sm text-[var(--ft-charcoal)] text-right font-mono">{trade.qty}</td>
+                      <td className="py-3 text-sm text-[var(--ft-charcoal)] text-right font-mono">₹{trade.entry.toFixed(2)}</td>
+                      <td className="py-3 text-sm text-[var(--ft-charcoal)] text-right font-mono">₹{trade.exit.toFixed(2)}</td>
                       <td className={`py-3 text-sm text-right font-mono ${
-                        trade.pnl > 0 ? 'text-[#10B981]' : 'text-[#EF4444]'
+                        trade.pnl > 0 ? 'text-[var(--ft-success)]' : 'text-[var(--ft-danger)]'
                       }`}>
                         {trade.pnl > 0 ? '+' : ''}₹{trade.pnl.toFixed(2)}
                       </td>
-                      <td className="py-3 text-xs text-[#9CA3AF] text-right">{trade.date}</td>
+                      <td className="py-3 text-xs text-[var(--ft-muted)] text-right">{trade.date}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -170,13 +170,13 @@ export function TradingSimulator() {
         {/* Order Entry & Watchlist */}
         <div className="col-span-1 space-y-6">
           {/* Order Entry */}
-          <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-[#E5E7EB] mb-4">Place Order</h3>
+          <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-[var(--ft-charcoal)] mb-4">Place Order</h3>
 
             <div className="space-y-4">
               <div>
-                <Label className="text-[#E5E7EB] mb-2 block">Instrument</Label>
-                <select className="w-full bg-[#1F2937] border border-[#334155] text-[#E5E7EB] rounded-lg px-3 py-2 text-sm">
+                <Label className="text-[var(--ft-charcoal)] mb-2 block">Instrument</Label>
+                <select className="w-full bg-[var(--ft-surface)] border border-[var(--ft-border)] text-[var(--ft-charcoal)] rounded-lg px-3 py-2 text-sm">
                   {instruments.map((inst) => (
                     <option key={inst.symbol} value={inst.symbol}>{inst.symbol}</option>
                   ))}
@@ -184,28 +184,28 @@ export function TradingSimulator() {
               </div>
 
               <div>
-                <Label className="text-[#E5E7EB] mb-2 block">Quantity</Label>
+                <Label className="text-[var(--ft-charcoal)] mb-2 block">Quantity</Label>
                 <Input
                   type="number"
                   defaultValue="50"
-                  className="bg-[#1F2937] border-[#334155] text-[#E5E7EB]"
+                  className="bg-[var(--ft-surface)] border-[var(--ft-border)] text-[var(--ft-charcoal)]"
                 />
               </div>
 
               <div>
-                <Label className="text-[#E5E7EB] mb-2 block">Price</Label>
+                <Label className="text-[var(--ft-charcoal)] mb-2 block">Price</Label>
                 <Input
                   type="number"
                   defaultValue={selectedInstrument.price}
-                  className="bg-[#1F2937] border-[#334155] text-[#E5E7EB]"
+                  className="bg-[var(--ft-surface)] border-[var(--ft-border)] text-[var(--ft-charcoal)]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <Button className="bg-[#10B981] text-[#E5E7EB] hover:bg-[#10B981]/90">
+                <Button className="bg-[var(--ft-success)] text-[var(--ft-charcoal)] hover:bg-[var(--ft-success)]/90">
                   BUY
                 </Button>
-                <Button className="bg-[#EF4444] text-[#E5E7EB] hover:bg-[#EF4444]/90">
+                <Button className="bg-[var(--ft-danger)] text-[var(--ft-charcoal)] hover:bg-[var(--ft-danger)]/90">
                   SELL
                 </Button>
               </div>
@@ -213,8 +213,8 @@ export function TradingSimulator() {
           </div>
 
           {/* Watchlist */}
-          <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-[#E5E7EB] mb-4">Watchlist</h3>
+          <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-[var(--ft-charcoal)] mb-4">Watchlist</h3>
 
             <div className="space-y-3">
               {instruments.map((inst) => (
@@ -223,21 +223,21 @@ export function TradingSimulator() {
                   onClick={() => setSelectedInstrument(inst)}
                   className={`w-full text-left p-3 rounded-lg border transition-colors ${
                     selectedInstrument.symbol === inst.symbol
-                      ? 'border-[#00D1B2] bg-[#00D1B2]/10'
-                      : 'border-[#334155] bg-[#1F2937] hover:border-[#00D1B2]/50'
+                      ? 'border-[var(--ft-red)] bg-[var(--ft-red)]/10'
+                      : 'border-[var(--ft-border)] bg-[var(--ft-surface)] hover:border-[var(--ft-red)]/50'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-[#E5E7EB]">{inst.symbol}</span>
+                    <span className="text-sm font-medium text-[var(--ft-charcoal)]">{inst.symbol}</span>
                     {inst.change > 0 ? (
-                      <TrendingUp className="h-4 w-4 text-[#10B981]" />
+                      <TrendingUp className="h-4 w-4 text-[var(--ft-success)]" />
                     ) : (
-                      <TrendingDown className="h-4 w-4 text-[#EF4444]" />
+                      <TrendingDown className="h-4 w-4 text-[var(--ft-danger)]" />
                     )}
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-mono text-[#E5E7EB]">₹{inst.price.toFixed(2)}</span>
-                    <span className={`text-xs font-mono ${inst.change > 0 ? 'text-[#10B981]' : 'text-[#EF4444]'}`}>
+                    <span className="text-sm font-mono text-[var(--ft-charcoal)]">₹{inst.price.toFixed(2)}</span>
+                    <span className={`text-xs font-mono ${inst.change > 0 ? 'text-[var(--ft-success)]' : 'text-[var(--ft-danger)]'}`}>
                       {inst.change > 0 ? '+' : ''}{inst.changePercent}%
                     </span>
                   </div>
@@ -247,12 +247,12 @@ export function TradingSimulator() {
           </div>
 
           {/* Daily Loss Alert */}
-          <div className="bg-[#EF4444]/10 border border-[#EF4444] rounded-lg p-4">
+          <div className="bg-[var(--ft-danger)]/10 border border-[var(--ft-danger)] rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-[#EF4444] mt-0.5" />
+              <AlertCircle className="h-5 w-5 text-[var(--ft-danger)] mt-0.5" />
               <div>
-                <div className="text-sm font-medium text-[#EF4444] mb-1">Daily Loss Limit</div>
-                <div className="text-xs text-[#9CA3AF]">You have ₹3,783 remaining before hitting your daily loss limit</div>
+                <div className="text-sm font-medium text-[var(--ft-danger)] mb-1">Daily Loss Limit</div>
+                <div className="text-xs text-[var(--ft-muted)]">You have ₹3,783 remaining before hitting your daily loss limit</div>
               </div>
             </div>
           </div>

@@ -1,7 +1,23 @@
 export const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '');
 
+// ── In-memory token (backed by sessionStorage for tab persistence) ──
+let _token: string | null = sessionStorage.getItem('ft_token');
+
+export function setAuthToken(token: string | null) {
+  _token = token;
+  if (token) {
+    sessionStorage.setItem('ft_token', token);
+  } else {
+    sessionStorage.removeItem('ft_token');
+  }
+}
+
+export function getAuthToken(): string | null {
+  return _token;
+}
+
 export const fetchClient = async (endpoint: string, options: RequestInit = {}) => {
-  const token = localStorage.getItem('token');
+  const token = getAuthToken();
   const headers: any = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),

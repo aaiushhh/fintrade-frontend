@@ -90,7 +90,7 @@ export function CourseModules() {
   }, [courseIdParam, navigate]);
 
   if (loading) {
-    return <div className="p-8 flex items-center justify-center min-h-[400px]"><Loader2 className="h-8 w-8 text-[#00D1B2] animate-spin" /></div>;
+    return <div className="p-8 flex items-center justify-center min-h-[400px]"><Loader2 className="h-8 w-8 text-[var(--ft-red)] animate-spin" /></div>;
   }
 
   if (error) {
@@ -98,7 +98,7 @@ export function CourseModules() {
   }
 
   if (!course) {
-    return <div className="p-8 text-[#9CA3AF]">You are not enrolled in any courses to view modules.</div>;
+    return <div className="p-8 text-[var(--ft-muted)]">You are not enrolled in any courses to view modules.</div>;
   }
 
   const modules = course.modules || [];
@@ -111,19 +111,19 @@ export function CourseModules() {
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#E5E7EB] mb-1">{course.title} - Modules</h1>
-        <p className="text-sm text-[#9CA3AF]">Course Material • {modules.length} Modules in total</p>
+        <h1 className="text-2xl font-medium text-[var(--ft-charcoal)] mb-1">{course.title} - Modules</h1>
+        <p className="text-sm text-[var(--ft-muted)]">Course Material • {modules.length} Modules in total</p>
       </div>
 
       {/* Overall Progress */}
-      <div className="bg-[#111827] border border-[#334155] rounded-lg p-6 mb-8">
+      <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6 mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-lg font-semibold text-[#E5E7EB] mb-1">Overall Progress</h2>
-            <p className="text-sm text-[#9CA3AF]">{completedModules} of {modules.length} modules completed</p>
+            <h2 className="text-lg font-semibold text-[var(--ft-charcoal)] mb-1">Overall Progress</h2>
+            <p className="text-sm text-[var(--ft-muted)]">{completedModules} of {modules.length} modules completed</p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold text-[#00D1B2] font-mono">{overallProgress}%</div>
+            <div className="text-3xl font-medium text-[var(--ft-red)] font-mono">{overallProgress}%</div>
           </div>
         </div>
         <Progress value={overallProgress} className="h-3" />
@@ -131,16 +131,16 @@ export function CourseModules() {
 
       {/* Scheduled Lectures for this Course */}
       {lectures.length > 0 && (
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6 mb-8">
-          <h2 className="text-lg font-semibold text-[#E5E7EB] mb-4">
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6 mb-8">
+          <h2 className="text-lg font-semibold text-[var(--ft-charcoal)] mb-4">
             Scheduled Lectures ({upcomingLectures.length} upcoming)
           </h2>
           <div className="space-y-3">
             {upcomingLectures.map((lecture) => (
-              <div key={lecture.id} className="flex items-center justify-between bg-[#1F2937] border border-[#334155] rounded-lg p-4">
+              <div key={lecture.id} className="flex items-center justify-between bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
                 <div>
-                  <div className="text-sm text-[#E5E7EB] mb-1">{lecture.title}</div>
-                  <div className="flex items-center gap-4 text-xs text-[#9CA3AF]">
+                  <div className="text-sm text-[var(--ft-charcoal)] mb-1">{lecture.title}</div>
+                  <div className="flex items-center gap-4 text-xs text-[var(--ft-muted)]">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
                       <span>{new Date(lecture.scheduled_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
@@ -154,11 +154,11 @@ export function CourseModules() {
                 </div>
                 <div className="flex items-center gap-2">
                   {lecture.is_live && (
-                    <span className="text-xs px-2 py-1 rounded-full bg-[#EF4444]/10 text-[#EF4444]">LIVE</span>
+                    <span className="text-xs px-2 py-1 rounded-full bg-[var(--ft-danger)]/10 text-[var(--ft-danger)]">LIVE</span>
                   )}
                   {lecture.meeting_link && (
                     <a href={lecture.meeting_link} target="_blank" rel="noopener noreferrer">
-                      <Button className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90 h-7 text-xs px-3">
+                      <Button className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90 h-7 text-xs px-3">
                         Join
                       </Button>
                     </a>
@@ -167,13 +167,13 @@ export function CourseModules() {
               </div>
             ))}
             {completedLectures.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-[#334155]">
-                <h3 className="text-sm font-medium text-[#9CA3AF] mb-3">Past Lectures & Recordings</h3>
+              <div className="mt-4 pt-4 border-t border-[var(--ft-border)]">
+                <h3 className="text-sm font-medium text-[var(--ft-muted)] mb-3">Past Lectures & Recordings</h3>
                 {completedLectures.map((lecture) => (
-                  <div key={lecture.id} className="flex items-center justify-between bg-[#1F2937] border border-[#334155] rounded-lg p-4 mb-2">
+                  <div key={lecture.id} className="flex items-center justify-between bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4 mb-2">
                     <div>
-                      <div className="text-sm text-[#E5E7EB] mb-1">{lecture.title}</div>
-                      <div className="text-xs text-[#9CA3AF]">
+                      <div className="text-sm text-[var(--ft-charcoal)] mb-1">{lecture.title}</div>
+                      <div className="text-xs text-[var(--ft-muted)]">
                         {new Date(lecture.scheduled_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                       </div>
                     </div>
@@ -181,7 +181,7 @@ export function CourseModules() {
                       <div className="flex gap-2">
                         {lecture.recordings.map(rec => (
                           <a key={rec.id} href={getFullUrl(rec.recording_url)} target="_blank" rel="noopener noreferrer">
-                            <Button variant="outline" className="border-[#00D1B2]/50 text-[#00D1B2] bg-[#00D1B2]/10 hover:bg-[#00D1B2]/20 h-7 text-xs px-3">
+                            <Button variant="outline" className="border-[var(--ft-red)]/50 text-[var(--ft-red)] bg-[var(--ft-red)]/10 hover:bg-[var(--ft-red)]/20 h-7 text-xs px-3">
                               <Video className="h-3 w-3 mr-1" />
                               Recording
                             </Button>
@@ -202,16 +202,16 @@ export function CourseModules() {
         {modules.map((module) => (
           <div
             key={module.id}
-            className="bg-[#111827] border border-[#334155] rounded-lg p-6"
+            className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-mono text-[#9CA3AF]">Module {module.order}</span>
+                  <span className="text-xs font-mono text-[var(--ft-muted)]">Module {module.order}</span>
                 </div>
-                <h3 className="text-base font-semibold text-[#E5E7EB] mb-3">{module.title}</h3>
+                <h3 className="text-base font-semibold text-[var(--ft-charcoal)] mb-3">{module.title}</h3>
 
-                <div className="flex gap-4 text-xs text-[#9CA3AF] mb-4">
+                <div className="flex gap-4 text-xs text-[var(--ft-muted)] mb-4">
                   <div>{(module.lessons || []).length} lessons</div>
                 </div>
               </div>
@@ -219,14 +219,14 @@ export function CourseModules() {
 
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-[#9CA3AF]">Progress</span>
-                <span className="text-xs font-mono text-[#E5E7EB]">{module.progress || 0}%</span>
+                <span className="text-xs text-[var(--ft-muted)]">Progress</span>
+                <span className="text-xs font-mono text-[var(--ft-charcoal)]">{module.progress || 0}%</span>
               </div>
               <Progress value={module.progress || 0} className="h-2" />
             </div>
 
             <Link to={`/student/lecture?module_id=${module.id}&course_id=${course.id}`}>
-                <Button className="w-full bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90">
+                <Button className="w-full bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90">
                   <Play className="h-4 w-4 mr-2" />
                   View Lessons
                 </Button>

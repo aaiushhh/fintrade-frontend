@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { api } from '../services/api';
+import { api, setAuthToken, getAuthToken } from '../services/api';
 
 export interface User {
   id: number | string;
@@ -37,11 +37,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [token, setToken] = useState<string | null>(getAuthToken());
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuth = async () => {
-    const storedToken = localStorage.getItem('token');
+    const storedToken = getAuthToken();
     if (!storedToken) {
       setIsLoading(false);
       return;
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(storedToken);
     } catch (error) {
       console.error("Auth check failed:", error);
-      localStorage.removeItem('token');
+      setAuthToken(null);
       setToken(null);
       setUser(null);
     } finally {
@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = (newToken: string, userData: User) => {
-    localStorage.setItem('token', newToken);
+    setAuthToken(newToken);
     setToken(newToken);
     setUser(normalizeUser(userData));
   };
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       // Ignore errors — clear local state regardless
     }
-    localStorage.removeItem('token');
+    setAuthToken(null);
     setToken(null);
     setUser(null);
   };

@@ -72,7 +72,7 @@ export function DistributorDashboard() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-[#00D1B2] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[var(--ft-red)] animate-spin" />
       </div>
     );
   }
@@ -80,96 +80,96 @@ export function DistributorDashboard() {
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#E5E7EB] mb-1">Distributor Dashboard</h1>
-        <p className="text-sm text-[#9CA3AF]">Welcome back, {profile?.user_name || 'Distributor'}</p>
+        <h1 className="text-2xl font-medium text-[var(--ft-charcoal)] mb-1">Distributor Dashboard</h1>
+        <p className="text-sm text-[var(--ft-muted)]">Welcome back, {profile?.user_name || 'Distributor'}</p>
       </div>
 
       {error && (
-        <div className="mb-6 text-red-400 text-sm p-4 bg-red-500/10 rounded-lg border border-red-500/20">{error}</div>
+        <div className="mb-6 text-red-400 text-sm p-4 bg-[var(--ft-danger)]/10 rounded-lg border border-[var(--ft-danger)]/20">{error}</div>
       )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-4 gap-6 mb-8">
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
           <div className="flex items-center justify-between mb-2">
-            <div className="text-sm text-[#9CA3AF]">Students Referred</div>
-            <Users className="h-5 w-5 text-[#3B82F6]" />
+            <div className="text-sm text-[var(--ft-muted)]">Students Referred</div>
+            <Users className="h-5 w-5 text-[var(--ft-red)]" />
           </div>
-          <div className="text-3xl font-bold text-[#E5E7EB] font-mono">{stats?.total_students_referred ?? 0}</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] font-mono">{stats?.total_students_referred ?? 0}</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
           <div className="flex items-center justify-between mb-2">
-            <div className="text-sm text-[#9CA3AF]">Courses Purchased</div>
+            <div className="text-sm text-[var(--ft-muted)]">Courses Purchased</div>
             <Tag className="h-5 w-5 text-[#A855F7]" />
           </div>
-          <div className="text-3xl font-bold text-[#E5E7EB] font-mono">{stats?.total_courses_purchased ?? 0}</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] font-mono">{stats?.total_courses_purchased ?? 0}</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
           <div className="flex items-center justify-between mb-2">
-            <div className="text-sm text-[#9CA3AF]">Revenue Generated</div>
-            <TrendingUp className="h-5 w-5 text-[#00D1B2]" />
+            <div className="text-sm text-[var(--ft-muted)]">Revenue Generated</div>
+            <TrendingUp className="h-5 w-5 text-[var(--ft-red)]" />
           </div>
-          <div className="text-3xl font-bold text-[#00D1B2] font-mono">₹{(stats?.total_revenue_generated ?? 0).toLocaleString('en-IN')}</div>
+          <div className="text-3xl font-medium text-[var(--ft-red)] font-mono">₹{(stats?.total_revenue_generated ?? 0).toLocaleString('en-IN')}</div>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Discount Rate</div>
-          <div className="text-3xl font-bold text-[#E5E7EB] font-mono">{profile?.discount_percentage ?? 0}%</div>
-          <div className="text-xs text-[#9CA3AF]">for referred students</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Discount Rate</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] font-mono">{profile?.discount_percentage ?? 0}%</div>
+          <div className="text-xs text-[var(--ft-muted)]">for referred students</div>
         </div>
       </div>
 
       {/* Referral Code + Profile */}
       <div className="grid grid-cols-3 gap-6 mb-8">
-        <div className="col-span-1 bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-[#E5E7EB] mb-4">Your Referral Code</h2>
-          <div className="bg-[#0F172A] border border-[#334155] rounded-lg p-4 mb-4 flex items-center justify-between">
-            <span className="text-2xl font-bold font-mono text-[#00D1B2]">{profile?.referral_code}</span>
-            <Button onClick={copyReferralCode} variant="outline" className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#1F2937] h-8 text-xs">
-              {copied ? <CheckCircle2 className="h-4 w-4 text-[#10B981]" /> : <Copy className="h-4 w-4" />}
+        <div className="col-span-1 bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-[var(--ft-charcoal)] mb-4">Your Referral Code</h2>
+          <div className="bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg p-4 mb-4 flex items-center justify-between">
+            <span className="text-2xl font-medium font-mono text-[var(--ft-red)]">{profile?.referral_code}</span>
+            <Button onClick={copyReferralCode} variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)] h-8 text-xs">
+              {copied ? <CheckCircle2 className="h-4 w-4 text-[var(--ft-success)]" /> : <Copy className="h-4 w-4" />}
             </Button>
           </div>
           <div className="space-y-3">
             <div>
-              <div className="text-xs text-[#9CA3AF] mb-1">Region</div>
-              <div className="text-sm text-[#E5E7EB]">{profile?.region}</div>
+              <div className="text-xs text-[var(--ft-muted)] mb-1">Region</div>
+              <div className="text-sm text-[var(--ft-charcoal)]">{profile?.region}</div>
             </div>
             <div>
-              <div className="text-xs text-[#9CA3AF] mb-1">Email</div>
-              <div className="text-sm text-[#E5E7EB]">{profile?.user_email}</div>
+              <div className="text-xs text-[var(--ft-muted)] mb-1">Email</div>
+              <div className="text-sm text-[var(--ft-charcoal)]">{profile?.user_email}</div>
             </div>
             <div>
-              <div className="text-xs text-[#9CA3AF] mb-1">Member Since</div>
-              <div className="text-sm text-[#E5E7EB]">{profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : '—'}</div>
+              <div className="text-xs text-[var(--ft-muted)] mb-1">Member Since</div>
+              <div className="text-sm text-[var(--ft-charcoal)]">{profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : '—'}</div>
             </div>
           </div>
         </div>
 
         {/* Referrals Table */}
-        <div className="col-span-2 bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-[#E5E7EB] mb-4">Referred Students</h2>
+        <div className="col-span-2 bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-[var(--ft-charcoal)] mb-4">Referred Students</h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#334155]">
-                  <th className="text-left text-xs text-[#9CA3AF] pb-3">Student</th>
-                  <th className="text-left text-xs text-[#9CA3AF] pb-3">Email</th>
-                  <th className="text-left text-xs text-[#9CA3AF] pb-3">Course</th>
-                  <th className="text-right text-xs text-[#9CA3AF] pb-3">Date</th>
+                <tr className="border-b border-[var(--ft-border)]">
+                  <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Student</th>
+                  <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Email</th>
+                  <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Course</th>
+                  <th className="text-right text-xs text-[var(--ft-muted)] pb-3">Date</th>
                 </tr>
               </thead>
               <tbody>
                 {referrals.length === 0 ? (
-                  <tr><td colSpan={4} className="py-8 text-center text-sm text-[#9CA3AF]">No referrals yet. Share your code to get started!</td></tr>
+                  <tr><td colSpan={4} className="py-8 text-center text-sm text-[var(--ft-muted)]">No referrals yet. Share your code to get started!</td></tr>
                 ) : (
                   referrals.map((ref) => (
-                    <tr key={ref.id} className="border-b border-[#334155]">
-                      <td className="py-4 text-sm text-[#E5E7EB]">{ref.student_name || '—'}</td>
-                      <td className="py-4 text-sm text-[#9CA3AF]">{ref.student_email || '—'}</td>
-                      <td className="py-4 text-sm text-[#9CA3AF]">{ref.course_title || `Course #${ref.course_id}`}</td>
-                      <td className="py-4 text-right text-sm text-[#9CA3AF]">{new Date(ref.created_at).toLocaleDateString()}</td>
+                    <tr key={ref.id} className="border-b border-[var(--ft-border)]">
+                      <td className="py-4 text-sm text-[var(--ft-charcoal)]">{ref.student_name || '—'}</td>
+                      <td className="py-4 text-sm text-[var(--ft-muted)]">{ref.student_email || '—'}</td>
+                      <td className="py-4 text-sm text-[var(--ft-muted)]">{ref.course_title || `Course #${ref.course_id}`}</td>
+                      <td className="py-4 text-right text-sm text-[var(--ft-muted)]">{new Date(ref.created_at).toLocaleDateString()}</td>
                     </tr>
                   ))
                 )}

@@ -91,7 +91,7 @@ export function AdminCourseManagement() {
     let finalVideoUrl = lessonForm.content_url;
 
     try {
-      if ((lessonForm.content_type === 'video' || lessonForm.content_type === 'audio') && lessonFile) {
+      if ((lessonForm.content_type === 'video' || lessonForm.content_type === 'audio' || lessonForm.content_type === 'pdf') && lessonFile) {
         const formData = new FormData();
         formData.append('file', lessonFile);
         const uploadRes: any = await api.post('/admin/upload', formData);
@@ -120,7 +120,7 @@ export function AdminCourseManagement() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-[#00D1B2] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[var(--ft-red)] animate-spin" />
       </div>
     );
   }
@@ -128,22 +128,22 @@ export function AdminCourseManagement() {
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#E5E7EB] mb-1">Course Management</h1>
-        <p className="text-sm text-[#9CA3AF]">Manage courses, modules, and lessons</p>
+        <h1 className="text-2xl font-medium text-[var(--ft-charcoal)] mb-1">Course Management</h1>
+        <p className="text-sm text-[var(--ft-muted)]">Manage courses, modules, and lessons</p>
       </div>
 
       {error && (
-        <div className="mb-6 text-red-400 text-sm p-4 bg-red-500/10 rounded-lg border border-red-500/20">{error}
+        <div className="mb-6 text-red-400 text-sm p-4 bg-[var(--ft-danger)]/10 rounded-lg border border-[var(--ft-danger)]/20">{error}
           <button onClick={() => setError('')} className="ml-4 underline text-xs">dismiss</button>
         </div>
       )}
 
       <div className="grid grid-cols-3 gap-6">
         {/* Courses List */}
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
-            <BookOpen className="h-5 w-5 text-[#00D1B2]" />
-            <h2 className="text-sm font-semibold text-[#E5E7EB]">Courses ({courses.length})</h2>
+            <BookOpen className="h-5 w-5 text-[var(--ft-red)]" />
+            <h2 className="text-sm font-semibold text-[var(--ft-charcoal)]">Courses ({courses.length})</h2>
           </div>
           <div className="space-y-2">
             {courses.map((course) => (
@@ -152,12 +152,12 @@ export function AdminCourseManagement() {
                 onClick={() => viewCourseDetail(course.id)}
                 className={`w-full text-left p-3 rounded-lg border transition-all ${
                   selectedCourse?.id === course.id
-                    ? 'border-[#00D1B2] bg-[#00D1B2]/10'
-                    : 'border-[#334155] bg-[#1F2937] hover:border-[#00D1B2]/50'
+                    ? 'border-[var(--ft-red)] bg-[var(--ft-red)]/10'
+                    : 'border-[var(--ft-border)] bg-[var(--ft-surface)] hover:border-[var(--ft-red)]/50'
                 }`}
               >
-                <div className="text-sm text-[#E5E7EB] mb-1">{course.title}</div>
-                <div className="flex items-center gap-2 text-xs text-[#9CA3AF]">
+                <div className="text-sm text-[var(--ft-charcoal)] mb-1">{course.title}</div>
+                <div className="flex items-center gap-2 text-xs text-[var(--ft-muted)]">
                   <span className="capitalize">{course.difficulty_level}</span>
                   <span>•</span>
                   <span className="font-mono">₹{course.price.toLocaleString('en-IN')}</span>
@@ -168,43 +168,43 @@ export function AdminCourseManagement() {
         </div>
 
         {/* Course Detail — Modules & Lessons */}
-        <div className="col-span-2 bg-[#111827] border border-[#334155] rounded-lg p-6">
+        <div className="col-span-2 bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
           {detailLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 text-[#00D1B2] animate-spin" />
+              <Loader2 className="h-6 w-6 text-[var(--ft-red)] animate-spin" />
             </div>
           ) : selectedCourse ? (
             <>
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-lg font-semibold text-[#E5E7EB]">{selectedCourse.title}</h2>
-                  <p className="text-xs text-[#9CA3AF]">Course ID: {selectedCourse.id}</p>
+                  <h2 className="text-lg font-semibold text-[var(--ft-charcoal)]">{selectedCourse.title}</h2>
+                  <p className="text-xs text-[var(--ft-muted)]">Course ID: {selectedCourse.id}</p>
                 </div>
-                <Button onClick={() => setIsAddingModule(true)} className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90 h-8 text-xs">
+                <Button onClick={() => setIsAddingModule(true)} className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90 h-8 text-xs">
                   <Plus className="h-3 w-3 mr-1" /> Add Module
                 </Button>
               </div>
 
               {/* Add Module Form */}
               {isAddingModule && (
-                <form onSubmit={handleAddModule} className="bg-[#1F2937] border border-[#334155] rounded-lg p-4 mb-4">
+                <form onSubmit={handleAddModule} className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4 mb-4">
                   <div className="grid grid-cols-3 gap-3 mb-3">
                     <input required type="text" value={moduleForm.title}
                       onChange={(e) => setModuleForm({ ...moduleForm, title: e.target.value })}
-                      className="col-span-2 bg-[#0F172A] border border-[#334155] rounded-lg px-3 py-2 text-sm text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+                      className="col-span-2 bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg px-3 py-2 text-sm text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
                       placeholder="Module title"
                     />
                     <input required type="number" min={1} value={moduleForm.order}
                       onChange={(e) => setModuleForm({ ...moduleForm, order: Number(e.target.value) })}
-                      className="bg-[#0F172A] border border-[#334155] rounded-lg px-3 py-2 text-sm text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+                      className="bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg px-3 py-2 text-sm text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
                       placeholder="Order"
                     />
                   </div>
                   <div className="flex gap-2">
-                    <Button type="submit" disabled={moduleLoading} className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90 h-8 text-xs">
+                    <Button type="submit" disabled={moduleLoading} className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90 h-8 text-xs">
                       {moduleLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Save Module'}
                     </Button>
-                    <Button type="button" onClick={() => setIsAddingModule(false)} variant="outline" className="border-[#334155] bg-transparent text-[#9CA3AF] h-8 text-xs">
+                    <Button type="button" onClick={() => setIsAddingModule(false)} variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-muted)] h-8 text-xs">
                       Cancel
                     </Button>
                   </div>
@@ -214,50 +214,51 @@ export function AdminCourseManagement() {
               {/* Modules List */}
               <div className="space-y-4">
                 {(selectedCourse.modules || []).length === 0 ? (
-                  <div className="text-center text-sm text-[#9CA3AF] py-8">No modules yet. Add one above.</div>
+                  <div className="text-center text-sm text-[var(--ft-muted)] py-8">No modules yet. Add one above.</div>
                 ) : (
                   (selectedCourse.modules || []).map((mod) => (
-                    <div key={mod.id} className="bg-[#1F2937] border border-[#334155] rounded-lg p-4">
+                    <div key={mod.id} className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <Layers className="h-4 w-4 text-[#3B82F6]" />
-                          <span className="text-sm font-medium text-[#E5E7EB]">{mod.title}</span>
-                          <span className="text-xs text-[#9CA3AF]">#{mod.order}</span>
+                          <Layers className="h-4 w-4 text-[var(--ft-red)]" />
+                          <span className="text-sm font-medium text-[var(--ft-charcoal)]">{mod.title}</span>
+                          <span className="text-xs text-[var(--ft-muted)]">#{mod.order}</span>
                         </div>
                         <Button onClick={() => setIsAddingLesson(isAddingLesson === mod.id ? null : mod.id)}
-                          variant="outline" className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#0F172A] h-7 text-xs">
+                          variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-bg)] h-7 text-xs">
                           <Plus className="h-3 w-3 mr-1" /> Lesson
                         </Button>
                       </div>
 
                       {/* Add Lesson Form */}
                       {isAddingLesson === mod.id && (
-                        <form onSubmit={(e) => handleAddLesson(e, mod.id)} className="bg-[#0F172A] border border-[#334155] rounded-lg p-3 mb-3">
+                        <form onSubmit={(e) => handleAddLesson(e, mod.id)} className="bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg p-3 mb-3">
                           <div className="grid grid-cols-3 gap-2 mb-2">
                             <input required type="text" value={lessonForm.title}
                               onChange={(e) => setLessonForm({ ...lessonForm, title: e.target.value })}
-                              className="col-span-2 bg-[#111827] border border-[#334155] rounded px-3 py-1.5 text-xs text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+                              className="col-span-2 bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded px-3 py-1.5 text-xs text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
                               placeholder="Lesson title"
                             />
                             <select value={lessonForm.content_type}
                               onChange={(e) => setLessonForm({ ...lessonForm, content_type: e.target.value })}
-                              className="bg-[#111827] border border-[#334155] rounded px-2 py-1.5 text-xs text-[#E5E7EB]"
+                              className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded px-2 py-1.5 text-xs text-[var(--ft-charcoal)]"
                             >
                               <option value="text">Text</option>
                               <option value="video">Video</option>
                               <option value="audio">Audio</option>
+                              <option value="pdf">PDF</option>
                             </select>
                           </div>
-                          {(lessonForm.content_type === 'video' || lessonForm.content_type === 'audio') && (
+                          {(lessonForm.content_type === 'video' || lessonForm.content_type === 'audio' || lessonForm.content_type === 'pdf') && (
                             <div className="mb-2">
-                              <input type="file" accept={lessonForm.content_type === 'video' ? 'video/*' : 'audio/*'}
+                              <input type="file" accept={lessonForm.content_type === 'video' ? 'video/*' : lessonForm.content_type === 'audio' ? 'audio/*' : '.pdf'}
                                 onChange={(e) => setLessonFile(e.target.files ? e.target.files[0] : null)}
-                                className="w-full bg-[#111827] border border-[#334155] rounded px-3 py-1.5 text-xs text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+                                className="w-full bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded px-3 py-1.5 text-xs text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
                               />
-                              <p className="text-[10px] text-[#9CA3AF] mt-1">Or provide a link instead (optional if file uploaded)</p>
+                              <p className="text-[10px] text-[var(--ft-muted)] mt-1">Or provide a link instead (optional if file uploaded)</p>
                               <input type="text" value={lessonForm.content_url}
                                 onChange={(e) => setLessonForm({ ...lessonForm, content_url: e.target.value })}
-                                className="w-full mt-1 bg-[#111827] border border-[#334155] rounded px-3 py-1.5 text-xs text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+                                className="w-full mt-1 bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded px-3 py-1.5 text-xs text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
                                 placeholder={`External ${lessonForm.content_type} link...`}
                               />
                             </div>
@@ -266,16 +267,16 @@ export function AdminCourseManagement() {
                             <div className="mb-2">
                               <textarea value={lessonForm.text_content}
                                 onChange={(e) => setLessonForm({ ...lessonForm, text_content: e.target.value })}
-                                className="w-full bg-[#111827] border border-[#334155] rounded px-3 py-1.5 text-xs text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2] min-h-[60px]"
+                                className="w-full bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded px-3 py-1.5 text-xs text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)] min-h-[60px]"
                                 placeholder="Text content..."
                               />
                             </div>
                           )}
                           <div className="flex gap-2">
-                            <Button type="submit" disabled={lessonLoading} className="bg-[#3B82F6] text-white hover:bg-[#3B82F6]/90 h-7 text-xs">
+                            <Button type="submit" disabled={lessonLoading} className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90 h-7 text-xs">
                               {lessonLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Add'}
                             </Button>
-                            <Button type="button" onClick={() => setIsAddingLesson(null)} variant="outline" className="border-[#334155] bg-transparent text-[#9CA3AF] h-7 text-xs">
+                            <Button type="button" onClick={() => setIsAddingLesson(null)} variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-muted)] h-7 text-xs">
                               Cancel
                             </Button>
                           </div>
@@ -286,10 +287,10 @@ export function AdminCourseManagement() {
                       {(mod.lessons || []).length > 0 && (
                         <div className="space-y-1 mt-2">
                           {(mod.lessons || []).map((lesson) => (
-                            <div key={lesson.id} className="flex items-center gap-2 p-2 rounded bg-[#0F172A] text-xs">
-                              <FileText className="h-3 w-3 text-[#9CA3AF]" />
-                              <span className="text-[#E5E7EB]">{lesson.title}</span>
-                              <span className="text-[#9CA3AF] capitalize ml-auto">{lesson.content_type}</span>
+                            <div key={lesson.id} className="flex items-center gap-2 p-2 rounded bg-[var(--ft-bg)] text-xs">
+                              <FileText className="h-3 w-3 text-[var(--ft-muted)]" />
+                              <span className="text-[var(--ft-charcoal)]">{lesson.title}</span>
+                              <span className="text-[var(--ft-muted)] capitalize ml-auto">{lesson.content_type}</span>
                             </div>
                           ))}
                         </div>
@@ -300,7 +301,7 @@ export function AdminCourseManagement() {
               </div>
             </>
           ) : (
-            <div className="text-center text-sm text-[#9CA3AF] py-12">
+            <div className="text-center text-sm text-[var(--ft-muted)] py-12">
               Select a course to view and manage modules & lessons
             </div>
           )}

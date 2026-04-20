@@ -61,7 +61,7 @@ export function AdminDistributors() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-[#00D1B2] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[var(--ft-red)] animate-spin" />
       </div>
     );
   }
@@ -71,56 +71,56 @@ export function AdminDistributors() {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-1">
           <Users className="h-8 w-8 text-[#A855F7]" />
-          <h1 className="text-2xl font-bold text-[#E5E7EB]">Distributor Management</h1>
+          <h1 className="text-2xl font-medium text-[var(--ft-charcoal)]">Distributor Management</h1>
         </div>
-        <p className="text-sm text-[#9CA3AF]">View distributor profiles, referral codes, and performance stats</p>
+        <p className="text-sm text-[var(--ft-muted)]">View distributor profiles, referral codes, and performance stats</p>
       </div>
 
       {error && (
-        <div className="mb-6 text-red-400 text-sm p-4 bg-red-500/10 rounded-lg border border-red-500/20">{error}</div>
+        <div className="mb-6 text-red-400 text-sm p-4 bg-[var(--ft-danger)]/10 rounded-lg border border-[var(--ft-danger)]/20">{error}</div>
       )}
 
       <div className="grid grid-cols-2 gap-6 mb-8">
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Total Distributors</div>
-          <div className="text-3xl font-bold text-[#E5E7EB] font-mono">{distributors.length}</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Total Distributors</div>
+          <div className="text-3xl font-medium text-[var(--ft-charcoal)] font-mono">{distributors.length}</div>
         </div>
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <div className="text-sm text-[#9CA3AF] mb-2">Regions Covered</div>
-          <div className="text-3xl font-bold text-[#A855F7] font-mono">{new Set(distributors.map(d => d.region)).size}</div>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <div className="text-sm text-[var(--ft-muted)] mb-2">Regions Covered</div>
+          <div className="text-3xl font-medium text-[#A855F7] font-mono">{new Set(distributors.map(d => d.region)).size}</div>
         </div>
       </div>
 
       <div className="grid grid-cols-3 gap-6">
         {/* Distributors List */}
-        <div className="col-span-2 bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-[#E5E7EB] mb-4">All Distributors</h2>
+        <div className="col-span-2 bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-[var(--ft-charcoal)] mb-4">All Distributors</h2>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-[#334155]">
-                  <th className="text-left text-xs text-[#9CA3AF] pb-3">Name</th>
-                  <th className="text-left text-xs text-[#9CA3AF] pb-3">Region</th>
-                  <th className="text-left text-xs text-[#9CA3AF] pb-3">Referral Code</th>
-                  <th className="text-center text-xs text-[#9CA3AF] pb-3">Discount</th>
-                  <th className="text-right text-xs text-[#9CA3AF] pb-3">Actions</th>
+                <tr className="border-b border-[var(--ft-border)]">
+                  <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Name</th>
+                  <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Region</th>
+                  <th className="text-left text-xs text-[var(--ft-muted)] pb-3">Referral Code</th>
+                  <th className="text-center text-xs text-[var(--ft-muted)] pb-3">Discount</th>
+                  <th className="text-right text-xs text-[var(--ft-muted)] pb-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {distributors.length === 0 ? (
-                  <tr><td colSpan={5} className="py-8 text-center text-sm text-[#9CA3AF]">No distributors found</td></tr>
+                  <tr><td colSpan={5} className="py-8 text-center text-sm text-[var(--ft-muted)]">No distributors found</td></tr>
                 ) : (
                   distributors.map((d) => (
-                    <tr key={d.id} className="border-b border-[#334155] hover:bg-[#1F2937] transition-colors">
+                    <tr key={d.id} className="border-b border-[var(--ft-border)] hover:bg-[var(--ft-surface)] transition-colors">
                       <td className="py-4">
-                        <div className="text-sm text-[#E5E7EB]">{d.user_name || '—'}</div>
-                        <div className="text-xs text-[#9CA3AF]">{d.user_email}</div>
+                        <div className="text-sm text-[var(--ft-charcoal)]">{d.user_name || '—'}</div>
+                        <div className="text-xs text-[var(--ft-muted)]">{d.user_email}</div>
                       </td>
-                      <td className="py-4 text-sm text-[#9CA3AF]">{d.region}</td>
-                      <td className="py-4 text-sm font-mono text-[#00D1B2]">{d.referral_code}</td>
-                      <td className="py-4 text-center text-sm font-mono text-[#E5E7EB]">{d.discount_percentage}%</td>
+                      <td className="py-4 text-sm text-[var(--ft-muted)]">{d.region}</td>
+                      <td className="py-4 text-sm font-mono text-[var(--ft-red)]">{d.referral_code}</td>
+                      <td className="py-4 text-center text-sm font-mono text-[var(--ft-charcoal)]">{d.discount_percentage}%</td>
                       <td className="py-4 text-right">
-                        <Button onClick={() => viewStats(d.id)} variant="outline" className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#1F2937] h-8 text-xs">
+                        <Button onClick={() => viewStats(d.id)} variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)] h-8 text-xs">
                           View Stats <ChevronRight className="h-3 w-3 ml-1" />
                         </Button>
                       </td>
@@ -133,38 +133,38 @@ export function AdminDistributors() {
         </div>
 
         {/* Stats Panel */}
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-6">
-          <h2 className="text-sm font-semibold text-[#E5E7EB] mb-4">Distributor Stats</h2>
+        <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6">
+          <h2 className="text-sm font-semibold text-[var(--ft-charcoal)] mb-4">Distributor Stats</h2>
           {statsLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 text-[#00D1B2] animate-spin" />
+              <Loader2 className="h-6 w-6 text-[var(--ft-red)] animate-spin" />
             </div>
           ) : selectedStats ? (
             <div className="space-y-4">
-              <div className="text-sm text-[#E5E7EB] font-medium mb-3">{selectedStats.user_name || 'Distributor'}</div>
-              <div className="bg-[#1F2937] border border-[#334155] rounded-lg p-4">
-                <div className="text-xs text-[#9CA3AF] mb-1">Region</div>
-                <div className="text-sm text-[#E5E7EB]">{selectedStats.region}</div>
+              <div className="text-sm text-[var(--ft-charcoal)] font-medium mb-3">{selectedStats.user_name || 'Distributor'}</div>
+              <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+                <div className="text-xs text-[var(--ft-muted)] mb-1">Region</div>
+                <div className="text-sm text-[var(--ft-charcoal)]">{selectedStats.region}</div>
               </div>
-              <div className="bg-[#1F2937] border border-[#334155] rounded-lg p-4">
-                <div className="text-xs text-[#9CA3AF] mb-1">Referral Code</div>
-                <div className="text-sm font-mono text-[#00D1B2]">{selectedStats.referral_code}</div>
+              <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+                <div className="text-xs text-[var(--ft-muted)] mb-1">Referral Code</div>
+                <div className="text-sm font-mono text-[var(--ft-red)]">{selectedStats.referral_code}</div>
               </div>
-              <div className="bg-[#1F2937] border border-[#334155] rounded-lg p-4">
-                <div className="text-xs text-[#9CA3AF] mb-1">Students Referred</div>
-                <div className="text-2xl font-bold font-mono text-[#E5E7EB]">{selectedStats.total_students_referred}</div>
+              <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+                <div className="text-xs text-[var(--ft-muted)] mb-1">Students Referred</div>
+                <div className="text-2xl font-medium font-mono text-[var(--ft-charcoal)]">{selectedStats.total_students_referred}</div>
               </div>
-              <div className="bg-[#1F2937] border border-[#334155] rounded-lg p-4">
-                <div className="text-xs text-[#9CA3AF] mb-1">Courses Purchased</div>
-                <div className="text-2xl font-bold font-mono text-[#E5E7EB]">{selectedStats.total_courses_purchased}</div>
+              <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+                <div className="text-xs text-[var(--ft-muted)] mb-1">Courses Purchased</div>
+                <div className="text-2xl font-medium font-mono text-[var(--ft-charcoal)]">{selectedStats.total_courses_purchased}</div>
               </div>
-              <div className="bg-[#1F2937] border border-[#334155] rounded-lg p-4">
-                <div className="text-xs text-[#9CA3AF] mb-1">Revenue Generated</div>
-                <div className="text-2xl font-bold font-mono text-[#00D1B2]">₹{selectedStats.total_revenue_generated.toLocaleString('en-IN')}</div>
+              <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-4">
+                <div className="text-xs text-[var(--ft-muted)] mb-1">Revenue Generated</div>
+                <div className="text-2xl font-medium font-mono text-[var(--ft-red)]">₹{selectedStats.total_revenue_generated.toLocaleString('en-IN')}</div>
               </div>
             </div>
           ) : (
-            <div className="text-center text-sm text-[#9CA3AF] py-12">
+            <div className="text-center text-sm text-[var(--ft-muted)] py-12">
               Select a distributor to view stats
             </div>
           )}

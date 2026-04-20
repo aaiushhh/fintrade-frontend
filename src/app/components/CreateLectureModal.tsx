@@ -84,12 +84,12 @@ export function CreateLectureModal({ isOpen, onClose, onSuccess }: CreateLecture
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="bg-[#111827] border border-[#334155] rounded-xl w-full max-w-lg overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between p-6 border-b border-[#334155]">
-          <h2 className="text-xl font-bold text-[#E5E7EB]">Schedule Lecture</h2>
+      <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-xl w-full max-w-lg overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between p-6 border-b border-[var(--ft-border)]">
+          <h2 className="text-xl font-medium text-[var(--ft-charcoal)]">Schedule Lecture</h2>
           <button 
             onClick={onClose}
-            className="text-[#9CA3AF] hover:text-[#E5E7EB] transition-colors"
+            className="text-[var(--ft-muted)] hover:text-[var(--ft-charcoal)] transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -97,33 +97,33 @@ export function CreateLectureModal({ isOpen, onClose, onSuccess }: CreateLecture
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {error && (
-            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+            <div className="p-3 bg-[var(--ft-danger)]/10 border border-[var(--ft-danger)]/20 rounded-lg text-red-400 text-sm">
               {error}
             </div>
           )}
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#E5E7EB]">Lecture Title</label>
+            <label className="text-sm font-medium text-[var(--ft-charcoal)]">Lecture Title</label>
             <input 
               required
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full bg-[#0F172A] border border-[#334155] rounded-lg px-4 py-2.5 text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+              className="w-full bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg px-4 py-2.5 text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
               placeholder="e.g. Introduction to Options Pricing"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#E5E7EB]">Course</label>
+            <label className="text-sm font-medium text-[var(--ft-charcoal)]">Course</label>
             {loadingCourses ? (
-              <div className="text-[#9CA3AF] text-sm">Loading courses...</div>
+              <div className="text-[var(--ft-muted)] text-sm">Loading courses...</div>
             ) : (
               <select 
                 required
                 value={formData.course_id}
                 onChange={(e) => setFormData({ ...formData, course_id: e.target.value })}
-                className="w-full bg-[#0F172A] border border-[#334155] rounded-lg px-4 py-2.5 text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+                className="w-full bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg px-4 py-2.5 text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
               >
                 {courses.length === 0 && <option value="">No courses available</option>}
                 {courses.map(c => (
@@ -135,53 +135,53 @@ export function CreateLectureModal({ isOpen, onClose, onSuccess }: CreateLecture
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[#E5E7EB]">Date & Time</label>
+              <label className="text-sm font-medium text-[var(--ft-charcoal)]">Date & Time</label>
               <input 
                 required
                 type="datetime-local"
                 value={formData.scheduled_at}
                 onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
-                className="w-full bg-[#0F172A] border border-[#334155] rounded-lg px-4 py-2.5 text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+                className="w-full bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg px-4 py-2.5 text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[#E5E7EB]">Duration (minutes)</label>
+              <label className="text-sm font-medium text-[var(--ft-charcoal)]">Duration (minutes)</label>
               <input 
                 required
                 type="number"
                 min="1"
                 value={formData.duration_minutes}
                 onChange={(e) => setFormData({ ...formData, duration_minutes: Number(e.target.value) })}
-                className="w-full bg-[#0F172A] border border-[#334155] rounded-lg px-4 py-2.5 text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+                className="w-full bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg px-4 py-2.5 text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#E5E7EB]">Meeting Link (Optional)</label>
+            <label className="text-sm font-medium text-[var(--ft-charcoal)]">Meeting Link (Optional)</label>
             <input 
               type="url"
               value={formData.meeting_link}
               onChange={(e) => setFormData({ ...formData, meeting_link: e.target.value })}
-              className="w-full bg-[#0F172A] border border-[#334155] rounded-lg px-4 py-2.5 text-[#E5E7EB] focus:outline-none focus:border-[#00D1B2]"
+              className="w-full bg-[var(--ft-bg)] border border-[var(--ft-border)] rounded-lg px-4 py-2.5 text-[var(--ft-charcoal)] focus:outline-none focus:border-[var(--ft-red)]"
               placeholder="https://zoom.us/j/..."
             />
           </div>
 
-          <div className="pt-6 flex items-center justify-end gap-3 border-t border-[#334155] mt-6">
+          <div className="pt-6 flex items-center justify-end gap-3 border-t border-[var(--ft-border)] mt-6">
             <Button 
               type="button" 
               onClick={onClose}
               variant="outline" 
-              className="border-[#334155] bg-transparent text-[#9CA3AF] hover:text-[#E5E7EB] hover:bg-[#1F2937]"
+              className="border-[var(--ft-border)] bg-transparent text-[var(--ft-muted)] hover:text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)]"
             >
               Cancel
             </Button>
             <Button 
               type="submit" 
               disabled={loading || loadingCourses || courses.length === 0}
-              className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90 min-w-[100px]"
+              className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90 min-w-[100px]"
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Schedule Lecture'}
             </Button>

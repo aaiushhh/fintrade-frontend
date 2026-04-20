@@ -25,7 +25,6 @@ export function SignupPage() {
     try {
       const response = await api.post('/auth/register', { email, full_name: name, password, phone });
       const rawUser = response.user;
-      // Backend returns roles: [{id, name}] — extract flat role string
       const role = rawUser.role || (Array.isArray(rawUser.roles) && rawUser.roles.length > 0 ? rawUser.roles[0].name : 'student');
       const normalizedUser = { ...rawUser, role };
       login(response.access_token, normalizedUser);
@@ -42,81 +41,49 @@ export function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-[var(--ft-bg)] flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <TrendingUp className="h-8 w-8 text-[#00D1B2]" />
-            <span className="text-2xl font-bold text-[#E5E7EB]">FinTrade</span>
+            <TrendingUp className="h-8 w-8 text-[var(--ft-red)]" />
+            <span className="text-2xl font-medium text-[var(--ft-charcoal)]">FinTrade</span>
           </div>
-          <h1 className="text-2xl font-bold text-[#E5E7EB] mb-2">Create Account</h1>
-          <p className="text-sm text-[#9CA3AF]">Start your trading education journey</p>
+          <h1 className="text-2xl font-medium text-[var(--ft-charcoal)] mb-2">Create Account</h1>
+          <p className="text-sm text-[var(--ft-muted)]">Start your trading education journey</p>
         </div>
 
-        <div className="bg-[#111827] border border-[#334155] rounded-lg p-8">
+        <div className="ft-card p-8">
           <form className="space-y-5" onSubmit={handleSignup}>
-            {error && <div className="text-red-500 text-sm p-3 bg-red-500/10 rounded border border-red-500/20">{error}</div>}
+            {error && <div className="text-[var(--ft-danger)] text-sm p-3 bg-[var(--ft-danger)]/10 rounded-lg border border-[var(--ft-danger)]/20">{error}</div>}
             <div>
-              <Label htmlFor="name" className="text-[#E5E7EB]">Full Name</Label>
-              <Input
-                id="name"
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Rahul Sharma"
-                className="mt-2 bg-[#1F2937] border-[#334155] text-[#E5E7EB] placeholder:text-[#9CA3AF]"
-              />
+              <Label htmlFor="name" className="text-[var(--ft-slate)]">Full Name</Label>
+              <Input id="name" type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Rahul Sharma" className="mt-2 bg-[var(--ft-surface)] border-[var(--ft-border)] text-[var(--ft-charcoal)] placeholder:text-[var(--ft-muted)]" />
             </div>
 
             <div>
-              <Label htmlFor="email" className="text-[#E5E7EB]">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="rahul.sharma@email.com"
-                className="mt-2 bg-[#1F2937] border-[#334155] text-[#E5E7EB] placeholder:text-[#9CA3AF]"
-              />
+              <Label htmlFor="email" className="text-[var(--ft-slate)]">Email Address</Label>
+              <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="rahul.sharma@email.com" className="mt-2 bg-[var(--ft-surface)] border-[var(--ft-border)] text-[var(--ft-charcoal)] placeholder:text-[var(--ft-muted)]" />
             </div>
 
             <div>
-              <Label htmlFor="phone" className="text-[#E5E7EB]">Phone Number</Label>
-              <Input
-                id="phone"
-                type="tel"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91 98765 43210"
-                className="mt-2 bg-[#1F2937] border-[#334155] text-[#E5E7EB] placeholder:text-[#9CA3AF]"
-              />
+              <Label htmlFor="phone" className="text-[var(--ft-slate)]">Phone Number</Label>
+              <Input id="phone" type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 98765 43210" className="mt-2 bg-[var(--ft-surface)] border-[var(--ft-border)] text-[var(--ft-charcoal)] placeholder:text-[var(--ft-muted)]" />
             </div>
 
             <div>
-              <Label htmlFor="password" className="text-[#E5E7EB]">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Create a strong password"
-                className="mt-2 bg-[#1F2937] border-[#334155] text-[#E5E7EB] placeholder:text-[#9CA3AF]"
-              />
+              <Label htmlFor="password" className="text-[var(--ft-slate)]">Password</Label>
+              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Create a strong password" className="mt-2 bg-[var(--ft-surface)] border-[var(--ft-border)] text-[var(--ft-charcoal)] placeholder:text-[var(--ft-muted)]" />
             </div>
 
-            <Button disabled={loading} type="submit" className="w-full bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90 h-11 mt-6">
+            <Button disabled={loading} type="submit" className="w-full ft-btn-primary h-11 mt-6 text-white">
               {loading ? 'Creating Account...' : 'Create Account'}
             </Button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-[#9CA3AF]">
+            <p className="text-sm text-[var(--ft-muted)]">
               Already have an account?{' '}
-              <Link to="/login" className="text-[#00D1B2] hover:underline">
+              <Link to="/login" className="text-[var(--ft-red)] hover:underline">
                 Login
               </Link>
             </p>

@@ -157,32 +157,32 @@ export function ExamInterface() {
     navigate('/login');
   };
 
-  if (loading) return <div className="min-h-screen bg-[#0F172A] flex items-center justify-center text-white">Loading exam...</div>;
+  if (loading) return <div className="min-h-screen bg-[var(--ft-bg)] flex items-center justify-center text-white">Loading exam...</div>;
 
   return (
-    <div className="min-h-screen bg-[#0F172A]">
+    <div className="min-h-screen bg-[var(--ft-bg)]">
       {/* Header */}
-      <nav className="border-b border-[#334155] bg-[#111827]">
+      <nav className="border-b border-[var(--ft-border)] bg-[var(--ft-surface)]">
         <div className="mx-auto max-w-7xl px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-6 w-6 text-[#00D1B2]" />
-              <span className="text-xl font-bold text-[#E5E7EB]">FinTrade</span>
-              <span className="text-sm text-[#9CA3AF] ml-4">Entrance Exam</span>
+              <TrendingUp className="h-6 w-6 text-[var(--ft-red)]" />
+              <span className="text-xl font-medium text-[var(--ft-charcoal)]">FinTrade</span>
+              <span className="text-sm text-[var(--ft-muted)] ml-4">Entrance Exam</span>
             </div>
             
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
-                <Camera className="h-4 w-4 text-[#10B981]" />
-                <span className="text-sm text-[#9CA3AF]">Camera Active</span>
+                <Camera className="h-4 w-4 text-[var(--ft-success)]" />
+                <span className="text-sm text-[var(--ft-muted)]">Camera Active</span>
               </div>
               
-              <div className="flex items-center gap-2 bg-[#1F2937] px-4 py-2 rounded border border-[#334155]">
-                <Clock className="h-4 w-4 text-[#00D1B2]" />
-                <span className="text-sm font-mono text-[#E5E7EB]">{formatTime(timeRemaining)}</span>
+              <div className="flex items-center gap-2 bg-[var(--ft-surface)] px-4 py-2 rounded border border-[var(--ft-border)]">
+                <Clock className="h-4 w-4 text-[var(--ft-red)]" />
+                <span className="text-sm font-mono text-[var(--ft-charcoal)]">{formatTime(timeRemaining)}</span>
               </div>
 
-              <Button onClick={handleLogout} variant="outline" className="border-[#334155] bg-transparent text-[#EF4444] hover:bg-[#EF4444]/10">
+              <Button onClick={handleLogout} variant="outline" className="border-[var(--ft-border)] bg-transparent text-[var(--ft-danger)] hover:bg-[var(--ft-danger)]/10">
                 <LogOut className="h-4 w-4 mr-2" />
                 Exit & Logout
               </Button>
@@ -195,12 +195,12 @@ export function ExamInterface() {
         <div className="grid grid-cols-4 gap-6">
           {/* Question Panel */}
           <div className="col-span-3">
-            <div className="bg-[#111827] border border-[#334155] rounded-lg p-8">
+            <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-8">
               <div className="mb-6">
-                <div className="text-sm text-[#9CA3AF] mb-2">
+                <div className="text-sm text-[var(--ft-muted)] mb-2">
                   Question {currentQuestion + 1} of {questions.length}
                 </div>
-                <h2 className="text-xl font-semibold text-[#E5E7EB]">
+                <h2 className="text-xl font-semibold text-[var(--ft-charcoal)]">
                   {questions[currentQuestion]?.question_text}
                 </h2>
               </div>
@@ -213,33 +213,33 @@ export function ExamInterface() {
                     disabled={isSubmitting || timeRemaining <= 0}
                     className={`w-full text-left p-4 rounded-lg border transition-all ${
                       selectedAnswers[currentQuestion] === option.id
-                        ? 'border-[#00D1B2] bg-[#00D1B2]/10'
-                        : 'border-[#334155] bg-[#1F2937] hover:border-[#00D1B2]/50'
+                        ? 'border-[var(--ft-red)] bg-[var(--ft-red)]/10'
+                        : 'border-[var(--ft-border)] bg-[var(--ft-surface)] hover:border-[var(--ft-red)]/50'
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                         selectedAnswers[currentQuestion] === option.id
-                          ? 'border-[#00D1B2]'
-                          : 'border-[#334155]'
+                          ? 'border-[var(--ft-red)]'
+                          : 'border-[var(--ft-border)]'
                       }`}>
                         {selectedAnswers[currentQuestion] === option.id && (
-                          <div className="w-3 h-3 rounded-full bg-[#00D1B2]" />
+                          <div className="w-3 h-3 rounded-full bg-[var(--ft-red)]" />
                         )}
                       </div>
-                      <span className="text-[#E5E7EB]">{option.option_text}</span>
+                      <span className="text-[var(--ft-charcoal)]">{option.option_text}</span>
                     </div>
                   </button>
                 ))}
               </div>
 
               {/* Navigation */}
-              <div className="flex justify-between items-center pt-6 border-t border-[#334155]">
+              <div className="flex justify-between items-center pt-6 border-t border-[var(--ft-border)]">
                 <Button
                   variant="outline"
                   onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
                   disabled={currentQuestion === 0 || isSubmitting || timeRemaining <= 0}
-                  className="border-[#334155] bg-transparent text-[#E5E7EB] hover:bg-[#1F2937] disabled:opacity-50"
+                  className="border-[var(--ft-border)] bg-transparent text-[var(--ft-charcoal)] hover:bg-[var(--ft-surface)] disabled:opacity-50"
                 >
                   <ChevronLeft className="h-4 w-4 mr-2" />
                   Previous
@@ -248,7 +248,7 @@ export function ExamInterface() {
                 <Button
                   onClick={() => setCurrentQuestion(Math.min(questions.length - 1, currentQuestion + 1))}
                   disabled={currentQuestion === questions.length - 1 || isSubmitting || timeRemaining <= 0}
-                  className="bg-[#00D1B2] text-[#0F172A] hover:bg-[#00D1B2]/90 disabled:opacity-50"
+                  className="bg-[var(--ft-red)] text-white hover:bg-[var(--ft-red)]/90 disabled:opacity-50"
                 >
                   Next
                   <ChevronRight className="h-4 w-4 ml-2" />
@@ -259,8 +259,8 @@ export function ExamInterface() {
 
           {/* Question Navigation Panel */}
           <div className="col-span-1">
-            <div className="bg-[#111827] border border-[#334155] rounded-lg p-6 sticky top-6">
-              <h3 className="text-sm font-semibold text-[#E5E7EB] mb-4">Questions</h3>
+            <div className="bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded-lg p-6 sticky top-6">
+              <h3 className="text-sm font-semibold text-[var(--ft-charcoal)] mb-4">Questions</h3>
               
               <div className="grid grid-cols-5 gap-2 mb-6">
                 {questions.map((_, index) => (
@@ -269,10 +269,10 @@ export function ExamInterface() {
                     onClick={() => setCurrentQuestion(index)}
                     className={`aspect-square rounded flex items-center justify-center text-sm font-medium ${
                       selectedAnswers[index] !== null
-                        ? 'bg-[#00D1B2] text-[#0F172A]'
+                        ? 'bg-[var(--ft-red)] text-white'
                         : index === currentQuestion
-                        ? 'bg-[#3B82F6] text-[#E5E7EB]'
-                        : 'bg-[#1F2937] text-[#9CA3AF] border border-[#334155]'
+                        ? 'bg-[var(--ft-red)] text-[var(--ft-charcoal)]'
+                        : 'bg-[var(--ft-surface)] text-[var(--ft-muted)] border border-[var(--ft-border)]'
                     }`}
                   >
                     {index + 1}
@@ -282,23 +282,23 @@ export function ExamInterface() {
 
               <div className="space-y-2 mb-6 text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-[#00D1B2] rounded" />
-                  <span className="text-[#9CA3AF]">Answered</span>
+                  <div className="w-4 h-4 bg-[var(--ft-red)] rounded" />
+                  <span className="text-[var(--ft-muted)]">Answered</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-[#3B82F6] rounded" />
-                  <span className="text-[#9CA3AF]">Current</span>
+                  <div className="w-4 h-4 bg-[var(--ft-red)] rounded" />
+                  <span className="text-[var(--ft-muted)]">Current</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-[#1F2937] border border-[#334155] rounded" />
-                  <span className="text-[#9CA3AF]">Not Answered</span>
+                  <div className="w-4 h-4 bg-[var(--ft-surface)] border border-[var(--ft-border)] rounded" />
+                  <span className="text-[var(--ft-muted)]">Not Answered</span>
                 </div>
               </div>
 
               <Button 
                 onClick={handleSubmit} 
                 disabled={isSubmitting || timeRemaining <= 0}
-                className="w-full bg-[#3B82F6] text-[#E5E7EB] hover:bg-[#3B82F6]/90 disabled:opacity-50"
+                className="w-full bg-[var(--ft-red)] text-[var(--ft-charcoal)] hover:bg-[var(--ft-red)]/90 disabled:opacity-50"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Exam'}
               </Button>
