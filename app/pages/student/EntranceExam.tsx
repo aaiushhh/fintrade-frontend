@@ -1,0 +1,385 @@
+import { useState } from "react";
+import { useNavigate, Link } from "react-router";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Progress } from "../../components/ui/progress";
+import { ArrowLeft, Clock, Camera, AlertTriangle, ChevronLeft, ChevronRight, Flag } from "lucide-react";
+
+const examQuestions = [
+  {
+    id: 1,
+    question: "What is the primary purpose of a stop-loss order in trading?",
+    options: [
+      "To maximize profits",
+      "To limit potential losses on a position",
+      "To guarantee entry into a trade",
+      "To increase trading volume",
+    ],
+    correctAnswer: 1,
+  },
+  {
+    id: 2,
+    question: "Which technical indicator is used to measure market volatility?",
+    options: ["Moving Average", "RSI (Relative Strength Index)", "Bollinger Bands", "MACD"],
+    correctAnswer: 2,
+  },
+  {
+    id: 3,
+    question: "What does P/E ratio stand for in stock market analysis?",
+    options: [
+      "Profit to Equity ratio",
+      "Price to Earnings ratio",
+      "Performance to Expectation ratio",
+      "Portfolio to Exchange ratio",
+    ],
+    correctAnswer: 1,
+  },
+  {
+    id: 4,
+    question: "In options trading, what is a 'call' option?",
+    options: [
+      "The right to sell an asset at a specified price",
+      "The right to buy an asset at a specified price",
+      "An obligation to buy an asset",
+      "A requirement to close a position",
+    ],
+    correctAnswer: 1,
+  },
+  {
+    id: 5,
+    question: "What is the NSE (National Stock Exchange) benchmark index?",
+    options: ["SENSEX", "NIFTY 50", "BSE 500", "NIFTY BANK"],
+    correctAnswer: 1,
+  },
+];
+
+export default function EntranceExam() {
+  const [examStarted, setExamStarted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<number[]>(new Array(examQuestions.length).fill(-1));
+  const [timeRemaining, setTimeRemaining] = useState(1800); // 30 minutes
+  const [cameraActive, setCameraActive] = useState(true);
+  const navigate = useNavigate();
+
+  const handleStartExam = () => {
+    setExamStarted(true);
+    // Start timer
+    const timer = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          handleSubmitExam();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleAnswerSelect = (answerIndex: number) => {
+    const newAnswers = [...answers];
+    newAnswers[currentQuestion] = answerIndex;
+    setAnswers(newAnswers);
+  };
+
+  const handleSubmitExam = () => {
+    // Calculate score
+    let correctAnswers = 0;
+    examQuestions.forEach((q, index) => {
+      if (answers[index] === q.correctAnswer) {
+        correctAnswers++;
+      }
+    });
+    const score = (correctAnswers / examQuestions.length) * 100;
+    
+    // For demo purposes, navigate to courses if passed
+    if (score >= 60) {
+      navigate("/student/courses");
+    } else {
+      alert(`Score: ${score}%. You need 60% to pass. Please try again.`);
+      setExamStarted(false);
+      setCurrentQuestion(0);
+      setAnswers(new Array(examQuestions.length).fill(-1));
+      setTimeRemaining(1800);
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const answeredCount = answers.filter((a) => a !== -1).length;
+  const progress = (answeredCount / examQuestions.length) * 100;
+
+  if (!examStarted) {
+    return (
+      <div className="min-h-screen bg-[#F4F1EA] p-4 md:p-8">
+        <div className="max-w-4xl mx-auto">
+          <Link to="/" className="inline-flex items-center gap-2 text-[#0B2A5B] hover:text-[#C2A86A] mb-6">
+            <ArrowLeft size={20} />
+            Back to Home
+          </Link>
+
+          <Card className="p-8 bg-white shadow-xl">
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 bg-[#C2A86A] rounded-full flex items-center justify-center mx-auto mb-4">
+                <Flag className="text-[#0B2A5B]" size={40} />
+              </div>
+              <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">FinTrade Entrance Exam</h1>
+              <p className="text-[#0B2A5B]/70">
+                Complete this exam to unlock access to our trading courses
+              </p>
+            </div>
+
+            <div className="bg-[#F4F1EA] rounded-lg p-6 mb-8">
+              <h2 className="text-lg font-semibold text-[#0B2A5B] mb-4 flex items-center gap-2">
+                <AlertTriangle className="text-[#C2A86A]" size={20} />
+                Exam Rules & Guidelines
+              </h2>
+              <ul className="space-y-3 text-[#0B2A5B]/80">
+                <li className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-[#C2A86A] rounded-full flex items-center justify-center flex-shrink-0 text-[#0B2A5B] text-sm font-semibold">
+                    1
+                  </div>
+                  <span>
+                    <strong>Duration:</strong> 30 minutes (1800 seconds)
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-[#C2A86A] rounded-full flex items-center justify-center flex-shrink-0 text-[#0B2A5B] text-sm font-semibold">
+                    2
+                  </div>
+                  <span>
+                    <strong>Total Questions:</strong> {examQuestions.length} multiple-choice questions
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-[#C2A86A] rounded-full flex items-center justify-center flex-shrink-0 text-[#0B2A5B] text-sm font-semibold">
+                    3
+                  </div>
+                  <span>
+                    <strong>Passing Score:</strong> 60% or higher
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-[#C2A86A] rounded-full flex items-center justify-center flex-shrink-0 text-[#0B2A5B] text-sm font-semibold">
+                    4
+                  </div>
+                  <span>
+                    <strong>Tab Switching:</strong> Restricted - switching tabs will auto-submit your exam
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-[#C2A86A] rounded-full flex items-center justify-center flex-shrink-0 text-[#0B2A5B] text-sm font-semibold">
+                    5
+                  </div>
+                  <span>
+                    <strong>Device:</strong> Single device only - logging in from another device will
+                    invalidate this session
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-[#C2A86A] rounded-full flex items-center justify-center flex-shrink-0 text-[#0B2A5B] text-sm font-semibold">
+                    6
+                  </div>
+                  <span>
+                    <strong>Camera:</strong> Webcam must remain active throughout the exam for proctoring
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-8">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="text-yellow-600 flex-shrink-0" size={20} />
+                <div>
+                  <p className="font-semibold text-yellow-800 mb-1">Important Notice</p>
+                  <p className="text-sm text-yellow-700">
+                    By starting this exam, you agree to our terms and conditions. Any violation of exam
+                    rules will result in automatic disqualification.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Button
+                onClick={handleStartExam}
+                size="lg"
+                className="flex-1 bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a] shadow-lg shadow-[#0B2A5B]/20"
+              >
+                Start Exam
+              </Button>
+              <Link to="/" className="flex-1">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full border-2 border-[#0B2A5B]/20 text-[#0B2A5B] hover:bg-[#F4F1EA]"
+                >
+                  Cancel
+                </Button>
+              </Link>
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  const question = examQuestions[currentQuestion];
+
+  return (
+    <div className="min-h-screen bg-[#F4F1EA]">
+      {/* Exam Header */}
+      <div className="bg-[#0B2A5B] text-[#F4F1EA] p-4 shadow-lg sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl font-bold">FinTrade Entrance Exam</h1>
+            <div className="flex items-center gap-2 px-3 py-1 bg-[#1a3d7a] rounded-lg">
+              <Camera size={16} className={cameraActive ? "text-green-400" : "text-red-400"} />
+              <span className="text-sm">{cameraActive ? "Camera Active" : "Camera Off"}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 px-4 py-2 bg-[#C2A86A] text-[#0B2A5B] rounded-lg font-semibold">
+              <Clock size={18} />
+              {formatTime(timeRemaining)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto p-4 md:p-8">
+        <div className="grid lg:grid-cols-4 gap-6">
+          {/* Main Question Area */}
+          <Card className="lg:col-span-3 p-6 md:p-8 bg-white shadow-xl">
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm text-[#0B2A5B]/60">
+                  Question {currentQuestion + 1} of {examQuestions.length}
+                </span>
+                <span className="text-sm font-semibold text-[#0B2A5B]">
+                  {answeredCount}/{examQuestions.length} Answered
+                </span>
+              </div>
+              <Progress value={progress} className="h-2 mb-4" />
+            </div>
+
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold text-[#0B2A5B] mb-6">{question.question}</h2>
+
+              <div className="space-y-3">
+                {question.options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerSelect(index)}
+                    className={`
+                      w-full p-4 rounded-lg border-2 text-left transition-all
+                      ${
+                        answers[currentQuestion] === index
+                          ? "border-[#C2A86A] bg-[#C2A86A]/10 shadow-md"
+                          : "border-[#0B2A5B]/10 hover:border-[#0B2A5B]/30 bg-white"
+                      }
+                    `}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`
+                        w-6 h-6 rounded-full border-2 flex items-center justify-center
+                        ${
+                          answers[currentQuestion] === index
+                            ? "border-[#C2A86A] bg-[#C2A86A]"
+                            : "border-[#0B2A5B]/30"
+                        }
+                      `}
+                      >
+                        {answers[currentQuestion] === index && (
+                          <div className="w-3 h-3 bg-white rounded-full" />
+                        )}
+                      </div>
+                      <span className="text-[#0B2A5B]">{option}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-6 border-t border-[#0B2A5B]/10">
+              <Button
+                onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
+                disabled={currentQuestion === 0}
+                variant="outline"
+                className="border-[#0B2A5B]/20"
+              >
+                <ChevronLeft size={20} className="mr-2" />
+                Previous
+              </Button>
+
+              {currentQuestion === examQuestions.length - 1 ? (
+                <Button
+                  onClick={handleSubmitExam}
+                  className="bg-green-600 text-white hover:bg-green-700"
+                  disabled={answeredCount < examQuestions.length}
+                >
+                  Submit Exam
+                  <Flag size={20} className="ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={() =>
+                    setCurrentQuestion(Math.min(examQuestions.length - 1, currentQuestion + 1))
+                  }
+                  className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]"
+                >
+                  Next
+                  <ChevronRight size={20} className="ml-2" />
+                </Button>
+              )}
+            </div>
+          </Card>
+
+          {/* Question Navigator */}
+          <Card className="p-6 bg-white shadow-xl h-fit sticky top-24">
+            <h3 className="text-lg font-semibold text-[#0B2A5B] mb-4">Question Navigator</h3>
+            <div className="grid grid-cols-5 gap-2">
+              {examQuestions.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentQuestion(index)}
+                  className={`
+                    w-10 h-10 rounded-lg font-semibold transition-all
+                    ${
+                      currentQuestion === index
+                        ? "bg-[#0B2A5B] text-[#F4F1EA] shadow-lg"
+                        : answers[index] !== -1
+                        ? "bg-[#C2A86A] text-[#0B2A5B]"
+                        : "bg-[#F4F1EA] text-[#0B2A5B] hover:bg-[#e8e4d9]"
+                    }
+                  `}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+            <div className="mt-6 space-y-3 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-[#C2A86A] rounded" />
+                <span className="text-[#0B2A5B]/70">Answered</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-[#F4F1EA] border border-[#0B2A5B]/20 rounded" />
+                <span className="text-[#0B2A5B]/70">Not Answered</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-[#0B2A5B] rounded" />
+                <span className="text-[#0B2A5B]/70">Current</span>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
