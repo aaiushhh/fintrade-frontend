@@ -44,9 +44,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleDemoAccess = (role: "student" | "teacher" | "admin") => {
-    navigate(`/${role}/dashboard`);
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'linear-gradient(135deg, #121212 0%, #2d2d2d 100%)' }}>
@@ -169,47 +166,13 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Or try demo access</span>
-            </div>
-          </div>
 
-          <div className="space-y-3">
-            <Button
-              onClick={() => handleDemoAccess("student")}
-              variant="outline"
-              className="w-full border-2 border-gray-200 hover:border-[#E53935] hover:bg-red-50"
-              style={{ color: '#121212' }}
-            >
-              View Student Dashboard
-            </Button>
-            <Button
-              onClick={() => handleDemoAccess("teacher")}
-              variant="outline"
-              className="w-full border-2 border-gray-200 hover:border-[#E53935] hover:bg-red-50"
-              style={{ color: '#121212' }}
-            >
-              View Teacher Dashboard
-            </Button>
-            <Button
-              onClick={() => handleDemoAccess("admin")}
-              variant="outline"
-              className="w-full border-2 border-gray-200 hover:border-[#E53935] hover:bg-red-50"
-              style={{ color: '#121212' }}
-            >
-              View Admin Dashboard
-            </Button>
-          </div>
 
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link to="/student/entrance-exam" className="hover:underline" style={{ color: '#E53935' }}>
-                Take Entrance Exam
+              <Link to="/register" className="hover:underline font-semibold" style={{ color: '#E53935' }}>
+                Register here
               </Link>
             </p>
           </div>
