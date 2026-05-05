@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../services/api";
 import DashboardLayout from "../../components/DashboardLayout";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
@@ -56,8 +57,10 @@ export default function AITutor() {
   const [messages, setMessages] = useState(initialMessages);
   const [inputMessage, setInputMessage] = useState("");
   const [cannotSolve, setCannotSolve] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<number | null>(null);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
     const userMessage = {
@@ -68,35 +71,43 @@ export default function AITutor() {
     };
 
     setMessages([...messages, userMessage]);
+    setInputMessage("");
+    setLoading(true);
+    setCannotSolve(false);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const response = await api.post("/ai/ask", {
+        question: userMessage.content,
+        session_id: sessionId || undefined
+      });
+
+      if (response.data.session_id) {
+        setSessionId(response.data.session_id);
+      }
+
       const aiResponse = {
         id: messages.length + 2,
         sender: "ai",
-        content: getAIResponse(inputMessage),
+        content: response.data.answer,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, aiResponse]);
-    }, 1000);
-
-    setInputMessage("");
-  };
-
-  const getAIResponse = (question: string) => {
-    const lowerQuestion = question.toLowerCase();
-    
-    if (lowerQuestion.includes("stop-loss") || lowerQuestion.includes("stop loss")) {
-      return "A stop-loss order is a risk management tool that automatically sells a security when it reaches a certain price level. It helps limit potential losses on a position. For example, if you buy a stock at ₹100 and set a stop-loss at ₹95, your position will be automatically sold if the price drops to ₹95, limiting your loss to ₹5 per share.";
-    } else if (lowerQuestion.includes("rsi")) {
-      return "RSI (Relative Strength Index) is a momentum oscillator that measures the speed and magnitude of price changes. It ranges from 0 to 100. Generally, RSI above 70 indicates overbought conditions (potential selling opportunity), while RSI below 30 indicates oversold conditions (potential buying opportunity). However, it's important to use RSI in conjunction with other indicators for better accuracy.";
-    } else if (lowerQuestion.includes("candlestick")) {
-      return "Candlestick patterns are visual representations of price movements. Each candlestick shows four key prices: Open, High, Low, and Close (OHLC). The body represents the range between open and close, while wicks/shadows show the high and low. Green/white candles indicate bullish movement (close > open), while red/black candles indicate bearish movement (close < open). Common patterns include doji, hammer, shooting star, and engulfing patterns.";
-    } else if (lowerQuestion.includes("options") || lowerQuestion.includes("call") || lowerQuestion.includes("put")) {
-      return "In options trading, a CALL option gives you the right (but not obligation) to BUY an asset at a specified price (strike price) before expiration. A PUT option gives you the right to SELL an asset at a specified price. Calls are used when you expect prices to rise, while puts are used when you expect prices to fall. Options are powerful tools but carry significant risk and require proper understanding.";
-    } else {
-      setCannotSolve(true);
-      return "This is a complex question that requires personalized guidance. I can schedule a live doubt session with one of our expert instructors for you. Would you like me to arrange that?";
+      
+      // Basic heuristic to detect if AI couldn't solve it well
+      if (response.data.answer.toLowerCase().includes("cannot answer") || response.data.answer.toLowerCase().includes("don't know")) {
+        setCannotSolve(true);
+      }
+    } catch (err: any) {
+      console.error("AI Error:", err);
+      const errorResponse = {
+        id: messages.length + 2,
+        sender: "ai",
+        content: "Sorry, I am having trouble connecting to my knowledge base right now.",
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+      setMessages((prev) => [...prev, errorResponse]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -173,6 +184,23 @@ export default function AITutor() {
               </div>
             ))}
 
+            {loading && (
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-[#C2A86A] to-[#d4bd8a]">
+                  <Bot className="text-[#0B2A5B]" size={20} />
+                </div>
+                <div className="flex-1">
+                  <div className="inline-block p-4 rounded-lg max-w-[85%] bg-[#F4F1EA] text-[#0B2A5B]">
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-[#0B2A5B]/40 rounded-full animate-bounce" />
+                      <div className="w-2 h-2 bg-[#0B2A5B]/40 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                      <div className="w-2 h-2 bg-[#0B2A5B]/40 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {cannotSolve && (
               <Card className="p-4 bg-blue-50 border-blue-200">
                 <div className="flex items-start gap-3">
@@ -208,6 +236,7 @@ export default function AITutor() {
               />
               <Button
                 onClick={handleSendMessage}
+                disabled={loading || !inputMessage.trim()}
                 className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]"
               >
                 <Send size={20} />

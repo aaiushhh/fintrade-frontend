@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../services/api";
 import { useNavigate, Link } from "react-router";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
@@ -56,51 +57,98 @@ const examQuestions = [
 export default function EntranceExam() {
   const [examStarted, setExamStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<number[]>(new Array(examQuestions.length).fill(-1));
+  const [answers, setAnswers] = useState<number[]>([]);
   const [timeRemaining, setTimeRemaining] = useState(1800); // 30 minutes
   const [cameraActive, setCameraActive] = useState(true);
+  const [examId, setExamId] = useState<number | null>(null);
+  const [attemptId, setAttemptId] = useState<number | null>(null);
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
-  const handleStartExam = () => {
-    setExamStarted(true);
-    // Start timer
-    const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          handleSubmitExam();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+  useEffect(() => {
+    // Fetch available entrance exams on load
+    api.get("/exams/entrance").then(res => {
+      if (res.data && res.data.length > 0) {
+        setExamId(res.data[0].id);
+      }
+    }).catch(err => console.error("Failed to load exams", err));
+  }, []);
+
+  const handleStartExam = async () => {
+    if (!examId) {
+      setErrorMsg("No entrance exams available at the moment.");
+      return;
+    }
+    setErrorMsg("");
+    try {
+      // 1. Start attempt
+      const startRes = await api.post(`/exams/start?exam_id=${examId}`);
+      setAttemptId(startRes.data.attempt_id);
+
+      // 2. Fetch questions
+      const qRes = await api.get(`/exams/questions?exam_id=${examId}`);
+      
+      // If the backend doesn't have options seeded, use local mock fallback temporarily for UI flow to work
+      const loadedQuestions = qRes.data.length > 0 ? qRes.data : examQuestions.map(q => ({
+        id: q.id,
+        text: q.question,
+        options: q.options.map((opt, i) => ({ id: i, text: opt }))
+      }));
+
+      setQuestions(loadedQuestions);
+      setAnswers(new Array(loadedQuestions.length).fill(-1));
+      
+      setExamStarted(true);
+      // Start timer
+      const timer = setInterval(() => {
+        setTimeRemaining((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            handleSubmitExam();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (err: any) {
+      setErrorMsg(err.response?.data?.detail || "Failed to start exam. Note: Entrance exams have a 30-day retry cooldown.");
+    }
   };
 
-  const handleAnswerSelect = (answerIndex: number) => {
+  const handleAnswerSelect = (optionIndex: number) => {
     const newAnswers = [...answers];
-    newAnswers[currentQuestion] = answerIndex;
+    newAnswers[currentQuestion] = optionIndex;
     setAnswers(newAnswers);
   };
 
-  const handleSubmitExam = () => {
-    // Calculate score
-    let correctAnswers = 0;
-    examQuestions.forEach((q, index) => {
-      if (answers[index] === q.correctAnswer) {
-        correctAnswers++;
+  const handleSubmitExam = async () => {
+    if (!attemptId) return;
+
+    try {
+      // Map local indices back to option IDs
+      const mappedAnswers = questions.map((q, idx) => ({
+        question_id: q.id,
+        selected_option_id: answers[idx] !== -1 ? q.options[answers[idx]].id : null
+      })).filter(a => a.selected_option_id !== null);
+
+      const res = await api.post("/exams/submit", {
+        attempt_id: attemptId,
+        answers: mappedAnswers
+      });
+      
+      const score = res.data.score || 0;
+      const passed = res.data.passed;
+
+      if (passed) {
+        alert(`Congratulations! You passed with a score of ${score}%.`);
+        navigate("/student/courses");
+      } else {
+        alert(`Score: ${score}%. You need 60% to pass. Please try again after 30 days.`);
+        navigate("/student/dashboard");
       }
-    });
-    const score = (correctAnswers / examQuestions.length) * 100;
-    
-    // For demo purposes, navigate to courses if passed
-    if (score >= 60) {
-      navigate("/student/courses");
-    } else {
-      alert(`Score: ${score}%. You need 60% to pass. Please try again.`);
-      setExamStarted(false);
-      setCurrentQuestion(0);
-      setAnswers(new Array(examQuestions.length).fill(-1));
-      setTimeRemaining(1800);
+    } catch (err: any) {
+      alert("Failed to submit exam: " + (err.response?.data?.detail || "Unknown error"));
     }
   };
 
@@ -111,7 +159,7 @@ export default function EntranceExam() {
   };
 
   const answeredCount = answers.filter((a) => a !== -1).length;
-  const progress = (answeredCount / examQuestions.length) * 100;
+  const progress = questions.length > 0 ? (answeredCount / questions.length) * 100 : 0;
 
   if (!examStarted) {
     return (
@@ -204,9 +252,22 @@ export default function EntranceExam() {
               </div>
             </div>
 
+            {errorMsg && (
+              <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="text-red-600 flex-shrink-0" size={20} />
+                  <div>
+                    <p className="font-semibold text-red-800 mb-1">Cannot Start Exam</p>
+                    <p className="text-sm text-red-700">{errorMsg}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="flex gap-4">
               <Button
                 onClick={handleStartExam}
+                disabled={!examId}
                 size="lg"
                 className="flex-1 bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a] shadow-lg shadow-[#0B2A5B]/20"
               >
@@ -228,7 +289,7 @@ export default function EntranceExam() {
     );
   }
 
-  const question = examQuestions[currentQuestion];
+  const question = questions[currentQuestion];
 
   return (
     <div className="min-h-screen bg-[#F4F1EA]">
@@ -258,20 +319,20 @@ export default function EntranceExam() {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-sm text-[#0B2A5B]/60">
-                  Question {currentQuestion + 1} of {examQuestions.length}
+                  Question {currentQuestion + 1} of {questions.length}
                 </span>
                 <span className="text-sm font-semibold text-[#0B2A5B]">
-                  {answeredCount}/{examQuestions.length} Answered
+                  {answeredCount}/{questions.length} Answered
                 </span>
               </div>
               <Progress value={progress} className="h-2 mb-4" />
             </div>
 
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-[#0B2A5B] mb-6">{question.question}</h2>
+              <h2 className="text-xl font-semibold text-[#0B2A5B] mb-6">{question?.text || question?.question}</h2>
 
               <div className="space-y-3">
-                {question.options.map((option, index) => (
+                {question?.options.map((option: any, index: number) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
@@ -299,7 +360,7 @@ export default function EntranceExam() {
                           <div className="w-3 h-3 bg-white rounded-full" />
                         )}
                       </div>
-                      <span className="text-[#0B2A5B]">{option}</span>
+                      <span className="text-[#0B2A5B]">{option.text || option}</span>
                     </div>
                   </button>
                 ))}
@@ -317,11 +378,11 @@ export default function EntranceExam() {
                 Previous
               </Button>
 
-              {currentQuestion === examQuestions.length - 1 ? (
+              {currentQuestion === questions.length - 1 ? (
                 <Button
                   onClick={handleSubmitExam}
                   className="bg-green-600 text-white hover:bg-green-700"
-                  disabled={answeredCount < examQuestions.length}
+                  disabled={answeredCount < questions.length}
                 >
                   Submit Exam
                   <Flag size={20} className="ml-2" />
@@ -329,7 +390,7 @@ export default function EntranceExam() {
               ) : (
                 <Button
                   onClick={() =>
-                    setCurrentQuestion(Math.min(examQuestions.length - 1, currentQuestion + 1))
+                    setCurrentQuestion(Math.min(questions.length - 1, currentQuestion + 1))
                   }
                   className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]"
                 >
@@ -344,7 +405,7 @@ export default function EntranceExam() {
           <Card className="p-6 bg-white shadow-xl h-fit sticky top-24">
             <h3 className="text-lg font-semibold text-[#0B2A5B] mb-4">Question Navigator</h3>
             <div className="grid grid-cols-5 gap-2">
-              {examQuestions.map((_, index) => (
+              {questions.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentQuestion(index)}

@@ -8,44 +8,40 @@ import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import logo from "../../imports/fintrade_logo.png";
 import api from "../services/api";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
     
     try {
-      const response = await api.post("/auth/login", { email, password });
+      const response = await api.post("/auth/register", {
+        full_name: fullName,
+        email,
+        phone,
+        password
+      });
       const { access_token, user } = response.data;
       
       localStorage.setItem("token", access_token);
       localStorage.setItem("user", JSON.stringify(user));
       
-      // Determine dashboard based on role
-      const roles = user.roles || [];
-      if (roles.includes("admin")) {
-        navigate("/admin/dashboard");
-      } else if (roles.includes("faculty")) {
-        navigate("/teacher/dashboard");
-      } else {
-        navigate("/student/dashboard");
-      }
+      // Navigate to student dashboard since new registrations are students by default
+      navigate("/student/dashboard");
     } catch (err: any) {
-      setErrorMsg(err.response?.data?.detail || "Invalid credentials or login failed.");
+      setErrorMsg(err.response?.data?.detail || "Registration failed. Email might already exist.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDemoAccess = (role: "student" | "teacher" | "admin") => {
-    navigate(`/${role}/dashboard`);
   };
 
   return (
@@ -67,10 +63,9 @@ export default function LoginPage() {
             <img src={logo} alt="FinTrade" className="h-16 mb-6" />
             <p className="text-gray-300">Professional Trading Education Platform</p>
           </div>
-          <h2 className="text-3xl font-bold mb-4">Welcome Back</h2>
+          <h2 className="text-3xl font-bold mb-4">Start Your Journey</h2>
           <p className="text-gray-300 text-lg leading-relaxed mb-6">
-            Access your personalized dashboard to continue your trading education journey. Track your
-            progress, attend live lectures, and practice on our advanced simulator.
+            Join the FinTrade community to master trading fundamentals and advanced strategies.
           </p>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
@@ -94,7 +89,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Right Side - Login Form */}
+        {/* Right Side - Register Form */}
         <Card className="p-8 bg-white shadow-2xl border-none">
           <div className="lg:hidden mb-6">
             <Link to="/" className="inline-flex items-center gap-2 hover:text-[#E53935] transition-colors" style={{ color: '#121212' }}>
@@ -103,8 +98,8 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <h2 className="text-3xl font-bold mb-2" style={{ color: '#121212' }}>Login to Your Account</h2>
-          <p className="text-gray-600 mb-8">Enter your credentials to access your dashboard</p>
+          <h2 className="text-3xl font-bold mb-2" style={{ color: '#121212' }}>Create an Account</h2>
+          <p className="text-gray-600 mb-8">Fill in your details to get started</p>
 
           {errorMsg && (
             <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
@@ -112,7 +107,20 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div>
+              <Label htmlFor="fullName">Full Name</Label>
+              <Input
+                id="fullName"
+                type="text"
+                placeholder="Rahul Sharma"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="mt-1 bg-gray-50 border-gray-300 focus:border-[#E53935] focus:ring-[#E53935]"
+                required
+              />
+            </div>
+
             <div>
               <Label htmlFor="email">Email Address</Label>
               <Input
@@ -121,18 +129,31 @@ export default function LoginPage() {
                 placeholder="rahul.sharma@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-2 bg-gray-50 border-gray-300 focus:border-[#E53935] focus:ring-[#E53935]"
+                className="mt-1 bg-gray-50 border-gray-300 focus:border-[#E53935] focus:ring-[#E53935]"
+                required
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+91 98765 43210"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="mt-1 bg-gray-50 border-gray-300 focus:border-[#E53935] focus:ring-[#E53935]"
                 required
               />
             </div>
 
             <div>
               <Label htmlFor="password">Password</Label>
-              <div className="relative mt-2">
+              <div className="relative mt-1">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder="Create a strong password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="bg-gray-50 border-gray-300 focus:border-[#E53935] focus:ring-[#E53935] pr-12"
@@ -148,68 +169,22 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="rounded border-gray-300" />
-                <span className="text-sm text-gray-600">Remember me</span>
-              </label>
-              <a href="#" className="text-sm hover:underline" style={{ color: '#E53935' }}>
-                Forgot Password?
-              </a>
-            </div>
-
             <Button
               type="submit"
-              className="w-full text-white shadow-lg"
+              className="w-full text-white shadow-lg mt-6"
               style={{ background: '#E53935', boxShadow: '0 0 20px rgba(229, 57, 53, 0.3)' }}
               size="lg"
               disabled={loading}
             >
-              {loading ? "Logging in..." : "Login"}
+              {loading ? "Registering..." : "Sign Up"}
             </Button>
           </form>
 
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Or try demo access</span>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <Button
-              onClick={() => handleDemoAccess("student")}
-              variant="outline"
-              className="w-full border-2 border-gray-200 hover:border-[#E53935] hover:bg-red-50"
-              style={{ color: '#121212' }}
-            >
-              View Student Dashboard
-            </Button>
-            <Button
-              onClick={() => handleDemoAccess("teacher")}
-              variant="outline"
-              className="w-full border-2 border-gray-200 hover:border-[#E53935] hover:bg-red-50"
-              style={{ color: '#121212' }}
-            >
-              View Teacher Dashboard
-            </Button>
-            <Button
-              onClick={() => handleDemoAccess("admin")}
-              variant="outline"
-              className="w-full border-2 border-gray-200 hover:border-[#E53935] hover:bg-red-50"
-              style={{ color: '#121212' }}
-            >
-              View Admin Dashboard
-            </Button>
-          </div>
-
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
-              Don't have an account?{" "}
-              <Link to="/student/entrance-exam" className="hover:underline" style={{ color: '#E53935' }}>
-                Take Entrance Exam
+              Already have an account?{" "}
+              <Link to="/login" className="hover:underline font-semibold" style={{ color: '#E53935' }}>
+                Login here
               </Link>
             </p>
           </div>

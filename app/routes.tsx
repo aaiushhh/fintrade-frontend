@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import MarketingHome from "./pages/MarketingHome";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import ContractKYC from "./pages/student/ContractKYC";
 import AdminContracts from "./pages/admin/AdminContracts";
 
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     Component: LoginPage,
+  },
+  {
+    path: "/register",
+    Component: RegisterPage,
   },
   // Student Routes
   {

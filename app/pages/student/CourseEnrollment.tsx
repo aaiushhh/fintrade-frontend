@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../../services/api";
 import DashboardLayout from "../../components/DashboardLayout";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
@@ -35,110 +36,91 @@ const navItems = [
   { label: "Placement", path: "/student/placement", icon: <Award size={20} /> },
 ];
 
-const courses = [
-  {
-    id: 1,
-    title: "Basic Trading Fundamentals",
-    level: "Beginner",
-    duration: "8 weeks",
-    modules: 5,
-    students: 1240,
-    rating: 4.8,
-    price: 25000,
-    description: "Master the fundamentals of stock market trading, technical analysis, and risk management.",
-    features: [
-      "Introduction to Stock Markets",
-      "Chart Reading Basics",
-      "Technical Indicators",
-      "Risk Management",
-      "Trading Psychology",
-    ],
-  },
-  {
-    id: 2,
-    title: "Intermediate Trading Strategies",
-    level: "Intermediate",
-    duration: "10 weeks",
-    modules: 7,
-    students: 856,
-    rating: 4.9,
-    price: 25000,
-    description: "Advanced chart patterns, trading strategies, and portfolio management techniques.",
-    features: [
-      "Advanced Chart Patterns",
-      "Multi-Timeframe Analysis",
-      "Options Trading Basics",
-      "Portfolio Management",
-      "Strategy Backtesting",
-    ],
-  },
-  {
-    id: 3,
-    title: "Advanced Technical Analysis",
-    level: "Advanced",
-    duration: "12 weeks",
-    modules: 9,
-    students: 624,
-    rating: 4.9,
-    price: 25000,
-    description: "Deep dive into advanced technical analysis, algorithmic trading, and quantitative methods.",
-    features: [
-      "Algorithmic Trading",
-      "Quantitative Analysis",
-      "Advanced Options Strategies",
-      "Market Microstructure",
-      "Professional Risk Management",
-    ],
-  },
-  {
-    id: 4,
-    title: "Master Trader Program",
-    level: "Expert",
-    duration: "16 weeks",
-    modules: 12,
-    students: 342,
-    rating: 5.0,
-    price: 25000,
-    description: "Complete professional trader program with live trading mentorship and placement support.",
-    features: [
-      "Live Trading Sessions",
-      "One-on-One Mentorship",
-      "Proprietary Trading Techniques",
-      "Institutional Trading Strategies",
-      "Guaranteed Placement Support",
-    ],
-  },
-];
+// We will fetch courses from the API instead of hardcoding them.
+type CourseType = {
+  id: number;
+  title: string;
+  difficulty_level: string;
+  duration_hours: number;
+  price: number;
+  description: string;
+  rating?: number;
+  students?: number;
+  modules?: number;
+  features?: string[];
+};
 
 export default function CourseEnrollment() {
+  const [courses, setCourses] = useState<CourseType[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [finalPrice, setFinalPrice] = useState(0);
   const [showPayment, setShowPayment] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [couponMsg, setCouponMsg] = useState("");
 
-  const applyCoupon = () => {
-    const validCoupons: Record<string, number> = {
-      FIRST10: 10,
-      SAVE20: 20,
-      EARLY25: 25,
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await api.get("/courses");
+        setCourses(res.data.map((c: any) => ({
+          ...c,
+          level: c.difficulty_level || "Beginner",
+          duration: c.duration_hours ? `${c.duration_hours} hours` : "8 weeks",
+          modules: 5,
+          students: 1200,
+          rating: 4.8,
+          features: ["Live Sessions", "Mentorship", "Risk Management"],
+        })));
+      } catch (err) {
+        console.error("Failed to load courses", err);
+      }
     };
-    const discountPercent = validCoupons[couponCode.toUpperCase()];
-    if (discountPercent) {
-      setDiscount(discountPercent);
-    } else {
-      alert("Invalid coupon code");
+    fetchCourses();
+  }, []);
+
+  const selectedCourseData = courses.find((c) => c.id === selectedCourse);
+
+  const applyCoupon = async () => {
+    if (!selectedCourse) return;
+    try {
+      const res = await api.post("/offers/apply", { code: couponCode, course_id: selectedCourse });
+      setDiscount(res.data.discount_applied);
+      setFinalPrice(res.data.discounted_price);
+      setCouponMsg(res.data.message || "Coupon applied successfully!");
+      setErrorMsg("");
+    } catch (err: any) {
+      setErrorMsg(err.response?.data?.detail || "Invalid coupon code");
+      setCouponMsg("");
     }
   };
 
   const handleEnroll = (courseId: number) => {
     setSelectedCourse(courseId);
+    const course = courses.find(c => c.id === courseId);
+    setFinalPrice(course ? course.price : 0);
     setShowPayment(true);
+    setDiscount(0);
+    setCouponCode("");
+    setCouponMsg("");
+    setErrorMsg("");
   };
 
-  const selectedCourseData = courses.find((c) => c.id === selectedCourse);
-  const finalPrice = selectedCourseData
-    ? selectedCourseData.price - (selectedCourseData.price * discount) / 100
-    : 0;
+  const completePayment = async () => {
+    if (!selectedCourse) return;
+    setLoading(true);
+    try {
+      await api.post(`/courses/${selectedCourse}/enroll`);
+      alert("Payment successful! Welcome to the course.");
+      window.location.href = "/student/modules";
+    } catch (err: any) {
+      alert(err.response?.data?.detail || "Enrollment failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <DashboardLayout navItems={navItems} userRole="student" userName="Rahul Sharma">
@@ -155,16 +137,16 @@ export default function CourseEnrollment() {
                 <div>
                   <Badge
                     className={`mb-2 ${
-                      course.level === "Beginner"
+                      (course as any).level === "Beginner" || course.difficulty_level === "beginner"
                         ? "bg-green-100 text-green-700"
-                        : course.level === "Intermediate"
+                        : (course as any).level === "Intermediate" || course.difficulty_level === "intermediate"
                         ? "bg-blue-100 text-blue-700"
-                        : course.level === "Advanced"
+                        : (course as any).level === "Advanced" || course.difficulty_level === "advanced"
                         ? "bg-purple-100 text-purple-700"
                         : "bg-[#C2A86A] text-[#0B2A5B]"
                     }`}
                   >
-                    {course.level}
+                    {(course as any).level || course.difficulty_level}
                   </Badge>
                   <h3 className="text-xl font-semibold text-[#0B2A5B] mb-2">{course.title}</h3>
                 </div>
@@ -197,7 +179,7 @@ export default function CourseEnrollment() {
               <div className="mb-4">
                 <p className="text-sm font-semibold text-[#0B2A5B] mb-2">What You'll Learn:</p>
                 <ul className="space-y-2">
-                  {course.features.map((feature, index) => (
+                  {course.features?.map((feature, index) => (
                     <li key={index} className="flex items-start gap-2 text-sm text-[#0B2A5B]/80">
                       <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={16} />
                       {feature}
@@ -264,9 +246,12 @@ export default function CourseEnrollment() {
                   Apply
                 </Button>
               </div>
-              {discount > 0 && (
+              {errorMsg && (
+                <p className="text-sm text-red-600 mt-2">{errorMsg}</p>
+              )}
+              {couponMsg && (
                 <p className="text-sm text-green-600 mt-2">
-                  ✓ {discount}% discount applied successfully!
+                  ✓ {couponMsg}
                 </p>
               )}
             </div>
@@ -280,9 +265,9 @@ export default function CourseEnrollment() {
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-green-600">
-                  <span>Discount ({discount}%)</span>
+                  <span>Discount Applied</span>
                   <span className="font-semibold">
-                    -₹{((selectedCourseData?.price || 0) * discount / 100).toLocaleString("en-IN")}
+                    -₹{discount.toLocaleString("en-IN")}
                   </span>
                 </div>
               )}
@@ -312,14 +297,12 @@ export default function CourseEnrollment() {
 
           <div className="flex gap-4 mt-8">
             <Button
-              onClick={() => {
-                alert("Payment successful! Welcome to the course.");
-                window.location.href = "/student/modules";
-              }}
+              onClick={completePayment}
+              disabled={loading}
               className="flex-1 bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a] shadow-lg shadow-[#0B2A5B]/20"
               size="lg"
             >
-              Pay ₹{finalPrice.toLocaleString("en-IN")}
+              {loading ? "Processing..." : `Pay ₹${finalPrice.toLocaleString("en-IN")}`}
             </Button>
             <Button
               onClick={() => setShowPayment(false)}
