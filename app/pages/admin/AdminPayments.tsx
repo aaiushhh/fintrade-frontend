@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { DashboardLayout } from "../../components/DashboardLayout";
+import { useState, useEffect } from "react";
+import DashboardLayout from "../../components/DashboardLayout";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -10,135 +10,102 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Plus, Edit, Trash2, Tag, IndianRupee, TrendingUp, Users, Lock, ShieldAlert } from "lucide-react";
 import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import api from "../../services/api";
 
-// Mock: in production this comes from auth context
-// Change this to "Content Admin" or "Support Admin" to see the revenue block in action
-const CURRENT_ADMIN_ROLE = "Finance Admin"; // "Super Admin" | "Finance Admin" | "Content Admin" | "Support Admin"
+const CURRENT_ADMIN_ROLE = "Finance Admin";
 const canViewRevenue = CURRENT_ADMIN_ROLE === "Super Admin" || CURRENT_ADMIN_ROLE === "Finance Admin";
 
-interface Coupon {
+interface Offer {
   id: number;
   code: string;
-  discountType: "Percentage" | "Fixed";
-  value: number;
-  expiryDate: string;
-  usageLimit: number;
-  usageCount: number;
-  status: "Active" | "Expired" | "Disabled";
-  createdDate: string;
+  discount_percentage: number;
+  description: string;
+  valid_until: string;
+  is_active: boolean;
+  usage_count: number;
+  created_at: string;
 }
 
 export default function AdminPayments() {
-  const [coupons, setCoupons] = useState<Coupon[]>([
-    {
-      id: 1,
-      code: "FIRST10",
-      discountType: "Percentage",
-      value: 10,
-      expiryDate: "2026-04-30",
-      usageLimit: 500,
-      usageCount: 245,
-      status: "Active",
-      createdDate: "2026-03-01"
-    },
-    {
-      id: 2,
-      code: "SAVE20",
-      discountType: "Percentage",
-      value: 20,
-      expiryDate: "2026-05-15",
-      usageLimit: 300,
-      usageCount: 128,
-      status: "Active",
-      createdDate: "2026-03-10"
-    },
-    {
-      id: 3,
-      code: "EARLY25",
-      discountType: "Percentage",
-      value: 25,
-      expiryDate: "2026-04-20",
-      usageLimit: 200,
-      usageCount: 56,
-      status: "Active",
-      createdDate: "2026-03-15"
-    },
-    {
-      id: 4,
-      code: "FLAT5000",
-      discountType: "Fixed",
-      value: 5000,
-      expiryDate: "2026-06-30",
-      usageLimit: 100,
-      usageCount: 23,
-      status: "Active",
-      createdDate: "2026-04-01"
-    },
-    {
-      id: 5,
-      code: "EXPIRED50",
-      discountType: "Percentage",
-      value: 50,
-      expiryDate: "2026-03-31",
-      usageLimit: 50,
-      usageCount: 45,
-      status: "Expired",
-      createdDate: "2026-02-01"
-    }
-  ]);
-
+  const [coupons, setCoupons] = useState<Offer[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
+  const [selectedCoupon, setSelectedCoupon] = useState<Offer | null>(null);
+  const [stats, setStats] = useState({ active_coupons: 0, total_usage: 0 });
+
   const [formData, setFormData] = useState({
     code: "",
-    discountType: "Percentage" as "Percentage" | "Fixed",
-    value: 0,
-    expiryDate: "",
-    usageLimit: 0,
-    status: "Active" as "Active" | "Expired" | "Disabled"
+    discount_percentage: 0,
+    description: "",
+    valid_until: "",
+    is_active: true
   });
 
-  const handleAddCoupon = () => {
-    const newCoupon: Coupon = {
-      id: coupons.length + 1,
-      ...formData,
-      usageCount: 0,
-      createdDate: new Date().toISOString().split('T')[0]
-    };
-    setCoupons([newCoupon, ...coupons]);
-    setIsAddDialogOpen(false);
-    resetForm();
+  const fetchCoupons = async () => {
+    try {
+      const res = await api.get("/admin/offers");
+      setCoupons(res.data);
+      const statRes = await api.get("/admin/offers/stats");
+      setStats(statRes.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleEditCoupon = () => {
-    if (selectedCoupon) {
-      setCoupons(coupons.map(coupon => 
-        coupon.id === selectedCoupon.id 
-          ? { ...coupon, ...formData }
-          : coupon
-      ));
-      setIsEditDialogOpen(false);
-      setSelectedCoupon(null);
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
+
+  const handleAddCoupon = async () => {
+    try {
+      await api.post("/admin/offers", {
+        ...formData,
+        valid_until: new Date(formData.valid_until).toISOString()
+      });
+      setIsAddDialogOpen(false);
       resetForm();
+      fetchCoupons();
+    } catch (err: any) {
+      alert("Error creating offer: " + (err.response?.data?.detail || err.message));
     }
   };
 
-  const handleDeleteCoupon = (id: number) => {
+  const handleEditCoupon = async () => {
+    if (selectedCoupon) {
+      try {
+        await api.put(`/admin/offers/${selectedCoupon.id}`, {
+          ...formData,
+          valid_until: new Date(formData.valid_until).toISOString()
+        });
+        setIsEditDialogOpen(false);
+        setSelectedCoupon(null);
+        resetForm();
+        fetchCoupons();
+      } catch (err: any) {
+        alert("Error updating offer: " + (err.response?.data?.detail || err.message));
+      }
+    }
+  };
+
+  const handleDeleteCoupon = async (id: number) => {
     if (confirm("Are you sure you want to delete this coupon?")) {
-      setCoupons(coupons.filter(coupon => coupon.id !== id));
+      try {
+        await api.delete(`/admin/offers/${id}`);
+        fetchCoupons();
+      } catch (err: any) {
+        alert("Error deleting offer: " + (err.response?.data?.detail || err.message));
+      }
     }
   };
 
-  const openEditDialog = (coupon: Coupon) => {
+  const openEditDialog = (coupon: Offer) => {
     setSelectedCoupon(coupon);
     setFormData({
       code: coupon.code,
-      discountType: coupon.discountType,
-      value: coupon.value,
-      expiryDate: coupon.expiryDate,
-      usageLimit: coupon.usageLimit,
-      status: coupon.status
+      discount_percentage: coupon.discount_percentage,
+      description: coupon.description,
+      valid_until: coupon.valid_until.split("T")[0],
+      is_active: coupon.is_active
     });
     setIsEditDialogOpen(true);
   };
@@ -146,11 +113,10 @@ export default function AdminPayments() {
   const resetForm = () => {
     setFormData({
       code: "",
-      discountType: "Percentage",
-      value: 0,
-      expiryDate: "",
-      usageLimit: 0,
-      status: "Active"
+      discount_percentage: 0,
+      description: "",
+      valid_until: "",
+      is_active: true
     });
   };
 
@@ -168,67 +134,45 @@ export default function AdminPayments() {
         </div>
 
         <div>
-          <Label>Discount Type *</Label>
-          <Select 
-            value={formData.discountType} 
-            onValueChange={(value: "Percentage" | "Fixed") => setFormData({ ...formData, discountType: value })}
-          >
-            <SelectTrigger className="mt-2">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Percentage">Percentage (%)</SelectItem>
-              <SelectItem value="Fixed">Fixed Amount (₹)</SelectItem>
-            </SelectContent>
-          </Select>
+          <Label>Discount Percentage (%) *</Label>
+          <Input
+            type="number"
+            value={formData.discount_percentage || ""}
+            onChange={(e) => setFormData({ ...formData, discount_percentage: Number(e.target.value) })}
+            placeholder="30"
+            className="mt-2"
+            min="0"
+            max="100"
+          />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label>
-            {formData.discountType === "Percentage" ? "Discount Percentage" : "Discount Amount"} *
-          </Label>
-          <Input
-            type="number"
-            value={formData.value || ""}
-            onChange={(e) => setFormData({ ...formData, value: Number(e.target.value) })}
-            placeholder={formData.discountType === "Percentage" ? "30" : "5000"}
-            className="mt-2"
-            min="0"
-            max={formData.discountType === "Percentage" ? "100" : undefined}
-          />
-        </div>
+      <div>
+        <Label>Description</Label>
+        <Input
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          placeholder="New Year Sale"
+          className="mt-2"
+        />
+      </div>
 
+      <div className="grid grid-cols-2 gap-4">
         <div>
           <Label>Expiry Date *</Label>
           <Input
             type="date"
-            value={formData.expiryDate}
-            onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
+            value={formData.valid_until}
+            onChange={(e) => setFormData({ ...formData, valid_until: e.target.value })}
             className="mt-2"
-          />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label>Usage Limit *</Label>
-          <Input
-            type="number"
-            value={formData.usageLimit || ""}
-            onChange={(e) => setFormData({ ...formData, usageLimit: Number(e.target.value) })}
-            placeholder="500"
-            className="mt-2"
-            min="0"
           />
         </div>
 
         <div>
           <Label>Status *</Label>
           <Select 
-            value={formData.status} 
-            onValueChange={(value: "Active" | "Expired" | "Disabled") => setFormData({ ...formData, status: value })}
+            value={formData.is_active ? "Active" : "Disabled"} 
+            onValueChange={(value) => setFormData({ ...formData, is_active: value === "Active" })}
           >
             <SelectTrigger className="mt-2">
               <SelectValue />
@@ -236,7 +180,6 @@ export default function AdminPayments() {
             <SelectContent>
               <SelectItem value="Active">Active</SelectItem>
               <SelectItem value="Disabled">Disabled</SelectItem>
-              <SelectItem value="Expired">Expired</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -256,11 +199,9 @@ export default function AdminPayments() {
 
   const totalRevenue = "₹2.45Cr";
   const monthlyRevenue = "₹24.5L";
-  const activeCoupons = coupons.filter(c => c.status === "Active").length;
-  const totalUsage = coupons.reduce((sum, c) => sum + c.usageCount, 0);
 
   return (
-    <DashboardLayout role="admin">
+    <DashboardLayout navItems={[{ label: "Payments", path: "/admin/payments", icon: <IndianRupee size={20} /> }]} userRole="admin" userName="Admin">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -287,7 +228,7 @@ export default function AdminPayments() {
           </Dialog>
         </div>
 
-        {/* Revenue Stats — restricted to Finance Admin / Super Admin */}
+        {/* Revenue Stats */}
         {!canViewRevenue ? (
           <Card className="p-8 border-2 border-orange-200 bg-orange-50 flex items-center gap-4">
             <div className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "rgba(229,57,53,0.1)" }}>
@@ -295,10 +236,7 @@ export default function AdminPayments() {
             </div>
             <div>
               <div className="font-bold text-lg" style={{ color: "#121212" }}>Revenue Access Restricted</div>
-              <div className="text-gray-600 text-sm mt-1">You do not have permission to view revenue data. Contact a Super Admin to grant access.</div>
-              <div className="mt-2 inline-flex items-center gap-2 text-xs text-orange-600 font-medium">
-                <Lock className="h-3 w-3" /> Requires Super Admin approval
-              </div>
+              <div className="text-gray-600 text-sm mt-1">You do not have permission to view revenue data.</div>
             </div>
           </Card>
         ) : (
@@ -333,7 +271,7 @@ export default function AdminPayments() {
                 <Tag className="h-6 w-6" style={{ color: '#E53935' }} />
               </div>
               <div>
-                <div className="text-2xl font-bold" style={{ color: '#121212' }}>{activeCoupons}</div>
+                <div className="text-2xl font-bold" style={{ color: '#121212' }}>{stats.active_coupons}</div>
                 <div className="text-sm text-gray-600">Active Coupons</div>
               </div>
             </div>
@@ -345,7 +283,7 @@ export default function AdminPayments() {
                 <Users className="h-6 w-6" style={{ color: '#E53935' }} />
               </div>
               <div>
-                <div className="text-2xl font-bold" style={{ color: '#121212' }}>{totalUsage}</div>
+                <div className="text-2xl font-bold" style={{ color: '#121212' }}>{stats.total_usage}</div>
                 <div className="text-sm text-gray-600">Total Usage</div>
               </div>
             </div>
@@ -354,255 +292,81 @@ export default function AdminPayments() {
         )}
 
         {/* Coupons Management */}
-        <Card className="border-2 border-gray-100">
-          <Tabs defaultValue="all" className="w-full">
-            <div className="border-b border-gray-200 px-6 pt-6">
-              <TabsList className="bg-gray-100">
-                <TabsTrigger value="all">All Coupons</TabsTrigger>
-                <TabsTrigger value="active">Active ({activeCoupons})</TabsTrigger>
-                <TabsTrigger value="expired">Expired</TabsTrigger>
-              </TabsList>
-            </div>
-
-            <TabsContent value="all" className="p-0">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-gray-50 hover:bg-gray-50">
-                      <TableHead className="font-bold">Code</TableHead>
-                      <TableHead className="font-bold">Discount</TableHead>
-                      <TableHead className="font-bold">Type</TableHead>
-                      <TableHead className="font-bold">Usage</TableHead>
-                      <TableHead className="font-bold">Expiry Date</TableHead>
-                      <TableHead className="font-bold">Status</TableHead>
-                      <TableHead className="font-bold text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {coupons.map((coupon) => (
-                      <TableRow key={coupon.id} className="hover:bg-gray-50">
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded flex items-center justify-center" style={{ background: 'rgba(229, 57, 53, 0.1)' }}>
-                              <Tag className="h-4 w-4" style={{ color: '#E53935' }} />
-                            </div>
-                            <span className="font-bold" style={{ color: '#121212' }}>{coupon.code}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <span className="font-medium" style={{ color: '#E53935' }}>
-                            {coupon.discountType === "Percentage" 
-                              ? `${coupon.value}%` 
-                              : `₹${coupon.value}`}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="border-gray-300">
-                            {coupon.discountType}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="text-sm">
-                            <div className="font-medium" style={{ color: '#121212' }}>
-                              {coupon.usageCount} / {coupon.usageLimit}
-                            </div>
-                            <div className="w-24 h-2 bg-gray-200 rounded-full mt-1">
-                              <div 
-                                className="h-full rounded-full transition-all"
-                                style={{ 
-                                  background: '#E53935',
-                                  width: `${(coupon.usageCount / coupon.usageLimit) * 100}%` 
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-gray-600">
-                          {new Date(coupon.expiryDate).toLocaleDateString('en-IN', { 
-                            day: 'numeric', 
-                            month: 'short', 
-                            year: 'numeric' 
-                          })}
-                        </TableCell>
-                        <TableCell>
-                          <Badge 
-                            style={{ 
-                              background: coupon.status === "Active" ? '#4CAF50' : 
-                                         coupon.status === "Expired" ? '#gray' : '#FF9800', 
-                              color: 'white' 
-                            }}
-                          >
-                            {coupon.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => openEditDialog(coupon)}
-                              className="border-gray-300 hover:border-[#E53935] hover:text-[#E53935]"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleDeleteCoupon(coupon.id)}
-                              className="border-gray-300 hover:border-red-500 hover:text-red-500"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="active" className="p-0">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-gray-50 hover:bg-gray-50">
-                      <TableHead className="font-bold">Code</TableHead>
-                      <TableHead className="font-bold">Discount</TableHead>
-                      <TableHead className="font-bold">Type</TableHead>
-                      <TableHead className="font-bold">Usage</TableHead>
-                      <TableHead className="font-bold">Expiry Date</TableHead>
-                      <TableHead className="font-bold text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {coupons.filter(c => c.status === "Active").map((coupon) => (
-                      <TableRow key={coupon.id} className="hover:bg-gray-50">
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded flex items-center justify-center" style={{ background: 'rgba(229, 57, 53, 0.1)' }}>
-                              <Tag className="h-4 w-4" style={{ color: '#E53935' }} />
-                            </div>
-                            <span className="font-bold" style={{ color: '#121212' }}>{coupon.code}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <span className="font-medium" style={{ color: '#E53935' }}>
-                            {coupon.discountType === "Percentage" 
-                              ? `${coupon.value}%` 
-                              : `₹${coupon.value}`}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="border-gray-300">
-                            {coupon.discountType}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="text-sm">
-                            <div className="font-medium" style={{ color: '#121212' }}>
-                              {coupon.usageCount} / {coupon.usageLimit}
-                            </div>
-                            <div className="w-24 h-2 bg-gray-200 rounded-full mt-1">
-                              <div 
-                                className="h-full rounded-full transition-all"
-                                style={{ 
-                                  background: '#E53935',
-                                  width: `${(coupon.usageCount / coupon.usageLimit) * 100}%` 
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-gray-600">
-                          {new Date(coupon.expiryDate).toLocaleDateString('en-IN', { 
-                            day: 'numeric', 
-                            month: 'short', 
-                            year: 'numeric' 
-                          })}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => openEditDialog(coupon)}
-                              className="border-gray-300 hover:border-[#E53935] hover:text-[#E53935]"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleDeleteCoupon(coupon.id)}
-                              className="border-gray-300 hover:border-red-500 hover:text-red-500"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="expired" className="p-0">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-gray-50 hover:bg-gray-50">
-                      <TableHead className="font-bold">Code</TableHead>
-                      <TableHead className="font-bold">Discount</TableHead>
-                      <TableHead className="font-bold">Usage</TableHead>
-                      <TableHead className="font-bold">Expiry Date</TableHead>
-                      <TableHead className="font-bold text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {coupons.filter(c => c.status === "Expired").map((coupon) => (
-                      <TableRow key={coupon.id} className="hover:bg-gray-50 opacity-60">
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded flex items-center justify-center bg-gray-200">
-                              <Tag className="h-4 w-4 text-gray-500" />
-                            </div>
-                            <span className="font-bold text-gray-500">{coupon.code}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-gray-500">
-                          {coupon.discountType === "Percentage" 
-                            ? `${coupon.value}%` 
-                            : `₹${coupon.value}`}
-                        </TableCell>
-                        <TableCell className="text-gray-500">
-                          {coupon.usageCount} / {coupon.usageLimit}
-                        </TableCell>
-                        <TableCell className="text-gray-500">
-                          {new Date(coupon.expiryDate).toLocaleDateString('en-IN', { 
-                            day: 'numeric', 
-                            month: 'short', 
-                            year: 'numeric' 
-                          })}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDeleteCoupon(coupon.id)}
-                            className="border-gray-300 hover:border-red-500 hover:text-red-500"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </TabsContent>
-          </Tabs>
+        <Card className="border-2 border-gray-100 p-4">
+          <h2 className="text-xl font-bold mb-4">All Coupons</h2>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50 hover:bg-gray-50">
+                  <TableHead className="font-bold">Code</TableHead>
+                  <TableHead className="font-bold">Discount</TableHead>
+                  <TableHead className="font-bold">Description</TableHead>
+                  <TableHead className="font-bold">Usage</TableHead>
+                  <TableHead className="font-bold">Expiry Date</TableHead>
+                  <TableHead className="font-bold">Status</TableHead>
+                  <TableHead className="font-bold text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {coupons.map((coupon) => (
+                  <TableRow key={coupon.id} className="hover:bg-gray-50">
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded flex items-center justify-center" style={{ background: 'rgba(229, 57, 53, 0.1)' }}>
+                          <Tag className="h-4 w-4" style={{ color: '#E53935' }} />
+                        </div>
+                        <span className="font-bold" style={{ color: '#121212' }}>{coupon.code}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium" style={{ color: '#E53935' }}>
+                        {coupon.discount_percentage}%
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-gray-600">{coupon.description}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium">{coupon.usage_count}</span>
+                    </TableCell>
+                    <TableCell className="text-gray-600">
+                      {new Date(coupon.valid_until).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        style={{ 
+                          background: coupon.is_active ? '#4CAF50' : '#FF9800', 
+                          color: 'white' 
+                        }}
+                      >
+                        {coupon.is_active ? "Active" : "Disabled"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openEditDialog(coupon)}
+                          className="border-gray-300 hover:border-[#E53935] hover:text-[#E53935]"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteCoupon(coupon.id)}
+                          className="border-gray-300 hover:border-red-500 hover:text-red-500"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </Card>
 
         {/* Edit Dialog */}

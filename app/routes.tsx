@@ -40,6 +40,9 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import AdminNews from "./pages/admin/AdminNews";
 import AdminRoles from "./pages/admin/AdminRoles";
 
+// Distributor Pages
+import DistributorDashboard from "./pages/distributor/DistributorDashboard";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -179,5 +182,10 @@ export const router = createBrowserRouter([
   {
     path: "/admin/contracts",
     Component: AdminContracts,
+  },
+  // Distributor Routes
+  {
+    path: "/distributor/dashboard",
+    Component: DistributorDashboard,
   },
 ]);

@@ -1,8 +1,11 @@
+import { useState, useEffect } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
-import { Home, Users, BookOpen, Video, FileQuestion, IndianRupee, Bot, TrendingUp, BarChart3, Settings, Plus, Calendar, Clock } from "lucide-react";
+import { Input } from "../../components/ui/input";
+import { Home, Users, BookOpen, Video, FileQuestion, IndianRupee, Bot, TrendingUp, BarChart3, Settings, Plus, Calendar, Clock, X } from "lucide-react";
+import api from "../../services/api";
 
 const navItems = [
   { label: "Dashboard", path: "/admin/dashboard", icon: <Home size={20} /> },
@@ -17,21 +20,60 @@ const navItems = [
   { label: "Settings", path: "/admin/settings", icon: <Settings size={20} /> },
 ];
 
-const lectures = [
-  { id: 1, title: "Advanced Chart Patterns", teacher: "Amit Desai", date: "Apr 11, 2026", time: "10:00 AM", students: 45, status: "scheduled" },
-  { id: 2, title: "Risk Management", teacher: "Vikram Desai", date: "Apr 13, 2026", time: "11:00 AM", students: 38, status: "scheduled" },
-  { id: 3, title: "Options Trading", teacher: "Amit Desai", date: "Apr 8, 2026", time: "2:00 PM", students: 42, status: "completed" },
-];
-
 export default function AdminLectures() {
+  const [lectures, setLectures] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Modal state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newLecture, setNewLecture] = useState({
+    title: "",
+    description: "",
+    instructor_name: "",
+    start_time: "",
+    end_time: "",
+    meeting_url: ""
+  });
+
+  const fetchLectures = async () => {
+    try {
+      const res = await api.get("/lectures");
+      setLectures(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLectures();
+  }, []);
+
+  const handleAddLecture = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await api.post("/admin/lectures", {
+        ...newLecture,
+        start_time: new Date(newLecture.start_time).toISOString(),
+        end_time: new Date(newLecture.end_time).toISOString()
+      });
+      setShowAddModal(false);
+      setNewLecture({ title: "", description: "", instructor_name: "", start_time: "", end_time: "", meeting_url: "" });
+      fetchLectures();
+    } catch (err: any) {
+      alert("Error creating lecture: " + (err.response?.data?.detail || err.message));
+    }
+  };
+
   return (
-    <DashboardLayout navItems={navItems} userRole="admin" userName="Vikram Desai">
+    <DashboardLayout navItems={navItems} userRole="admin" userName="Admin">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Lecture Management</h1>
           <p className="text-[#0B2A5B]/70">Schedule and assign lectures to teachers</p>
         </div>
-        <Button className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]">
+        <Button onClick={() => setShowAddModal(true)} className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]">
           <Plus size={16} className="mr-2" />
           Schedule Lecture
         </Button>
@@ -49,19 +91,20 @@ export default function AdminLectures() {
                   </Badge>
                 </div>
                 <div className="flex items-center gap-6 text-sm text-[#0B2A5B]/70">
-                  <span>Teacher: {lecture.teacher}</span>
+                  <span>Teacher: {lecture.instructor_name || "Unassigned"}</span>
                   <span className="flex items-center gap-1">
                     <Calendar size={14} />
-                    {lecture.date}
+                    {new Date(lecture.start_time).toLocaleDateString()}
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock size={14} />
-                    {lecture.time}
+                    {new Date(lecture.start_time).toLocaleTimeString()}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Users size={14} />
-                    {lecture.students} students
-                  </span>
+                  {lecture.meeting_url && (
+                    <span className="flex items-center gap-1 text-blue-600">
+                      <a href={lecture.meeting_url} target="_blank" rel="noreferrer" className="hover:underline">Join Link</a>
+                    </span>
+                  )}
                 </div>
               </div>
               <Button size="sm" variant="outline" className="border-[#0B2A5B]/20">
@@ -70,7 +113,60 @@ export default function AdminLectures() {
             </div>
           </Card>
         ))}
+        {lectures.length === 0 && !loading && (
+           <p className="text-[#0B2A5B]/70">No lectures scheduled yet.</p>
+        )}
       </div>
+
+      {/* Add Lecture Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <Card className="w-full max-w-md p-6 bg-white shadow-xl relative">
+            <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-black">
+              <X size={20} />
+            </button>
+            <h2 className="text-2xl font-bold mb-4">Schedule New Lecture</h2>
+            <form onSubmit={handleAddLecture} className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Title</label>
+                <Input required value={newLecture.title} onChange={(e) => setNewLecture({...newLecture, title: e.target.value})} />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Description</label>
+                <textarea 
+                  className="w-full p-2 border rounded mt-1 bg-gray-50"
+                  rows={2}
+                  value={newLecture.description} 
+                  onChange={(e) => setNewLecture({...newLecture, description: e.target.value})}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium">Instructor Name</label>
+                <Input required value={newLecture.instructor_name} onChange={(e) => setNewLecture({...newLecture, instructor_name: e.target.value})} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium">Start Time</label>
+                  <Input required type="datetime-local" value={newLecture.start_time} onChange={(e) => setNewLecture({...newLecture, start_time: e.target.value})} />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">End Time</label>
+                  <Input required type="datetime-local" value={newLecture.end_time} onChange={(e) => setNewLecture({...newLecture, end_time: e.target.value})} />
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium">Meeting URL</label>
+                <Input type="url" placeholder="https://zoom.us/..." value={newLecture.meeting_url} onChange={(e) => setNewLecture({...newLecture, meeting_url: e.target.value})} />
+              </div>
+
+              <Button type="submit" className="w-full bg-[#0B2A5B] text-white hover:bg-[#1a3d7a]">
+                Schedule Lecture
+              </Button>
+            </form>
+          </Card>
+        </div>
+      )}
+
     </DashboardLayout>
   );
 }

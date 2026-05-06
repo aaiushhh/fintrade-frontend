@@ -30,10 +30,17 @@ export default function LoginPage() {
       
       // Determine dashboard based on role
       const roles = user.roles || [];
-      if (roles.includes("admin")) {
+      const isSuperAdmin = roles.some((r: any) => r.name === "super_admin");
+      const isAdmin = roles.some((r: any) => r.name === "admin");
+      const isFaculty = roles.some((r: any) => r.name === "faculty");
+      const isDistributor = roles.some((r: any) => r.name === "distributor");
+
+      if (isSuperAdmin || isAdmin) {
         navigate("/admin/dashboard");
-      } else if (roles.includes("faculty")) {
+      } else if (isFaculty) {
         navigate("/teacher/dashboard");
+      } else if (isDistributor) {
+        navigate("/distributor/dashboard");
       } else {
         navigate("/student/dashboard");
       }
