@@ -38,6 +38,7 @@ const getNavItemsByRole = (role: string): NavItem[] => {
     case "teacher":
       return [
         { label: "Dashboard", path: "/teacher/dashboard", icon: <Home size={20} /> },
+        { label: "Courses", path: "/teacher/courses", icon: <BookOpen size={20} /> },
         { label: "Students", path: "/teacher/students", icon: <Users size={20} /> },
         { label: "Lectures", path: "/teacher/lectures", icon: <Video size={20} /> },
         { label: "Doubt Sessions", path: "/teacher/doubt-sessions", icon: <MessageCircle size={20} /> },

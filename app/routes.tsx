@@ -20,6 +20,7 @@ import Placement from "./pages/student/Placement";
 
 // Teacher Pages
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import TeacherCourses from "./pages/teacher/TeacherCourses";
 import TeacherStudents from "./pages/teacher/TeacherStudents";
 import TeacherLectures from "./pages/teacher/TeacherLectures";
 import DoubtSessions from "./pages/teacher/DoubtSessions";
@@ -109,6 +110,10 @@ export const router = createBrowserRouter([
   {
     path: "/teacher/dashboard",
     Component: TeacherDashboard,
+  },
+  {
+    path: "/teacher/courses",
+    Component: TeacherCourses,
   },
   {
     path: "/teacher/students",
