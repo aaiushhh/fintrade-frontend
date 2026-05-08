@@ -29,7 +29,7 @@ export default function TeacherCourses() {
   const [saving, setSaving] = useState(false);
 
   const fetchCourses = async () => {
-    try { const res = await api.get("/courses"); setCourses(res.data); }
+    try { const res = await api.get("/admin/courses"); setCourses(res.data); }
     catch (err) { console.error(err); }
     finally { setLoading(false); }
   };
