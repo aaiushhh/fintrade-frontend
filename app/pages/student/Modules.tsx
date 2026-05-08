@@ -11,6 +11,7 @@ import api from "../../services/api";
 export default function Modules() {
   const [courses, setCourses] = useState<any[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  const [activeLesson, setActiveLesson] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0);
   const [generatingAudio, setGeneratingAudio] = useState(false);
@@ -93,7 +94,7 @@ export default function Modules() {
               <Card
                 key={course.id}
                 className={`p-4 cursor-pointer transition-all ${selectedCourse?.id === course.id ? "bg-[#C2A86A]/10 border-2 border-[#C2A86A] shadow-lg" : "bg-white hover:shadow-md"}`}
-                onClick={() => setSelectedCourse(course)}
+                onClick={() => { setSelectedCourse(course); setActiveLesson(null); }}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
@@ -128,44 +129,85 @@ export default function Modules() {
                   </div>
                 </div>
 
-                <Tabs defaultValue="lessons" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 mb-6">
-                    <TabsTrigger value="lessons">Modules & Lessons</TabsTrigger>
-                    <TabsTrigger value="resources">Resources</TabsTrigger>
-                  </TabsList>
+                {activeLesson ? (
+                  <div className="space-y-6">
+                    <Button variant="ghost" onClick={() => setActiveLesson(null)} className="text-[#0B2A5B]/60 hover:text-[#0B2A5B] p-0 h-auto mb-4">
+                      &larr; Back to Modules
+                    </Button>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-bold text-[#0B2A5B]">{activeLesson.title}</h3>
+                      <div className="flex items-center gap-2">
+                        {getTypeIcon(activeLesson.content_type)}
+                        <span className="text-sm font-medium text-[#0B2A5B] capitalize">{activeLesson.content_type}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-[#F4F1EA] rounded-xl p-6 min-h-[300px]">
+                      {activeLesson.content_type === "video" && activeLesson.video_url ? (
+                        <div className="w-full aspect-video rounded-lg overflow-hidden bg-black">
+                          {activeLesson.video_url.includes("youtube") || activeLesson.video_url.includes("vimeo") ? (
+                            <iframe src={activeLesson.video_url} className="w-full h-full" allowFullScreen></iframe>
+                          ) : (
+                            <video src={activeLesson.video_url} controls className="w-full h-full"></video>
+                          )}
+                        </div>
+                      ) : activeLesson.content_type === "audio" && activeLesson.video_url ? (
+                        <div className="flex flex-col items-center justify-center h-full py-12">
+                          <FileAudio size={64} className="text-[#0B2A5B] mb-6" />
+                          <audio src={activeLesson.video_url} controls className="w-full max-w-md"></audio>
+                        </div>
+                      ) : activeLesson.content ? (
+                        <div className="prose max-w-none text-[#0B2A5B]">
+                          {/* In a real app, this might be rendered via markdown */}
+                          <div dangerouslySetInnerHTML={{ __html: activeLesson.content }} />
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center h-full min-h-[200px] text-[#0B2A5B]/60">
+                          Content is being processed or not available.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <Tabs defaultValue="lessons" className="w-full">
+                      <TabsList className="grid w-full grid-cols-2 mb-6">
+                        <TabsTrigger value="lessons">Modules & Lessons</TabsTrigger>
+                        <TabsTrigger value="resources">Resources</TabsTrigger>
+                      </TabsList>
 
-                  <TabsContent value="lessons" className="space-y-4">
-                    {(selectedCourse.modules || []).length === 0 ? (
-                      <p className="text-[#0B2A5B]/60 text-center py-8">No modules available yet for this course.</p>
-                    ) : (
-                      (selectedCourse.modules || []).sort((a: any, b: any) => a.order - b.order).map((mod: any, idx: number) => (
-                        <Card key={mod.id} className="p-4 bg-[#F4F1EA]">
-                          <h4 className="font-semibold text-[#0B2A5B] mb-3">Module {idx + 1}: {mod.title}</h4>
-                          {mod.description && <p className="text-xs text-[#0B2A5B]/60 mb-3">{mod.description}</p>}
-                          <div className="space-y-2">
-                            {(mod.lessons || []).sort((a: any, b: any) => a.order - b.order).map((lesson: any, li: number) => (
-                              <div key={lesson.id} className="flex items-center justify-between p-3 bg-white rounded-lg">
-                                <div className="flex items-center gap-3 flex-1">
-                                  <div className="w-8 h-8 bg-[#F4F1EA] rounded-full flex items-center justify-center">{getTypeIcon(lesson.content_type)}</div>
-                                  <div className="flex-1">
-                                    <p className="font-medium text-[#0B2A5B] text-sm">{li + 1}. {lesson.title}</p>
-                                    <div className="flex items-center gap-2 text-xs text-[#0B2A5B]/60">
-                                      <span className="capitalize">{lesson.content_type}</span>
-                                      {lesson.duration_minutes && <><span>•</span><span>{lesson.duration_minutes} min</span></>}
+                      <TabsContent value="lessons" className="space-y-4">
+                        {(selectedCourse.modules || []).length === 0 ? (
+                          <p className="text-[#0B2A5B]/60 text-center py-8">No modules available yet for this course.</p>
+                        ) : (
+                          (selectedCourse.modules || []).sort((a: any, b: any) => a.order - b.order).map((mod: any, idx: number) => (
+                            <Card key={mod.id} className="p-4 bg-[#F4F1EA]">
+                              <h4 className="font-semibold text-[#0B2A5B] mb-3">Module {idx + 1}: {mod.title}</h4>
+                              {mod.description && <p className="text-xs text-[#0B2A5B]/60 mb-3">{mod.description}</p>}
+                              <div className="space-y-2">
+                                {(mod.lessons || []).sort((a: any, b: any) => a.order - b.order).map((lesson: any, li: number) => (
+                                  <div key={lesson.id} className="flex items-center justify-between p-3 bg-white rounded-lg">
+                                    <div className="flex items-center gap-3 flex-1">
+                                      <div className="w-8 h-8 bg-[#F4F1EA] rounded-full flex items-center justify-center">{getTypeIcon(lesson.content_type)}</div>
+                                      <div className="flex-1">
+                                        <p className="font-medium text-[#0B2A5B] text-sm">{li + 1}. {lesson.title}</p>
+                                        <div className="flex items-center gap-2 text-xs text-[#0B2A5B]/60">
+                                          <span className="capitalize">{lesson.content_type}</span>
+                                          {lesson.duration_minutes && <><span>•</span><span>{lesson.duration_minutes} min</span></>}
+                                        </div>
+                                      </div>
                                     </div>
+                                    <Button onClick={() => setActiveLesson(lesson)} size="sm" className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]"><Play size={14} className="mr-1" />Start</Button>
                                   </div>
-                                </div>
-                                <Button size="sm" className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]"><Play size={14} className="mr-1" />Start</Button>
+                                ))}
+                                {(mod.lessons || []).length === 0 && <p className="text-xs text-[#0B2A5B]/50 text-center py-2">No lessons yet</p>}
                               </div>
-                            ))}
-                            {(mod.lessons || []).length === 0 && <p className="text-xs text-[#0B2A5B]/50 text-center py-2">No lessons yet</p>}
-                          </div>
-                        </Card>
-                      ))
-                    )}
-                  </TabsContent>
+                            </Card>
+                          ))
+                        )}
+                      </TabsContent>
 
-                  <TabsContent value="resources">
+                      <TabsContent value="resources">
                     <div className="space-y-3">
                       <Card className="p-4 bg-[#F4F1EA]">
                         <div className="flex items-center justify-between">
