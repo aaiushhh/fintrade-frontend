@@ -4,21 +4,8 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
-import { Home, Users, BookOpen, Video, FileQuestion, IndianRupee, Bot, TrendingUp, BarChart3, Settings, Plus, Calendar, Clock, X } from "lucide-react";
+import { Plus, Calendar, Clock, X } from "lucide-react";
 import api from "../../services/api";
-
-const navItems = [
-  { label: "Dashboard", path: "/admin/dashboard", icon: <Home size={20} /> },
-  { label: "Students", path: "/admin/students", icon: <Users size={20} /> },
-  { label: "Courses", path: "/admin/courses", icon: <BookOpen size={20} /> },
-  { label: "Lectures", path: "/admin/lectures", icon: <Video size={20} /> },
-  { label: "Exams", path: "/admin/exams", icon: <FileQuestion size={20} /> },
-  { label: "Payments", path: "/admin/payments", icon: <IndianRupee size={20} /> },
-  { label: "AI Chatbot", path: "/admin/ai-chatbot", icon: <Bot size={20} /> },
-  { label: "Simulator", path: "/admin/simulator", icon: <TrendingUp size={20} /> },
-  { label: "Reports", path: "/admin/reports", icon: <BarChart3 size={20} /> },
-  { label: "Settings", path: "/admin/settings", icon: <Settings size={20} /> },
-];
 
 export default function AdminLectures() {
   const [lectures, setLectures] = useState<any[]>([]);
@@ -67,7 +54,7 @@ export default function AdminLectures() {
   };
 
   return (
-    <DashboardLayout navItems={navItems} userRole="admin" userName="Admin">
+    <DashboardLayout role="admin">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Lecture Management</h1>

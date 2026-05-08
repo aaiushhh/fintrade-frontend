@@ -201,7 +201,7 @@ export default function AdminPayments() {
   const monthlyRevenue = "₹24.5L";
 
   return (
-    <DashboardLayout navItems={[{ label: "Payments", path: "/admin/payments", icon: <IndianRupee size={20} /> }]} userRole="admin" userName="Admin">
+    <DashboardLayout role="admin">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">

@@ -2,16 +2,9 @@ import DashboardLayout from "../../components/DashboardLayout";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
-import { Home, Users, Video, MessageCircle, FileQuestion, BarChart3, Plus, Edit, Eye } from "lucide-react";
+import { Plus, Edit, Eye } from "lucide-react";
 
-const navItems = [
-  { label: "Dashboard", path: "/teacher/dashboard", icon: <Home size={20} /> },
-  { label: "Students", path: "/teacher/students", icon: <Users size={20} /> },
-  { label: "Lectures", path: "/teacher/lectures", icon: <Video size={20} /> },
-  { label: "Doubt Sessions", path: "/teacher/doubt-sessions", icon: <MessageCircle size={20} /> },
-  { label: "Exams", path: "/teacher/exams", icon: <FileQuestion size={20} /> },
-  { label: "Reports", path: "/teacher/reports", icon: <BarChart3 size={20} /> },
-];
+
 
 const exams = [
   { id: 1, title: "Month 1 Assessment", questions: 30, duration: "60 min", avgScore: 76.5, totalAttempts: 142, status: "completed" },
@@ -21,7 +14,7 @@ const exams = [
 
 export default function TeacherExams() {
   return (
-    <DashboardLayout navItems={navItems} userRole="teacher" userName="Amit Desai">
+    <DashboardLayout role="teacher">
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>

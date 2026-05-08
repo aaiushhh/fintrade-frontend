@@ -12,7 +12,9 @@ interface NavItem {
 
 interface DashboardLayoutProps {
   children: ReactNode;
-  role: "student" | "teacher" | "admin";
+  role?: "student" | "teacher" | "admin";
+  /** @deprecated Use `role` instead */
+  userRole?: "student" | "teacher" | "admin";
   userName?: string;
   navItems?: NavItem[];
 }
@@ -78,15 +80,34 @@ const getUserNameByRole = (role: string): string => {
 
 export function DashboardLayout({
   children,
-  role,
-  userName,
+  role: roleProp,
+  userRole,
+  userName: userNameProp,
   navItems: customNavItems,
 }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
 
+  // Resolve role: prefer `role` prop, fall back to `userRole` alias
+  const role = roleProp || userRole || "student";
+
   const navItems = customNavItems || getNavItemsByRole(role);
-  const displayName = userName || getUserNameByRole(role);
+
+  // Auto-read userName from localStorage if not provided
+  const [autoName, setAutoName] = useState("User");
+  useEffect(() => {
+    if (!userNameProp) {
+      try {
+        const stored = localStorage.getItem("user");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setAutoName(parsed.full_name || getUserNameByRole(role));
+        }
+      } catch { /* ignore */ }
+    }
+  }, [userNameProp, role]);
+
+  const displayName = userNameProp || autoName || getUserNameByRole(role);
 
   // Restore sidebar scroll position
   useEffect(() => {

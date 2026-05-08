@@ -1,16 +1,8 @@
 import DashboardLayout from "../../components/DashboardLayout";
 import { Card } from "../../components/ui/card";
-import { Home, Users, Video, MessageCircle, FileQuestion, BarChart3 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 
-const navItems = [
-  { label: "Dashboard", path: "/teacher/dashboard", icon: <Home size={20} /> },
-  { label: "Students", path: "/teacher/students", icon: <Users size={20} /> },
-  { label: "Lectures", path: "/teacher/lectures", icon: <Video size={20} /> },
-  { label: "Doubt Sessions", path: "/teacher/doubt-sessions", icon: <MessageCircle size={20} /> },
-  { label: "Exams", path: "/teacher/exams", icon: <FileQuestion size={20} /> },
-  { label: "Reports", path: "/teacher/reports", icon: <BarChart3 size={20} /> },
-];
+
 
 const attendanceData = [
   { week: "Week 1", attendance: 88 },
@@ -28,7 +20,7 @@ const performanceData = [
 
 export default function TeacherReports() {
   return (
-    <DashboardLayout navItems={navItems} userRole="teacher" userName="Amit Desai">
+    <DashboardLayout role="teacher">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Reports & Analytics</h1>
         <p className="text-[#0B2A5B]/70">Detailed insights into class performance</p>

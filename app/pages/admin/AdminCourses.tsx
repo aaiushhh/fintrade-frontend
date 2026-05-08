@@ -4,21 +4,8 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
-import { Home, Users, BookOpen, Video, FileQuestion, IndianRupee, Bot, TrendingUp, BarChart3, Settings, Plus, Edit, X } from "lucide-react";
+import { Plus, Edit, X } from "lucide-react";
 import api from "../../services/api";
-
-const navItems = [
-  { label: "Dashboard", path: "/admin/dashboard", icon: <Home size={20} /> },
-  { label: "Students", path: "/admin/students", icon: <Users size={20} /> },
-  { label: "Courses", path: "/admin/courses", icon: <BookOpen size={20} /> },
-  { label: "Lectures", path: "/admin/lectures", icon: <Video size={20} /> },
-  { label: "Exams", path: "/admin/exams", icon: <FileQuestion size={20} /> },
-  { label: "Payments", path: "/admin/payments", icon: <IndianRupee size={20} /> },
-  { label: "AI Chatbot", path: "/admin/ai-chatbot", icon: <Bot size={20} /> },
-  { label: "Simulator", path: "/admin/simulator", icon: <TrendingUp size={20} /> },
-  { label: "Reports", path: "/admin/reports", icon: <BarChart3 size={20} /> },
-  { label: "Settings", path: "/admin/settings", icon: <Settings size={20} /> },
-];
 
 export default function AdminCourses() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -62,7 +49,7 @@ export default function AdminCourses() {
   };
 
   return (
-    <DashboardLayout navItems={navItems} userRole="admin" userName="Admin">
+    <DashboardLayout role="admin">
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>

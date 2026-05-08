@@ -4,15 +4,7 @@ import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Progress } from "../../components/ui/progress";
 import {
-  Home,
-  BookOpen,
-  Video,
-  MessageSquare,
-  FileText,
-  BarChart3,
   Award,
-  TrendingUp,
-  GraduationCap,
   CheckCircle,
   Building2,
   IndianRupee,
@@ -21,18 +13,7 @@ import {
   Clock,
 } from "lucide-react";
 
-const navItems = [
-  { label: "Dashboard", path: "/student/dashboard", icon: <Home size={20} /> },
-  { label: "Courses", path: "/student/courses", icon: <BookOpen size={20} /> },
-  { label: "Modules", path: "/student/modules", icon: <GraduationCap size={20} /> },
-  { label: "Lectures", path: "/student/lectures", icon: <Video size={20} /> },
-  { label: "AI Tutor", path: "/student/ai-tutor", icon: <MessageSquare size={20} /> },
-  { label: "Exams", path: "/student/exams", icon: <FileText size={20} /> },
-  { label: "Performance", path: "/student/performance", icon: <BarChart3 size={20} /> },
-  { label: "Certificate", path: "/student/certificate", icon: <Award size={20} /> },
-  { label: "Simulator", path: "/student/simulator", icon: <TrendingUp size={20} /> },
-  { label: "Placement", path: "/student/placement", icon: <Award size={20} /> },
-];
+
 
 const eligibilityCriteria = [
   { criteria: "Course Completion", status: "completed", score: 100 },
@@ -110,7 +91,7 @@ export default function Placement() {
   const isEligible = eligibilityCriteria.every((c) => c.status === "completed");
 
   return (
-    <DashboardLayout navItems={navItems} userRole="student" userName="Rahul Sharma">
+    <DashboardLayout role="student">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Placement Portal</h1>
         <p className="text-[#0B2A5B]/70">Explore job opportunities from our partner firms</p>

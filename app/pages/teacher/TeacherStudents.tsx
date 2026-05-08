@@ -5,12 +5,6 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Badge } from "../../components/ui/badge";
 import {
-  Home,
-  Users,
-  Video,
-  MessageCircle,
-  FileQuestion,
-  BarChart3,
   Search,
   Download,
   Eye,
@@ -25,14 +19,7 @@ import {
   TableRow,
 } from "../../components/ui/table";
 
-const navItems = [
-  { label: "Dashboard", path: "/teacher/dashboard", icon: <Home size={20} /> },
-  { label: "Students", path: "/teacher/students", icon: <Users size={20} /> },
-  { label: "Lectures", path: "/teacher/lectures", icon: <Video size={20} /> },
-  { label: "Doubt Sessions", path: "/teacher/doubt-sessions", icon: <MessageCircle size={20} /> },
-  { label: "Exams", path: "/teacher/exams", icon: <FileQuestion size={20} /> },
-  { label: "Reports", path: "/teacher/reports", icon: <BarChart3 size={20} /> },
-];
+
 
 const students = [
   {
@@ -108,7 +95,7 @@ export default function TeacherStudents() {
   );
 
   return (
-    <DashboardLayout navItems={navItems} userRole="teacher" userName="Amit Desai">
+    <DashboardLayout role="teacher">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">My Students</h1>
         <p className="text-[#0B2A5B]/70">Track student progress and performance</p>

@@ -3,24 +3,11 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { Home, Users, BookOpen, Video, FileQuestion, IndianRupee, Bot, TrendingUp, BarChart3, Settings } from "lucide-react";
 
-const navItems = [
-  { label: "Dashboard", path: "/admin/dashboard", icon: <Home size={20} /> },
-  { label: "Students", path: "/admin/students", icon: <Users size={20} /> },
-  { label: "Courses", path: "/admin/courses", icon: <BookOpen size={20} /> },
-  { label: "Lectures", path: "/admin/lectures", icon: <Video size={20} /> },
-  { label: "Exams", path: "/admin/exams", icon: <FileQuestion size={20} /> },
-  { label: "Payments", path: "/admin/payments", icon: <IndianRupee size={20} /> },
-  { label: "AI Chatbot", path: "/admin/ai-chatbot", icon: <Bot size={20} /> },
-  { label: "Simulator", path: "/admin/simulator", icon: <TrendingUp size={20} /> },
-  { label: "Reports", path: "/admin/reports", icon: <BarChart3 size={20} /> },
-  { label: "Settings", path: "/admin/settings", icon: <Settings size={20} /> },
-];
 
 export default function AdminSettings() {
   return (
-    <DashboardLayout navItems={navItems} userRole="admin" userName="Vikram Desai">
+    <DashboardLayout role="admin">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Platform Settings</h1>
         <p className="text-[#0B2A5B]/70">Configure platform settings and preferences</p>

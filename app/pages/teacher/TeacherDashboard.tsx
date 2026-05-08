@@ -17,14 +17,8 @@ import {
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-const navItems = [
-  { label: "Dashboard", path: "/teacher/dashboard", icon: <Home size={20} /> },
-  { label: "Students", path: "/teacher/students", icon: <Users size={20} /> },
-  { label: "Lectures", path: "/teacher/lectures", icon: <Video size={20} /> },
-  { label: "Doubt Sessions", path: "/teacher/doubt-sessions", icon: <MessageCircle size={20} /> },
-  { label: "Exams", path: "/teacher/exams", icon: <FileQuestion size={20} /> },
-  { label: "Reports", path: "/teacher/reports", icon: <BarChart3 size={20} /> },
-];
+
+
 
 const studentPerformance = [
   { name: "Module 1", average: 72 },
@@ -48,7 +42,7 @@ const pendingDoubts = [
 
 export default function TeacherDashboard() {
   return (
-    <DashboardLayout navItems={navItems} userRole="teacher" userName="Amit Desai">
+    <DashboardLayout role="teacher">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Welcome back, Amit!</h1>
         <p className="text-[#0B2A5B]/70">Manage your classes and student progress</p>

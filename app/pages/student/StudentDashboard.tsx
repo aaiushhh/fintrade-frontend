@@ -33,13 +33,7 @@ import {
   Cell,
 } from "recharts";
 
-const navItems = [
-  { label: "Dashboard", path: "/student/dashboard", icon: <Home size={20} /> },
-  { label: "Courses", path: "/student/courses", icon: <BookOpen size={20} /> },
-  { label: "Lectures", path: "/student/lectures", icon: <Video size={20} /> },
-  { label: "AI Tutor", path: "/student/ai-tutor", icon: <MessageSquare size={20} /> },
-  { label: "Entrance Exam", path: "/student/entrance-exam", icon: <FileText size={20} /> },
-];
+
 
 import { useState, useEffect } from "react";
 import api from "../../services/api";
@@ -62,7 +56,7 @@ export default function StudentDashboard() {
   }, []);
 
   return (
-    <DashboardLayout navItems={navItems} userRole="student" userName={userName}>
+    <DashboardLayout role="student">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Welcome back, {userName}!</h1>

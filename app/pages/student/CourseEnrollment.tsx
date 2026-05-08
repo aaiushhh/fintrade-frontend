@@ -23,18 +23,7 @@ import {
   Tag,
 } from "lucide-react";
 
-const navItems = [
-  { label: "Dashboard", path: "/student/dashboard", icon: <Home size={20} /> },
-  { label: "Courses", path: "/student/courses", icon: <BookOpen size={20} /> },
-  { label: "Modules", path: "/student/modules", icon: <GraduationCap size={20} /> },
-  { label: "Lectures", path: "/student/lectures", icon: <Video size={20} /> },
-  { label: "AI Tutor", path: "/student/ai-tutor", icon: <MessageSquare size={20} /> },
-  { label: "Exams", path: "/student/exams", icon: <FileText size={20} /> },
-  { label: "Performance", path: "/student/performance", icon: <BarChart3 size={20} /> },
-  { label: "Certificate", path: "/student/certificate", icon: <Award size={20} /> },
-  { label: "Simulator", path: "/student/simulator", icon: <TrendingUp size={20} /> },
-  { label: "Placement", path: "/student/placement", icon: <Award size={20} /> },
-];
+
 
 // We will fetch courses from the API instead of hardcoding them.
 type CourseType = {
@@ -123,7 +112,7 @@ export default function CourseEnrollment() {
   };
 
   return (
-    <DashboardLayout navItems={navItems} userRole="student" userName="Rahul Sharma">
+    <DashboardLayout role="student">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Available Courses</h1>
         <p className="text-[#0B2A5B]/70">Choose your learning path and start your trading journey</p>

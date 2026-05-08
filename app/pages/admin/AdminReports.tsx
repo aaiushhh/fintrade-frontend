@@ -1,20 +1,6 @@
 import DashboardLayout from "../../components/DashboardLayout";
 import { Card } from "../../components/ui/card";
-import { Home, Users, BookOpen, Video, FileQuestion, IndianRupee, Bot, TrendingUp, BarChart3, Settings } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-
-const navItems = [
-  { label: "Dashboard", path: "/admin/dashboard", icon: <Home size={20} /> },
-  { label: "Students", path: "/admin/students", icon: <Users size={20} /> },
-  { label: "Courses", path: "/admin/courses", icon: <BookOpen size={20} /> },
-  { label: "Lectures", path: "/admin/lectures", icon: <Video size={20} /> },
-  { label: "Exams", path: "/admin/exams", icon: <FileQuestion size={20} /> },
-  { label: "Payments", path: "/admin/payments", icon: <IndianRupee size={20} /> },
-  { label: "AI Chatbot", path: "/admin/ai-chatbot", icon: <Bot size={20} /> },
-  { label: "Simulator", path: "/admin/simulator", icon: <TrendingUp size={20} /> },
-  { label: "Reports", path: "/admin/reports", icon: <BarChart3 size={20} /> },
-  { label: "Settings", path: "/admin/settings", icon: <Settings size={20} /> },
-];
 
 const revenueData = [
   { month: "Oct", revenue: 1200000 },
@@ -36,7 +22,7 @@ const examData = [
 
 export default function AdminReports() {
   return (
-    <DashboardLayout navItems={navItems} userRole="admin" userName="Vikram Desai">
+    <DashboardLayout role="admin">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Analytics & Reports</h1>
         <p className="text-[#0B2A5B]/70">Comprehensive platform performance metrics</p>

@@ -2,16 +2,9 @@ import DashboardLayout from "../../components/DashboardLayout";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
-import { Home, Users, Video, MessageCircle, FileQuestion, BarChart3, Clock, CheckCircle } from "lucide-react";
+import { Clock, CheckCircle } from "lucide-react";
 
-const navItems = [
-  { label: "Dashboard", path: "/teacher/dashboard", icon: <Home size={20} /> },
-  { label: "Students", path: "/teacher/students", icon: <Users size={20} /> },
-  { label: "Lectures", path: "/teacher/lectures", icon: <Video size={20} /> },
-  { label: "Doubt Sessions", path: "/teacher/doubt-sessions", icon: <MessageCircle size={20} /> },
-  { label: "Exams", path: "/teacher/exams", icon: <FileQuestion size={20} /> },
-  { label: "Reports", path: "/teacher/reports", icon: <BarChart3 size={20} /> },
-];
+
 
 const doubts = [
   { id: 1, student: "Rahul Sharma", topic: "RSI Divergence", description: "How to identify bullish vs bearish divergence?", time: "2 hours ago", priority: "high", status: "pending" },
@@ -27,7 +20,7 @@ const resolvedDoubts = [
 
 export default function DoubtSessions() {
   return (
-    <DashboardLayout navItems={navItems} userRole="teacher" userName="Amit Desai">
+    <DashboardLayout role="teacher">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Doubt Sessions</h1>
         <p className="text-[#0B2A5B]/70">Resolve student queries and schedule sessions</p>
