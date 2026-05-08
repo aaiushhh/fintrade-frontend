@@ -250,10 +250,12 @@ export default function Modules() {
                   </div>
                 </div>
               </>
-            ) : (
-              <p className="text-center text-[#0B2A5B]/60 py-8">Select a course to view modules</p>
             )}
-          </Card>
+          </>
+        ) : (
+          <p className="text-center text-[#0B2A5B]/60 py-8">Select a course to view modules</p>
+        )}
+      </Card>
         </div>
       )}
     </DashboardLayout>
