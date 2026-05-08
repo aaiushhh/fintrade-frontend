@@ -194,6 +194,13 @@ export default function CourseEnrollment() {
               </div>
             </Card>
           ))}
+          {courses.length === 0 && (
+            <div className="col-span-2 text-center py-16">
+              <GraduationCap className="text-[#C2A86A] mx-auto mb-4" size={48} />
+              <h3 className="text-xl font-semibold text-[#0B2A5B] mb-2">No Courses Available Yet</h3>
+              <p className="text-[#0B2A5B]/60">Courses will appear here once they are published by our instructors. Check back soon!</p>
+            </div>
+          )}
         </div>
       ) : (
         <Card className="max-w-2xl mx-auto p-8 bg-white shadow-xl">

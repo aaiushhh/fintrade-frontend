@@ -67,10 +67,15 @@ export default function AdminCourses() {
             <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Course Management</h1>
             <p className="text-[#0B2A5B]/70">Manage your course catalog</p>
           </div>
-          <Button onClick={() => setShowAddModal(true)} className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]">
-            <Plus size={16} className="mr-2" />
-            Add New Course
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={async () => { try { const res = await api.post("/admin/courses/publish-all"); alert(res.data.message); fetchCourses(); } catch (err: any) { alert("Error: " + (err.response?.data?.detail || err.message)); } }} variant="outline" className="border-green-500 text-green-600 hover:bg-green-50">
+              Publish All Drafts
+            </Button>
+            <Button onClick={() => setShowAddModal(true)} className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]">
+              <Plus size={16} className="mr-2" />
+              Add New Course
+            </Button>
+          </div>
         </div>
       </div>
 
