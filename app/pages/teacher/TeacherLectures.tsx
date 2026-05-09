@@ -19,16 +19,59 @@ export default function TeacherLectures() {
     meeting_link: "", max_participants: 100,
   });
 
+  const [uploadingId, setUploadingId] = useState<number | null>(null);
+
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
+    setLoading(true);
     Promise.all([
       api.get("/lectures").then((r) => setLectures(r.data)),
       api.get("/admin/courses").then((r) => setCourses(r.data)),
     ]).catch(console.error).finally(() => setLoading(false));
-  }, []);
+  };
 
-  const now = new Date();
-  const upcoming = lectures.filter((l) => new Date(l.scheduled_at) > now || l.is_live);
-  const past = lectures.filter((l) => new Date(l.scheduled_at) <= now && !l.is_live);
+  const upcoming = lectures.filter((l) => !l.is_live && !l.is_completed);
+  const live = lectures.filter((l) => l.is_live && !l.is_completed);
+  const past = lectures.filter((l) => l.is_completed);
+
+  const handleStart = async (id: number) => {
+    try {
+      await api.put(`/admin/lectures/${id}/start`);
+      fetchData();
+    } catch (err: any) { alert("Error starting lecture: " + (err.response?.data?.detail || err.message)); }
+  };
+
+  const handleEnd = async (id: number) => {
+    try {
+      await api.put(`/admin/lectures/${id}/end`);
+      fetchData();
+    } catch (err: any) { alert("Error ending lecture: " + (err.response?.data?.detail || err.message)); }
+  };
+
+  const handleUploadVideo = async (id: number, file: File) => {
+    setUploadingId(id);
+    try {
+      // 1. Upload file
+      const formData = new FormData();
+      formData.append("file", file);
+      const uploadRes = await api.post("/admin/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      const url = uploadRes.data.url;
+
+      // 2. Add recording to lecture
+      await api.post(`/admin/lectures/${id}/recordings`, { recording_url: url });
+      fetchData();
+      alert("Video uploaded successfully!");
+    } catch (err: any) {
+      alert("Error uploading video: " + (err.response?.data?.detail || err.message));
+    } finally {
+      setUploadingId(null);
+    }
+  };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true);
@@ -40,7 +83,7 @@ export default function TeacherLectures() {
       });
       setShowAddModal(false);
       setNewLecture({ title: "", description: "", course_id: 0, scheduled_at: "", duration_minutes: 60, meeting_link: "", max_participants: 100 });
-      const res = await api.get("/lectures"); setLectures(res.data);
+      fetchData();
     } catch (err: any) { alert("Error: " + (err.response?.data?.detail || err.message)); }
     finally { setSaving(false); }
   };
@@ -70,6 +113,35 @@ export default function TeacherLectures() {
         </Card>
       </div>
 
+      {/* Live */}
+      {live.length > 0 && (
+        <Card className="p-6 bg-red-50 border border-red-200 shadow-lg mb-6">
+          <h3 className="text-xl font-semibold text-red-800 mb-6 flex items-center">
+            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse mr-2"></span>
+            Live Lectures ({live.length})
+          </h3>
+          <div className="space-y-4">
+            {live.map((l) => (
+              <div key={l.id} className="p-4 bg-white rounded-lg border border-red-100 flex items-center justify-between">
+                <div>
+                  <h4 className="font-semibold text-red-900 mb-2">{l.title}</h4>
+                  <div className="flex items-center gap-4 text-sm text-red-800/70">
+                    <span className="flex items-center gap-1"><Calendar size={14} />{new Date(l.scheduled_at).toLocaleDateString()}</span>
+                    <span className="flex items-center gap-1"><Clock size={14} />{new Date(l.scheduled_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                    <span className="flex items-center gap-1"><Users size={14} />{l.max_participants} max</span>
+                    <span>{l.duration_minutes} min</span>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  {l.meeting_link && <a href={l.meeting_link} target="_blank" rel="noreferrer"><Button size="sm" className="bg-green-600 text-white hover:bg-green-700"><Play size={14} className="mr-1" />Join Session</Button></a>}
+                  <Button size="sm" variant="destructive" onClick={() => handleEnd(l.id)}>End Session</Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
       {/* Upcoming */}
       <Card className="p-6 bg-white shadow-lg mb-6">
         <h3 className="text-xl font-semibold text-[#0B2A5B] mb-6">Upcoming Lectures ({upcoming.length})</h3>
@@ -89,8 +161,7 @@ export default function TeacherLectures() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  {l.meeting_link && <a href={l.meeting_link} target="_blank" rel="noreferrer"><Button size="sm" className="bg-green-600 text-white hover:bg-green-700"><Play size={14} className="mr-1" />Join</Button></a>}
-                  {l.is_live && <Badge className="bg-red-100 text-red-700 animate-pulse">LIVE</Badge>}
+                  <Button size="sm" className="bg-[#0B2A5B] text-white hover:bg-[#1a3d7a]" onClick={() => handleStart(l.id)}><Play size={14} className="mr-1" />Start Session</Button>
                 </div>
               </div>
             ))}
@@ -112,8 +183,28 @@ export default function TeacherLectures() {
                 <div className="flex items-center gap-2"><Calendar size={14} /><span>{new Date(l.scheduled_at).toLocaleDateString()}</span></div>
                 <span>{l.duration_minutes} min</span>
               </div>
-              {l.recordings?.length > 0 && (
-                <Button size="sm" variant="outline" className="w-full mt-3 border-[#0B2A5B]/20 text-[#0B2A5B]"><Video size={14} className="mr-2" />View Recording</Button>
+              {l.recordings?.length > 0 ? (
+                <a href={api.defaults.baseURL?.replace('/api', '') + l.recordings[0].recording_url} target="_blank" rel="noreferrer">
+                  <Button size="sm" variant="outline" className="w-full mt-3 border-[#0B2A5B]/20 text-[#0B2A5B]"><Video size={14} className="mr-2" />View Recording</Button>
+                </a>
+              ) : (
+                <div className="mt-3 relative">
+                  <input 
+                    type="file" 
+                    accept="video/*" 
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    disabled={uploadingId === l.id}
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files.length > 0) {
+                        handleUploadVideo(l.id, e.target.files[0]);
+                      }
+                    }}
+                  />
+                  <Button size="sm" variant="outline" disabled={uploadingId === l.id} className="w-full border-dashed border-[#0B2A5B]/40 text-[#0B2A5B]">
+                    <Upload size={14} className="mr-2" />
+                    {uploadingId === l.id ? "Uploading..." : "Upload Video"}
+                  </Button>
+                </div>
               )}
             </div>
           ))}
