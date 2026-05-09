@@ -90,7 +90,11 @@ export default function EntranceExam() {
       const qRes = await api.get(`/exams/questions?exam_id=${examId}`);
       
       // If the backend doesn't have options seeded, use local mock fallback temporarily for UI flow to work
-      const loadedQuestions = qRes.data.length > 0 ? qRes.data : examQuestions.map(q => ({
+      const loadedQuestions = qRes.data.length > 0 ? qRes.data.map((q: any) => ({
+        id: q.id,
+        text: q.question_text,
+        options: q.options.map((opt: any) => ({ id: opt.id, text: opt.option_text }))
+      })) : examQuestions.map(q => ({
         id: q.id,
         text: q.question,
         options: q.options.map((opt, i) => ({ id: i, text: opt }))
@@ -137,7 +141,7 @@ export default function EntranceExam() {
         answers: mappedAnswers
       });
       
-      const score = res.data.score || 0;
+      const score = res.data.percentage || 0;
       const passed = res.data.passed;
 
       if (passed) {
