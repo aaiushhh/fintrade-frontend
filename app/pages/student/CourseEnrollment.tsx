@@ -101,7 +101,7 @@ export default function CourseEnrollment() {
     if (!selectedCourse) return;
     setLoading(true);
     try {
-      await api.post(`/courses/${selectedCourse}/enroll`);
+      await api.post(`/courses/${selectedCourse}/enroll`, { distributor_code: couponCode });
       alert("Payment successful! Welcome to the course.");
       window.location.href = "/student/modules";
     } catch (err: any) {

@@ -17,8 +17,10 @@ const canViewRevenue = CURRENT_ADMIN_ROLE === "Super Admin" || CURRENT_ADMIN_ROL
 
 interface Offer {
   id: number;
+  title: string;
   code: string;
-  discount_percentage: number;
+  discount_type: string;
+  discount_value: number;
   description: string;
   valid_until: string;
   is_active: boolean;
@@ -34,8 +36,10 @@ export default function AdminPayments() {
   const [stats, setStats] = useState({ active_coupons: 0, total_usage: 0 });
 
   const [formData, setFormData] = useState({
+    title: "",
     code: "",
-    discount_percentage: 0,
+    discount_type: "percentage",
+    discount_value: 0,
     description: "",
     valid_until: "",
     is_active: true
@@ -101,8 +105,10 @@ export default function AdminPayments() {
   const openEditDialog = (coupon: Offer) => {
     setSelectedCoupon(coupon);
     setFormData({
+      title: coupon.title || coupon.code, // fallback to code if title missing
       code: coupon.code,
-      discount_percentage: coupon.discount_percentage,
+      discount_type: coupon.discount_type || "percentage",
+      discount_value: coupon.discount_value,
       description: coupon.description,
       valid_until: coupon.valid_until.split("T")[0],
       is_active: coupon.is_active
@@ -112,8 +118,10 @@ export default function AdminPayments() {
 
   const resetForm = () => {
     setFormData({
+      title: "",
       code: "",
-      discount_percentage: 0,
+      discount_type: "percentage",
+      discount_value: 0,
       description: "",
       valid_until: "",
       is_active: true
@@ -122,6 +130,15 @@ export default function AdminPayments() {
 
   const CouponForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
     <div className="space-y-4">
+      <div>
+        <Label>Coupon Title *</Label>
+        <Input
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          placeholder="New Year Sale 2026"
+          className="mt-2"
+        />
+      </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label>Coupon Code *</Label>
@@ -137,8 +154,8 @@ export default function AdminPayments() {
           <Label>Discount Percentage (%) *</Label>
           <Input
             type="number"
-            value={formData.discount_percentage || ""}
-            onChange={(e) => setFormData({ ...formData, discount_percentage: Number(e.target.value) })}
+            value={formData.discount_value || ""}
+            onChange={(e) => setFormData({ ...formData, discount_value: Number(e.target.value) })}
             placeholder="30"
             className="mt-2"
             min="0"
@@ -320,7 +337,7 @@ export default function AdminPayments() {
                     </TableCell>
                     <TableCell>
                       <span className="font-medium" style={{ color: '#E53935' }}>
-                        {coupon.discount_percentage}%
+                        {coupon.discount_value}%
                       </span>
                     </TableCell>
                     <TableCell>
