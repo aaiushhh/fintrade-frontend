@@ -4,16 +4,29 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Plus, Edit, Eye, Clock, FileText } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../components/ui/dialog";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import api from "../../services/api";
 
 export default function AdminExams() {
   const [exams, setExams] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    type: "entrance",
+    course_id: "",
+    duration_minutes: 60,
+    passing_score: 60,
+  });
 
-  useEffect(() => {
-    api.get("/exams/all")
+  const fetchExams = () => {
+    api.get("/admin/exams/all")
       .then((res) => {
-        // Combine entrance and course exams
         const allExams = [
           ...(res.data.entrance_exams || []),
           ...(res.data.course_exams || [])
@@ -22,7 +35,46 @@ export default function AdminExams() {
       })
       .catch((err) => console.error("Error fetching exams:", err))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchExams();
+    api.get("/admin/courses")
+      .then(res => setCourses(res.data))
+      .catch(err => console.error("Error fetching courses:", err));
   }, []);
+
+  const handleCreate = async () => {
+    try {
+      if (!formData.title || !formData.course_id) {
+        alert("Please fill in title and course");
+        return;
+      }
+      
+      const payload = {
+        title: formData.title,
+        course_id: parseInt(formData.course_id),
+        duration_minutes: formData.duration_minutes,
+        passing_score: formData.passing_score,
+      };
+
+      if (formData.type === "entrance") {
+        await api.post("/admin/exams/create", payload);
+      } else {
+        await api.post("/admin/exams/course-create", {
+          ...payload,
+          exam_type: formData.type
+        });
+      }
+      
+      setIsModalOpen(false);
+      setFormData({ title: "", type: "entrance", course_id: "", duration_minutes: 60, passing_score: 60 });
+      setLoading(true);
+      fetchExams();
+    } catch (err: any) {
+      alert("Failed to create exam: " + (err.response?.data?.detail || err.message));
+    }
+  };
 
   return (
     <DashboardLayout role="admin">
@@ -31,7 +83,7 @@ export default function AdminExams() {
           <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Exam Management</h1>
           <p className="text-[#0B2A5B]/70">Create and manage student assessments</p>
         </div>
-        <Button className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]">
+        <Button onClick={() => setIsModalOpen(true)} className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]">
           <Plus size={16} className="mr-2" />
           Create Exam
         </Button>
@@ -86,6 +138,73 @@ export default function AdminExams() {
         </div>
       )}
 
+      {/* Create Exam Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Create New Exam</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label>Title</Label>
+              <Input
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                placeholder="e.g. Month 1 Final"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label>Exam Type</Label>
+              <select
+                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              >
+                <option value="entrance">Entrance Exam</option>
+                <option value="course_final">Course Final</option>
+                <option value="monthly">Monthly Assessment</option>
+              </select>
+            </div>
+            <div className="grid gap-2">
+              <Label>Course</Label>
+              <select
+                className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={formData.course_id}
+                onChange={(e) => setFormData({ ...formData, course_id: e.target.value })}
+              >
+                <option value="">Select a Course</option>
+                {courses.map(c => (
+                  <option key={c.id} value={c.id}>{c.title}</option>
+                ))}
+              </select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label>Duration (min)</Label>
+                <Input
+                  type="number"
+                  value={formData.duration_minutes}
+                  onChange={(e) => setFormData({ ...formData, duration_minutes: parseInt(e.target.value) })}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Passing %</Label>
+                <Input
+                  type="number"
+                  value={formData.passing_score}
+                  onChange={(e) => setFormData({ ...formData, passing_score: parseInt(e.target.value) })}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button onClick={handleCreate} className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a]">
+              Create Exam
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
