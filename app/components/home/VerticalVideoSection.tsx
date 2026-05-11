@@ -1,0 +1,127 @@
+import { useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Card } from "../ui/card";
+
+const verticalVideos = [
+  {
+    id: "v1",
+    title: "How I Became a Funded Trader",
+    author: "Rahul S.",
+    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    views: "12K",
+  },
+  {
+    id: "v2",
+    title: "My First Profitable Trade",
+    author: "Priya V.",
+    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    views: "8.5K",
+  },
+  {
+    id: "v3",
+    title: "Risk Management Tips",
+    author: "Amit P.",
+    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    views: "15K",
+  },
+  {
+    id: "v4",
+    title: "Technical Analysis Basics",
+    author: "Karan M.",
+    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    views: "9.2K",
+  },
+  {
+    id: "v5",
+    title: "Day Trading Routine",
+    author: "Sneha R.",
+    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    views: "11K",
+  },
+  {
+    id: "v6",
+    title: "NIFTY Analysis Explained",
+    author: "Vikram D.",
+    embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    views: "7.8K",
+  },
+];
+
+export default function VerticalVideoSection() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (dir: "left" | "right") => {
+    if (!scrollRef.current) return;
+    const amount = 280;
+    scrollRef.current.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+  };
+
+  return (
+    <section className="py-20 relative z-10" style={{ background: "linear-gradient(135deg, #121212 0%, #1a1a1a 100%)" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10">
+          <div className="inline-block px-4 py-2 rounded-full mb-4 border border-[#E53935]/40" style={{ background: "rgba(229,57,53,0.1)" }}>
+            <span className="text-[#E53935] font-semibold text-sm">📱 Short Videos</span>
+          </div>
+          <h2 className="text-4xl font-bold mb-4 text-white">Quick Trading Tips</h2>
+          <p className="text-xl text-gray-400">Bite-sized trading wisdom from our community</p>
+        </div>
+
+        <div className="relative">
+          {/* Scroll Buttons */}
+          <button
+            onClick={() => scroll("left")}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors -ml-2 lg:-ml-5"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            onClick={() => scroll("right")}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors -mr-2 lg:-mr-5"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          {/* Scrollable Container */}
+          <div
+            ref={scrollRef}
+            className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {verticalVideos.map((vid) => (
+              <Card
+                key={vid.id}
+                className="flex-shrink-0 w-[240px] overflow-hidden border border-[#E53935]/20 hover:border-[#E53935]/50 transition-all hover:shadow-2xl group"
+                style={{ background: "rgba(255,255,255,0.05)" }}
+              >
+                {/* 9:16 Video Container */}
+                <div className="relative w-full" style={{ aspectRatio: "9/16" }}>
+                  <iframe
+                    src={vid.embedUrl}
+                    title={vid.title}
+                    className="absolute inset-0 w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                </div>
+                {/* Info */}
+                <div className="p-3">
+                  <h4 className="text-sm font-bold text-white mb-1 line-clamp-2">{vid.title}</h4>
+                  <div className="flex items-center justify-between text-xs text-gray-400">
+                    <span>{vid.author}</span>
+                    <span>{vid.views} views</span>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+      `}</style>
+    </section>
+  );
+}

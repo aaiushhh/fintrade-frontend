@@ -114,8 +114,29 @@ export default function CourseEnrollment() {
   return (
     <DashboardLayout role="student">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Available Courses</h1>
-        <p className="text-[#0B2A5B]/70">Choose your learning path and start your trading journey</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-[#0B2A5B] mb-2">Available Courses</h1>
+            <p className="text-[#0B2A5B]/70">Choose your learning path and start your trading journey</p>
+          </div>
+          <div className="flex gap-3 flex-shrink-0">
+            <Button
+              className="bg-[#0B2A5B] text-[#F4F1EA] hover:bg-[#1a3d7a] shadow-lg shadow-[#0B2A5B]/20"
+              onClick={() => { window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }); }}
+            >
+              <GraduationCap size={16} className="mr-2" />
+              Apply Now
+            </Button>
+            <Button
+              variant="outline"
+              className="border-2 border-[#0B2A5B]/20 text-[#0B2A5B] hover:bg-[#F4F1EA]"
+              onClick={() => { alert("Brochure download will be available soon!"); }}
+            >
+              <FileText size={16} className="mr-2" />
+              Download Brochure
+            </Button>
+          </div>
+        </div>
       </div>
 
       {!showPayment ? (

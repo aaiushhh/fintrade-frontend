@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ContractKYC from "./pages/student/ContractKYC";
 import AdminContracts from "./pages/admin/AdminContracts";
+import CategoryPage from "./pages/CategoryPage";
 
 // Student Pages
 import StudentDashboard from "./pages/student/StudentDashboard";
@@ -56,6 +57,10 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     Component: RegisterPage,
+  },
+  {
+    path: "/category/:slug",
+    Component: CategoryPage,
   },
   // Student Routes
   {

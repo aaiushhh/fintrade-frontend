@@ -31,10 +31,13 @@ export default function TickerStrip() {
         style={{
           display: "flex",
           alignItems: "center",
-          animation: "ticker-scroll 40s linear infinite",
+          animation: "ticker-scroll 20s linear infinite",
           whiteSpace: "nowrap",
           padding: "8px 0",
           willChange: "transform",
+          backfaceVisibility: "hidden",
+          transform: "translateZ(0)",
+          perspective: 1000,
         }}
       >
         {items.map((t, i) => (

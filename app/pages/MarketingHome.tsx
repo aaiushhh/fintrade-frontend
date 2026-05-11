@@ -1,9 +1,18 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router";
-import { Play, TrendingUp, Award, Users, BookOpen, LineChart, Video, CheckCircle, Star, ArrowRight, BarChart3, Brain, Target, Trophy, X, FileText } from "lucide-react";
+import { Link } from "react-router";
+import { Play, TrendingUp, Award, Users, BookOpen, LineChart, Video, CheckCircle, Star, ArrowRight, BarChart3, Brain, Target, Trophy, X, FileText, Search, Phone, Download, Instagram, Youtube, Linkedin, Twitter } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import TickerStrip from "../components/TickerStrip";
+import ShareButton from "../components/ShareButton";
+import StudentStats from "../components/home/StudentStats";
+import VerticalVideoSection from "../components/home/VerticalVideoSection";
+import ExpertProfile from "../components/home/ExpertProfile";
+import EMIHighlight from "../components/home/EMIHighlight";
+import KeyInsights from "../components/home/KeyInsights";
+import CertificatePreview from "../components/home/CertificatePreview";
+import PlatformFeatures from "../components/home/PlatformFeatures";
+import ModuleRoadmap from "../components/home/ModuleRoadmap";
 import logo from "../../imports/fintrade_logo.png";
 
 // Interactive Cursor Glow
@@ -161,6 +170,7 @@ function VideoModal({ onClose }: { onClose: () => void }) {
 export default function MarketingHome() {
   const [videoOpen, setVideoOpen] = useState(false);
   const [activeVideoIdx, setActiveVideoIdx] = useState<number | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const showcaseVideos = [
     {
@@ -205,6 +215,60 @@ export default function MarketingHome() {
       {videoOpen && <VideoModal onClose={() => setVideoOpen(false)} />}
       {activeVideoIdx !== null && <VideoModal onClose={() => setActiveVideoIdx(null)} />}
 
+      {/* Search Overlay */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-[9998] flex items-start justify-center pt-32" style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }} onClick={() => setSearchOpen(false)}>
+          <div className="w-full max-w-2xl mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3 p-4 border-b border-gray-100">
+              <Search className="h-5 w-5 text-gray-400" />
+              <input autoFocus type="text" placeholder="Search courses, topics, videos..." className="flex-1 text-lg outline-none bg-transparent" style={{ color: "#121212" }} />
+              <button onClick={() => setSearchOpen(false)} className="text-gray-400 hover:text-gray-600 text-sm font-medium px-2 py-1 rounded bg-gray-100">ESC</button>
+            </div>
+            <div className="p-4 text-sm text-gray-500">
+              <p className="font-medium mb-3" style={{ color: "#121212" }}>Popular Searches</p>
+              <div className="flex flex-wrap gap-2">
+                {["Technical Analysis", "Options Trading", "Risk Management", "NIFTY", "Candlestick Patterns", "Trading Psychology"].map((t) => (
+                  <span key={t} className="px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-red-50 hover:text-[#E53935] transition-colors" style={{ background: "rgba(229,57,53,0.08)", color: "#E53935" }}>{t}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Utility Top Bar */}
+      <div className="w-full z-[101] bg-[#121212] text-white" style={{ borderBottom: "1px solid rgba(229,57,53,0.2)" }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-9 text-xs">
+            <div className="flex items-center gap-4">
+              <a href="tel:+919876543210" className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
+                <Phone className="h-3 w-3" /> <span className="hidden sm:inline">+91 98765 43210</span><span className="sm:hidden">Call</span>
+              </a>
+              <span className="text-gray-600 hidden sm:inline">|</span>
+              <span className="text-gray-400 hidden sm:inline">Support & Info</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                {[
+                  { icon: Instagram, href: "#", label: "Instagram" },
+                  { icon: Youtube, href: "#", label: "YouTube" },
+                  { icon: Linkedin, href: "#", label: "LinkedIn" },
+                  { icon: Twitter, href: "#", label: "Twitter" },
+                ].map((s) => (
+                  <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-[#E53935] transition-colors" title={s.label}>
+                    <s.icon className="h-3.5 w-3.5" />
+                  </a>
+                ))}
+              </div>
+              <span className="text-gray-600">|</span>
+              <a href="#" className="flex items-center gap-1.5 text-gray-300 hover:text-[#E53935] transition-colors font-medium">
+                <Download className="h-3 w-3" /> Download App
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Navbar */}
       <nav className="sticky top-0 z-[100] bg-white border-b border-gray-200 shadow-sm backdrop-blur-md bg-white/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -217,7 +281,7 @@ export default function MarketingHome() {
                   className="h-full w-full object-contain" 
                   style={{ 
                     filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.08))",
-                    transform: "scale(3.5) translateY(-4px)", // Shifted up to hide subtitle artifacts
+                    transform: "scale(3.5) translateY(-4px)",
                     transformOrigin: "center center"
                   }}
                 />
@@ -230,6 +294,9 @@ export default function MarketingHome() {
               <a href="#about" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">About</a>
             </div>
             <div className="flex items-center gap-3">
+              <button onClick={() => setSearchOpen(true)} className="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 hover:text-[#E53935] hover:bg-red-50 transition-all" title="Search">
+                <Search className="h-5 w-5" />
+              </button>
               <Link to="/login">
                 <Button variant="ghost" className="text-gray-700 hover:text-[#E53935] hover:bg-red-50" size="lg">Login</Button>
               </Link>
@@ -265,44 +332,44 @@ export default function MarketingHome() {
       <div className="relative z-[50]">
 
         {/* Hero Section (Soft gradient background) */}
-        <section className="relative py-24 md:py-32 overflow-hidden" style={{ background: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.8) 0%, transparent 100%)" }}>
+        <section className="relative py-10 md:py-16 overflow-hidden" style={{ background: "radial-gradient(circle at 80% 20%, rgba(255,255,255,0.8) 0%, transparent 100%)" }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
           <div className="grid md:grid-cols-2 gap-20 items-center">
             {/* Left Content */}
-            <div className="relative z-10">
+            <div className="relative z-10 pl-2 md:pl-6">
               <div className="inline-block px-4 py-2 rounded-full mb-6 border border-[#E53935]/30" style={{ background: "rgba(229, 57, 53, 0.08)" }}>
                 <span className="text-[#E53935] font-medium">🎯 India's Premier Trading Education</span>
               </div>
-              <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-[1.1] uppercase tracking-tight" style={{ color: "#121212" }}>
+              <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-[1.1] uppercase tracking-tight" style={{ color: "#121212" }}>
                 India&apos;s Trading <br />
                 <span className="bg-gradient-to-r from-[#E53935] via-[#ff6f60] to-[#E53935] bg-clip-text text-transparent">
                   Powerhouse
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl text-gray-600 mb-10 leading-relaxed font-medium">
-                We are not building another trading course company. <br className="hidden md:block" />
-                We are building <span className="text-[#E53935]">India's first Trader-to-Funded Professional Pipeline</span> — where every student has a pathway to professional capital.
+              <p className="text-base md:text-lg text-gray-600 mb-8 leading-relaxed font-medium">
+                We are not building another trading course company. We are building <span className="text-[#E53935]">India's first Trader-to-Funded Professional Pipeline</span> — where every student has a pathway to professional capital.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-col gap-3">
+                <Link to="/student/entrance-exam">
+                  <Button
+                    size="lg"
+                    className="shadow-xl hover:shadow-2xl transition-all hover:scale-105 text-lg px-8 py-6 w-full sm:w-auto"
+                    style={{ background: "linear-gradient(135deg, #E53935 0%, #b71c1c 100%)", color: "white", boxShadow: "0 10px 40px rgba(229, 57, 53, 0.4)" }}
+                  >
+                    Start Entrance Exam
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
                 <a href="#courses">
                   <Button
                     size="lg"
-                    className="shadow-xl hover:shadow-2xl transition-all hover:scale-105 text-lg px-8 py-6"
-                    style={{ background: "linear-gradient(135deg, #E53935 0%, #b71c1c 100%)", color: "white", boxShadow: "0 10px 40px rgba(229, 57, 53, 0.4)" }}
+                    variant="outline"
+                    className="border-2 border-[#E53935] text-[#E53935] hover:bg-red-50 text-lg px-8 py-6 w-full sm:w-auto"
                   >
                     Explore Courses
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </a>
-                <Link to="/student/entrance-exam">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-2 border-[#E53935] text-[#E53935] hover:bg-red-50 text-lg px-8 py-6"
-                  >
-                    Start Entrance Exam
-                  </Button>
-                </Link>
               </div>
             </div>
 
@@ -365,30 +432,32 @@ export default function MarketingHome() {
       <section className="py-16 bg-white relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all shadow-sm hover:shadow-lg">
+            <Card className="p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all shadow-sm hover:shadow-lg flex flex-col items-center justify-center">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
                 <Users className="h-8 w-8" style={{ color: "#E53935" }} />
               </div>
-              <div className="text-4xl font-bold mb-2" style={{ color: "#121212" }}>1200+</div>
+              <div className="text-[2.5rem] font-bold mb-2" style={{ color: "#121212" }}>1200+</div>
               <div className="text-gray-600">Active Students</div>
             </Card>
-            <Card className="p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all shadow-sm hover:shadow-lg">
+            <Card className="p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all shadow-sm hover:shadow-lg flex flex-col items-center justify-center">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
                 <Award className="h-8 w-8" style={{ color: "#E53935" }} />
               </div>
-              <div className="text-4xl font-bold mb-2" style={{ color: "#121212" }}>78%</div>
+              <div className="text-[2.5rem] font-bold mb-2" style={{ color: "#121212" }}>78%</div>
               <div className="text-gray-600">Completion Rate</div>
             </Card>
-            <Card className="p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all shadow-sm hover:shadow-lg">
+            <Card className="p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all shadow-sm hover:shadow-lg flex flex-col items-center justify-center">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
                 <Target className="h-8 w-8" style={{ color: "#E53935" }} />
               </div>
-              <div className="text-4xl font-bold mb-2" style={{ color: "#121212" }}>15+</div>
+              <div className="text-[2.5rem] font-bold mb-2" style={{ color: "#121212" }}>15+</div>
               <div className="text-gray-600">Cities (Mumbai, Ahmedabad, Bengaluru)</div>
             </Card>
           </div>
         </div>
       </section>
+
+      <StudentStats />
 
       {/* ===== PLACEMENTS SECTION (moved up) ===== */}
       <section id="markets" className="py-20 relative z-10" style={{ background: "linear-gradient(135deg, #121212 0%, #1a1a1a 100%)" }}>
@@ -405,13 +474,13 @@ export default function MarketingHome() {
               { stat: "₹8-12 LPA", label: "Average Starting Package", icon: TrendingUp },
               { stat: "85%", label: "Placement Rate (Top Batch)", icon: Award },
               { stat: "30+", label: "Partner Trading Firms", icon: Users },
-              { stat: "9 Months", label: "Average Time to Placement", icon: Trophy },
+              { stat: "9 Mo", label: "Avg. Time to Placement", icon: Trophy },
             ].map((item, i) => (
               <Card key={i} className="p-6 text-center border border-[#E53935]/20" style={{ background: "rgba(255,255,255,0.05)" }}>
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-full mb-4" style={{ background: "rgba(229,57,53,0.15)" }}>
                   <item.icon className="h-7 w-7" style={{ color: "#E53935" }} />
                 </div>
-                <div className="text-3xl font-bold text-white mb-1">{item.stat}</div>
+                <div className="text-[2rem] font-bold text-white mb-1">{item.stat}</div>
                 <div className="text-gray-400 text-sm">{item.label}</div>
               </Card>
             ))}
@@ -501,6 +570,9 @@ export default function MarketingHome() {
         </div>
       </section>
 
+      <CertificatePreview />
+      <EMIHighlight />
+
       {/* Learning Journey Section */}
       <section className="py-20 bg-transparent relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -552,6 +624,9 @@ export default function MarketingHome() {
         </div>
       </section>
 
+      <ModuleRoadmap />
+      <VerticalVideoSection />
+
       {/* Live Classes Section (Off-white contrast) */}
       <section className="py-24 relative z-10" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(248,248,248,0.4) 100%)", backdropFilter: "blur(2px)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -597,6 +672,8 @@ export default function MarketingHome() {
         </div>
       </section>
 
+      <PlatformFeatures />
+
       {/* ===== MARKET UPDATES (2-column) ===== */}
       <section id="market-updates" className="py-20 bg-transparent relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -608,7 +685,7 @@ export default function MarketingHome() {
             {/* Left: Video Cards (wider) */}
             <div className="lg:col-span-3">
               <h3 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: "#121212" }}>
-                <Video className="h-5 w-5" style={{ color: "#E53935" }} /> Video Analysis
+                <Video className="h-5 w-5" style={{ color: "#E53935" }} /> Videos
               </h3>
               <div className="grid sm:grid-cols-2 gap-5">
                 {[
@@ -631,7 +708,10 @@ export default function MarketingHome() {
                       <h3 className="font-bold text-sm mb-2 line-clamp-2" style={{ color: "#121212" }}>{news.title}</h3>
                       <div className="flex items-center justify-between text-xs text-gray-600">
                         <div className="flex items-center gap-1"><Video className="h-3 w-3" style={{ color: "#E53935" }} />{news.views} views</div>
-                        <button className="font-medium hover:underline" style={{ color: "#E53935" }}>Watch</button>
+                        <div className="flex items-center gap-2">
+                          <ShareButton title={news.title} variant="icon" />
+                          <button className="font-medium hover:underline" style={{ color: "#E53935" }}>Watch</button>
+                        </div>
                       </div>
                     </div>
                   </Card>
@@ -656,7 +736,10 @@ export default function MarketingHome() {
                           <span className="text-xs text-gray-400">{item.time}</span>
                         </div>
                         <h4 className="font-semibold text-sm leading-snug group-hover:text-[#E53935] transition-colors" style={{ color: "#121212" }}>{item.headline}</h4>
-                        <p className="text-xs text-gray-500 mt-1">{item.source}</p>
+                        <div className="flex items-center justify-between mt-1">
+                          <p className="text-xs text-gray-500">{item.source}</p>
+                          <ShareButton title={item.headline} variant="icon" />
+                        </div>
                       </div>
                     </div>
                   </Card>
@@ -703,6 +786,8 @@ export default function MarketingHome() {
         </div>
       </section>
 
+      <ExpertProfile />
+
       {/* Why FinTrade */}
       <section id="about" className="py-20 bg-transparent relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -728,6 +813,8 @@ export default function MarketingHome() {
           </div>
         </div>
       </section>
+
+      <KeyInsights />
 
       {/* Testimonials */}
       <section className="py-20 relative z-10 bg-transparent">

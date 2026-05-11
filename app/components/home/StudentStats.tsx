@@ -1,0 +1,108 @@
+import { useState, useEffect, useRef } from "react";
+import { Users, TrendingUp, MapPin, Briefcase, GraduationCap, Clock } from "lucide-react";
+
+const stats = [
+  { icon: Users, value: 1200, suffix: "+", label: "Students Trained", color: "#E53935" },
+  { icon: TrendingUp, value: 85, suffix: "%", label: "Placement Rate", color: "#E53935" },
+  { icon: MapPin, value: 15, suffix: "+", label: "Cities Across India", color: "#E53935" },
+  { icon: Briefcase, value: 30, suffix: "+", label: "Partner Firms", color: "#E53935" },
+  { icon: GraduationCap, value: 78, suffix: "%", label: "Course Completion", color: "#E53935" },
+  { icon: Clock, value: 9, suffix: " Mo", label: "Avg. Placement Time", color: "#E53935" },
+];
+
+function useCountUp(end: number, duration: number = 2000, start: boolean = false) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!start) return;
+    let startTime: number | null = null;
+    let frame: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * end));
+      if (progress < 1) {
+        frame = requestAnimationFrame(animate);
+      }
+    };
+
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [end, duration, start]);
+
+  return count;
+}
+
+function StatCard({ icon: Icon, value, suffix, label, delay, inView }: {
+  icon: typeof Users;
+  value: number;
+  suffix: string;
+  label: string;
+  delay: number;
+  inView: boolean;
+}) {
+  const count = useCountUp(value, 2000, inView);
+
+  return (
+    <div
+      className="text-center group"
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0)" : "translateY(20px)",
+        transition: `all 0.6s ease-out ${delay}ms`,
+      }}
+    >
+      <div
+        className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 group-hover:scale-110 transition-transform"
+        style={{ background: "rgba(229,57,53,0.1)" }}
+      >
+        <Icon className="h-8 w-8" style={{ color: "#E53935" }} />
+      </div>
+      <div className="text-[2.5rem] font-bold mb-2" style={{ color: "#121212" }}>
+        {count}{suffix}
+      </div>
+      <div className="text-gray-600 font-medium">{label}</div>
+    </div>
+  );
+}
+
+export default function StudentStats() {
+  const [inView, setInView] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section ref={ref} className="py-20 bg-white relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-2 rounded-full mb-4 border border-[#E53935]/30" style={{ background: "rgba(229,57,53,0.08)" }}>
+            <span className="text-[#E53935] font-semibold text-sm">📊 Our Impact</span>
+          </div>
+          <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Numbers That Speak</h2>
+          <p className="text-xl text-gray-600">Real results from real students</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          {stats.map((stat, i) => (
+            <StatCard key={i} {...stat} delay={i * 100} inView={inView} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
