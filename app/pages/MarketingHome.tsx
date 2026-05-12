@@ -278,7 +278,7 @@ export default function MarketingHome() {
                 <img 
                   src={logo} 
                   alt="FinTrade" 
-                  className="h-full w-full object-contain scale-[2.5] md:scale-[3.5]" 
+                  className="h-full w-full object-contain scale-[2.5] md:scale-[3.5] -translate-y-1 md:-translate-y-1.5" 
                   style={{ 
                     filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.08))",
                     transformOrigin: "center center"
