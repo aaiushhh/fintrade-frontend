@@ -270,18 +270,17 @@ export default function MarketingHome() {
       </div>
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-[100] bg-white border-b border-gray-200 shadow-sm backdrop-blur-md bg-white/80">
+      <nav className="sticky top-0 z-[100] bg-white/90 border-b border-gray-100 shadow-[0_4px_30px_rgba(0,0,0,0.05)] backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <div className="flex-shrink-0 overflow-hidden h-[40px] w-[140px] md:h-[60px] md:w-[220px]">
-              <Link to="/" className="flex items-center h-full w-full">
+            <div className="flex-shrink-0 flex items-center h-[50px] w-[140px] md:h-[60px] md:w-[220px]">
+              <Link to="/" className="flex items-center justify-center h-full w-full overflow-hidden">
                 <img 
                   src={logo} 
                   alt="FinTrade" 
-                  className="h-full w-full object-contain" 
+                  className="h-full w-full object-contain scale-[2.5] md:scale-[3.5]" 
                   style={{ 
                     filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.08))",
-                    transform: "scale(3.5) translateY(-4px)",
                     transformOrigin: "center center"
                   }}
                 />
