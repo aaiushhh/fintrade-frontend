@@ -56,15 +56,15 @@ function StatCard({ icon: Icon, value, suffix, label, delay, inView }: {
       }}
     >
       <div
-        className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 group-hover:scale-110 transition-transform"
+        className="inline-flex items-center justify-center w-10 h-10 md:w-16 md:h-16 rounded-full mb-2 md:mb-4 group-hover:scale-110 transition-transform"
         style={{ background: "rgba(229,57,53,0.1)" }}
       >
-        <Icon className="h-8 w-8" style={{ color: "#E53935" }} />
+        <Icon className="h-5 w-5 md:h-8 md:w-8" style={{ color: "#E53935" }} />
       </div>
-      <div className="text-[2.5rem] font-bold mb-2" style={{ color: "#121212" }}>
+      <div className="text-xl sm:text-2xl md:text-[2.5rem] font-bold mb-1 md:mb-2" style={{ color: "#121212" }}>
         {count}{suffix}
       </div>
-      <div className="text-gray-600 font-medium">{label}</div>
+      <div className="text-[10px] sm:text-xs md:text-base text-gray-600 font-medium leading-tight">{label}</div>
     </div>
   );
 }
@@ -97,7 +97,7 @@ export default function StudentStats() {
           <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Numbers That Speak</h2>
           <p className="text-xl text-gray-600">Real results from real students</p>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+        <div className="grid grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 md:gap-8">
           {stats.map((stat, i) => (
             <StatCard key={i} {...stat} delay={i * 100} inView={inView} />
           ))}

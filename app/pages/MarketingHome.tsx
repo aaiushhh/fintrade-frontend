@@ -203,7 +203,7 @@ export default function MarketingHome() {
   ];
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ 
+    <div className="min-h-screen" style={{ 
       background: "radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F8F8F8 50%, #F4F4F4 100%)",
       position: "relative" 
     }}>
@@ -273,7 +273,7 @@ export default function MarketingHome() {
       <nav className="sticky top-0 z-[100] bg-white border-b border-gray-200 shadow-sm backdrop-blur-md bg-white/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <div className="flex-shrink-0 overflow-hidden" style={{ height: 60, width: 220 }}>
+            <div className="flex-shrink-0 overflow-hidden h-[40px] w-[140px] md:h-[60px] md:w-[220px]">
               <Link to="/" className="flex items-center h-full w-full">
                 <img 
                   src={logo} 
@@ -296,10 +296,10 @@ export default function MarketingHome() {
               <a href="#about" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">About</a>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => setSearchOpen(true)} className="w-10 h-10 rounded-full flex items-center justify-center text-gray-600 hover:text-[#E53935] hover:bg-red-50 transition-all" title="Search">
-                <Search className="h-5 w-5" />
+              <button onClick={() => setSearchOpen(true)} className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-gray-600 hover:text-[#E53935] hover:bg-red-50 transition-all" title="Search">
+                <Search className="h-4 w-4 md:h-5 md:w-5" />
               </button>
-              <Link to="/login">
+              <Link to="/login" className="hidden sm:block">
                 <Button variant="ghost" className="text-gray-700 hover:text-[#E53935] hover:bg-red-50" size="lg">Login</Button>
               </Link>
               <Link to="/student/contract-kyc">
@@ -314,11 +314,11 @@ export default function MarketingHome() {
               </Link>
               <Link to="/student/entrance-exam">
                 <Button
-                  className="shadow-md hover:shadow-xl transition-all hover:scale-105"
+                  className="shadow-md hover:shadow-xl transition-all hover:scale-105 h-9 px-4 md:h-11 md:px-8"
                   style={{ background: "linear-gradient(135deg, #E53935 0%, #b71c1c 100%)", color: "white", boxShadow: "0 4px 20px rgba(229, 57, 53, 0.4)" }}
-                  size="lg"
                 >
-                  Start Learning
+                  <span className="sm:hidden text-xs">Start</span>
+                  <span className="hidden sm:inline">Start Learning</span>
                 </Button>
               </Link>
             </div>
@@ -442,16 +442,16 @@ export default function MarketingHome() {
               Master trading with our structured curriculum designed for all skill levels
             </p>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 px-4 -mx-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[
               { name: "Basic Trading", level: "Beginner", duration: "3 months", price: "₹25,000", description: "Foundation of markets, technical analysis, and risk management", icon: BookOpen },
               { name: "Intermediate Trading", level: "Intermediate", duration: "3 months", price: "₹35,000", description: "Advanced chart patterns, indicators, and trading psychology", icon: LineChart },
               { name: "Advanced Trading", level: "Advanced", duration: "3 months", price: "₹45,000", description: "Options, futures, derivatives, and portfolio management", icon: BarChart3 },
               { name: "Master Trading", level: "Expert", duration: "3 months", price: "₹55,000", description: "Algorithmic trading, quantitative analysis, and institutional strategies", icon: Trophy },
             ].map((course, i) => (
-              <Card key={i} className="min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto group hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-gray-100 hover:border-[#E53935]">
+              <Card key={i} className="min-w-[280px] snap-center shrink-0 md:min-w-0 md:w-auto group hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-gray-100 hover:border-[#E53935]">
                 <div className="h-2 w-full" style={{ background: "#E53935" }} />
-                <div className="p-6">
+                <div className="p-5 md:p-6">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg mb-4" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
                     <course.icon className="h-6 w-6" style={{ color: "#E53935" }} />
                   </div>
@@ -489,13 +489,13 @@ export default function MarketingHome() {
             <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Live Classes</h2>
             <p className="text-xl text-gray-600">Learn from expert traders in real-time</p>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 px-4 -mx-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[
               { title: "Technical Analysis Masterclass", instructor: "Amit Desai", date: "April 18, 2026", time: "10:00 AM IST", students: 145 },
               { title: "Options Trading Strategies", instructor: "Priya Sharma", date: "April 19, 2026", time: "2:00 PM IST", students: 132 },
               { title: "Risk Management Fundamentals", instructor: "Rajesh Kumar", date: "April 20, 2026", time: "4:00 PM IST", students: 178 },
             ].map((lecture, i) => (
-              <Card key={i} className="min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl">
+              <Card key={i} className="min-w-[300px] snap-center shrink-0 md:min-w-0 md:w-auto overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl">
                 <div className="relative h-48 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
                   <div className="absolute inset-0 opacity-20">
                     <img src="https://images.unsplash.com/photo-1616587896649-79b16d8b173d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Live class" className="w-full h-full object-cover" />
@@ -592,11 +592,11 @@ export default function MarketingHome() {
             <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Our Stories, Your Inspiration</h2>
             <p className="text-xl text-gray-600">Short films, ads, and student journeys</p>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 px-4 -mx-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {showcaseVideos.map((vid, i) => (
               <Card
                 key={i}
-                className="min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-2xl group cursor-pointer"
+                className="min-w-[280px] snap-center shrink-0 md:min-w-0 md:w-auto overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-2xl group cursor-pointer"
                 onClick={() => setActiveVideoIdx(i)}
               >
                 <div className="relative h-52 overflow-hidden bg-gray-900">
@@ -633,14 +633,14 @@ export default function MarketingHome() {
             <h2 className="text-4xl font-bold mb-4 text-white">Our Students Get Placed</h2>
             <p className="text-xl text-gray-400">Top performers join India's leading prop trading firms</p>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 px-4 -mx-4 md:mx-0 md:px-0 md:grid md:grid-cols-4 md:gap-6 md:mb-12 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-4 md:gap-6 md:mb-12 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[
               { stat: "₹8-12 LPA", label: "Average Starting Package", icon: TrendingUp },
               { stat: "85%", label: "Placement Rate (Top Batch)", icon: Award },
               { stat: "30+", label: "Partner Trading Firms", icon: Users },
               { stat: "9 Mo", label: "Avg. Time to Placement", icon: Trophy },
             ].map((item, i) => (
-              <Card key={i} className="min-w-[80vw] snap-center shrink-0 md:min-w-0 md:w-auto p-6 text-center border border-[#E53935]/20" style={{ background: "rgba(255,255,255,0.05)" }}>
+              <Card key={i} className="min-w-[240px] snap-center shrink-0 md:min-w-0 md:w-auto p-5 md:p-6 text-center border border-[#E53935]/20" style={{ background: "rgba(255,255,255,0.05)" }}>
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-full mb-4" style={{ background: "rgba(229,57,53,0.15)" }}>
                   <item.icon className="h-7 w-7" style={{ color: "#E53935" }} />
                 </div>
@@ -649,13 +649,13 @@ export default function MarketingHome() {
               </Card>
             ))}
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[
               { name: "Rahul Sharma", role: "Junior Trader", firm: "Nuvama Wealth", city: "Mumbai", package: "₹10 LPA", img: "https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" },
               { name: "Priya Verma", role: "Equity Analyst", firm: "Zerodha Capital", city: "Bengaluru", package: "₹9.5 LPA", img: "https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" },
               { name: "Amit Patel", role: "Options Trader", firm: "SAMCO Securities", city: "Ahmedabad", package: "₹11 LPA", img: "https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" },
             ].map((p, i) => (
-              <Card key={i} className="p-6 border border-[#E53935]/20 hover:border-[#E53935]/50 transition-all" style={{ background: "rgba(255,255,255,0.06)" }}>
+              <Card key={i} className="min-w-[280px] snap-center shrink-0 md:min-w-0 md:w-auto p-5 md:p-6 border border-[#E53935]/20 hover:border-[#E53935]/50 transition-all" style={{ background: "rgba(255,255,255,0.06)" }}>
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2" style={{ borderColor: "#E53935" }}>
                     <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
@@ -695,14 +695,14 @@ export default function MarketingHome() {
             <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Why Choose FinTrade</h2>
             <p className="text-xl text-gray-600">Everything you need to become a successful trader</p>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 px-4 -mx-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[
               { icon: Brain, title: "AI Tutor Support", description: "Get 24/7 assistance from our AI-powered trading assistant for doubts and guidance" },
               { icon: BookOpen, title: "Structured Curriculum", description: "Follow a proven learning path from basics to advanced strategies with expert content" },
               { icon: LineChart, title: "Real Trading Simulation", description: "Practice with ₹10 lakh virtual capital in realistic market conditions without risk" },
               { icon: Trophy, title: "Placement Opportunities", description: "Top performers get placed in leading prop trading firms and financial institutions" },
             ].map((feature, i) => (
-              <Card key={i} className="min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl group">
+              <Card key={i} className="min-w-[260px] snap-center shrink-0 md:min-w-0 md:w-auto p-6 md:p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl group">
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6 group-hover:scale-110 transition-transform" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
                   <feature.icon className="h-10 w-10" style={{ color: "#E53935" }} />
                 </div>
@@ -722,13 +722,13 @@ export default function MarketingHome() {
             <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Student Success Stories</h2>
             <p className="text-xl text-gray-600">Hear from our successful traders</p>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 px-4 -mx-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-8 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[
               { name: "Rahul Sharma", city: "Mumbai", testimonial: "FinTrade helped me become a disciplined trader. The structured approach and real trading simulator gave me confidence to trade professionally.", rating: 5 },
               { name: "Priya Verma", city: "Bengaluru", testimonial: "The AI tutor and live classes are game-changers. I went from zero knowledge to getting placed at a prop trading firm in just 9 months.", rating: 5 },
               { name: "Amit Patel", city: "Ahmedabad", testimonial: "Best investment I made in my career. The curriculum is comprehensive and the monthly exams keep you accountable. Highly recommend!", rating: 5 },
             ].map((testimonial, i) => (
-              <Card key={i} className="min-w-[85vw] snap-center shrink-0 md:min-w-0 md:w-auto p-6 border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl bg-white">
+              <Card key={i} className="min-w-[280px] snap-center shrink-0 md:min-w-0 md:w-auto p-5 md:p-6 border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl bg-white">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2" style={{ borderColor: "#E53935" }}>
                     <img src="https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" alt={testimonial.name} className="w-full h-full object-cover" />
@@ -784,13 +784,13 @@ export default function MarketingHome() {
             <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Student Success Stories</h2>
             <p className="text-xl text-gray-600">Hear from our successful traders</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-8 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[
               { name: "Rahul Sharma", city: "Mumbai", testimonial: "FinTrade helped me become a disciplined trader. The structured approach and real trading simulator gave me confidence to trade professionally.", rating: 5 },
               { name: "Priya Verma", city: "Bengaluru", testimonial: "The AI tutor and live classes are game-changers. I went from zero knowledge to getting placed at a prop trading firm in just 9 months.", rating: 5 },
               { name: "Amit Patel", city: "Ahmedabad", testimonial: "Best investment I made in my career. The curriculum is comprehensive and the monthly exams keep you accountable. Highly recommend!", rating: 5 },
             ].map((testimonial, i) => (
-              <Card key={i} className="p-6 border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl bg-white">
+              <Card key={i} className="min-w-[280px] snap-center shrink-0 md:min-w-0 md:w-auto p-5 md:p-6 border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl bg-white">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2" style={{ borderColor: "#E53935" }}>
                     <img src="https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" alt={testimonial.name} className="w-full h-full object-cover" />
