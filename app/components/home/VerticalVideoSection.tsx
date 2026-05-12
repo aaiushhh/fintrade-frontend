@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Card } from "../ui/card";
+import ShareButton from "../ShareButton";
 
 const verticalVideos = [
   {
@@ -110,7 +111,10 @@ export default function VerticalVideoSection() {
                   <h4 className="text-sm font-bold text-white mb-1 line-clamp-2">{vid.title}</h4>
                   <div className="flex items-center justify-between text-xs text-gray-400">
                     <span>{vid.author}</span>
-                    <span>{vid.views} views</span>
+                    <div className="flex items-center gap-2">
+                      <span>{vid.views} views</span>
+                      <ShareButton title={vid.title} variant="icon" className="[&_button]:text-gray-400 [&_button]:hover:text-[#E53935]" />
+                    </div>
                   </div>
                 </div>
               </Card>

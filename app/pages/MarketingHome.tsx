@@ -239,10 +239,10 @@ export default function MarketingHome() {
       {/* Utility Top Bar */}
       <div className="w-full z-[101] bg-[#121212] text-white" style={{ borderBottom: "1px solid rgba(229,57,53,0.2)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-9 text-xs">
+          <div className="flex items-center justify-between h-12 text-sm">
             <div className="flex items-center gap-4">
-              <a href="tel:+919876543210" className="flex items-center gap-1.5 text-gray-300 hover:text-white transition-colors">
-                <Phone className="h-3 w-3" /> <span className="hidden sm:inline">+91 98765 43210</span><span className="sm:hidden">Call</span>
+              <a href="tel:+919876543210" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
+                <Phone className="h-4 w-4" /> <span className="hidden sm:inline">+91 98765 43210</span><span className="sm:hidden">Call</span>
               </a>
               <span className="text-gray-600 hidden sm:inline">|</span>
               <span className="text-gray-400 hidden sm:inline">Support & Info</span>
@@ -255,14 +255,14 @@ export default function MarketingHome() {
                   { icon: Linkedin, href: "#", label: "LinkedIn" },
                   { icon: Twitter, href: "#", label: "Twitter" },
                 ].map((s) => (
-                  <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="w-6 h-6 rounded flex items-center justify-center text-gray-400 hover:text-[#E53935] transition-colors" title={s.label}>
-                    <s.icon className="h-3.5 w-3.5" />
+                  <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded flex items-center justify-center text-gray-400 hover:text-[#E53935] transition-colors" title={s.label}>
+                    <s.icon className="h-4 w-4" />
                   </a>
                 ))}
               </div>
               <span className="text-gray-600">|</span>
-              <a href="#" className="flex items-center gap-1.5 text-gray-300 hover:text-[#E53935] transition-colors font-medium">
-                <Download className="h-3 w-3" /> Download App
+              <a href="#" className="flex items-center gap-2 text-gray-300 hover:text-[#E53935] transition-colors font-medium">
+                <Download className="h-4 w-4" /> Download App
               </a>
             </div>
           </div>
@@ -290,7 +290,9 @@ export default function MarketingHome() {
             <div className="hidden md:flex items-center gap-8">
               <a href="#courses" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Courses</a>
               <a href="#markets" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Markets</a>
+              <Link to="/category/technical-analysis" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Categories</Link>
               <a href="#market-updates" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Market Updates</a>
+              <a href="#" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Blog</a>
               <a href="#about" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">About</a>
             </div>
             <div className="flex items-center gap-3">
@@ -349,25 +351,25 @@ export default function MarketingHome() {
               <p className="text-base md:text-lg text-gray-600 mb-8 leading-relaxed font-medium">
                 We are not building another trading course company. We are building <span className="text-[#E53935]">India's first Trader-to-Funded Professional Pipeline</span> — where every student has a pathway to professional capital.
               </p>
-              <div className="flex flex-col gap-3">
-                <Link to="/student/entrance-exam">
+              <div className="flex flex-row flex-wrap gap-3">
+                <Link to="/student/contract-kyc">
                   <Button
                     size="lg"
-                    className="shadow-xl hover:shadow-2xl transition-all hover:scale-105 text-lg px-8 py-6 w-full sm:w-auto"
+                    className="shadow-xl hover:shadow-2xl transition-all hover:scale-105 text-lg px-8 py-6"
                     style={{ background: "linear-gradient(135deg, #E53935 0%, #b71c1c 100%)", color: "white", boxShadow: "0 10px 40px rgba(229, 57, 53, 0.4)" }}
                   >
-                    Start Entrance Exam
+                    Apply Now
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <a href="#courses">
+                <a href="#">
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-2 border-[#E53935] text-[#E53935] hover:bg-red-50 text-lg px-8 py-6 w-full sm:w-auto"
+                    className="border-2 border-[#E53935] text-[#E53935] hover:bg-red-50 text-lg px-8 py-6"
                   >
-                    Explore Courses
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    <Download className="mr-2 h-5 w-5" />
+                    Download Brochure
                   </Button>
                 </a>
               </div>
@@ -420,6 +422,9 @@ export default function MarketingHome() {
                     <div className="flex items-center gap-1 text-xs text-gray-500">
                       <Award className="h-3 w-3" style={{ color: "#E53935" }} /> Certified
                     </div>
+                    <div className="ml-auto">
+                      <ShareButton title="Watch: The FinTrade Story" variant="icon" />
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -428,38 +433,197 @@ export default function MarketingHome() {
         </div>
       </section>
 
-      {/* Trust / Stats Section */}
-      <section className="py-16 bg-white relative z-10">
+      {/* 1. Featured Courses Section */}
+      <section id="courses" className="py-24 relative z-10" style={{ background: "linear-gradient(to bottom, transparent, rgba(229, 57, 53, 0.02), transparent)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all shadow-sm hover:shadow-lg flex flex-col items-center justify-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
-                <Users className="h-8 w-8" style={{ color: "#E53935" }} />
-              </div>
-              <div className="text-[2.5rem] font-bold mb-2" style={{ color: "#121212" }}>1200+</div>
-              <div className="text-gray-600">Active Students</div>
-            </Card>
-            <Card className="p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all shadow-sm hover:shadow-lg flex flex-col items-center justify-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
-                <Award className="h-8 w-8" style={{ color: "#E53935" }} />
-              </div>
-              <div className="text-[2.5rem] font-bold mb-2" style={{ color: "#121212" }}>78%</div>
-              <div className="text-gray-600">Completion Rate</div>
-            </Card>
-            <Card className="p-8 text-center border-2 border-gray-100 hover:border-[#E53935] transition-all shadow-sm hover:shadow-lg flex flex-col items-center justify-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
-                <Target className="h-8 w-8" style={{ color: "#E53935" }} />
-              </div>
-              <div className="text-[2.5rem] font-bold mb-2" style={{ color: "#121212" }}>15+</div>
-              <div className="text-gray-600">Cities (Mumbai, Ahmedabad, Bengaluru)</div>
-            </Card>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Featured Courses</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Master trading with our structured curriculum designed for all skill levels
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { name: "Basic Trading", level: "Beginner", duration: "3 months", price: "₹25,000", description: "Foundation of markets, technical analysis, and risk management", icon: BookOpen },
+              { name: "Intermediate Trading", level: "Intermediate", duration: "3 months", price: "₹35,000", description: "Advanced chart patterns, indicators, and trading psychology", icon: LineChart },
+              { name: "Advanced Trading", level: "Advanced", duration: "3 months", price: "₹45,000", description: "Options, futures, derivatives, and portfolio management", icon: BarChart3 },
+              { name: "Master Trading", level: "Expert", duration: "3 months", price: "₹55,000", description: "Algorithmic trading, quantitative analysis, and institutional strategies", icon: Trophy },
+            ].map((course, i) => (
+              <Card key={i} className="group hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-gray-100 hover:border-[#E53935]">
+                <div className="h-2 w-full" style={{ background: "#E53935" }} />
+                <div className="p-6">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg mb-4" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
+                    <course.icon className="h-6 w-6" style={{ color: "#E53935" }} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2" style={{ color: "#121212" }}>{course.name}</h3>
+                  <div className="inline-block px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ background: "rgba(229, 57, 53, 0.1)", color: "#E53935" }}>
+                    {course.level}
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4 min-h-[60px]">{course.description}</p>
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <CheckCircle className="h-4 w-4" style={{ color: "#E53935" }} />
+                      Duration: {course.duration}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-bold" style={{ color: "#121212" }}>
+                      <CheckCircle className="h-4 w-4" style={{ color: "#E53935" }} />
+                      {course.price}
+                    </div>
+                  </div>
+                  <Link to="/student/courses">
+                    <Button className="w-full group-hover:shadow-lg transition-all" style={{ background: "#E53935", color: "white" }}>
+                      View Course
+                    </Button>
+                  </Link>
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      <StudentStats />
+      {/* 2. Live Classes Section */}
+      <section className="py-24 relative z-10" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(248,248,248,0.4) 100%)", backdropFilter: "blur(2px)" }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Live Classes</h2>
+            <p className="text-xl text-gray-600">Learn from expert traders in real-time</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { title: "Technical Analysis Masterclass", instructor: "Amit Desai", date: "April 18, 2026", time: "10:00 AM IST", students: 145 },
+              { title: "Options Trading Strategies", instructor: "Priya Sharma", date: "April 19, 2026", time: "2:00 PM IST", students: 132 },
+              { title: "Risk Management Fundamentals", instructor: "Rajesh Kumar", date: "April 20, 2026", time: "4:00 PM IST", students: 178 },
+            ].map((lecture, i) => (
+              <Card key={i} className="overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl">
+                <div className="relative h-48 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
+                  <div className="absolute inset-0 opacity-20">
+                    <img src="https://images.unsplash.com/photo-1616587896649-79b16d8b173d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Live class" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="relative z-10">
+                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white">
+                      <Video className="h-8 w-8 text-white" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 px-2 py-1 rounded-full text-xs font-bold text-white animate-pulse" style={{ background: "#E53935" }}>LIVE</div>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 className="font-bold text-lg mb-3" style={{ color: "#121212" }}>{lecture.title}</h3>
+                  <div className="space-y-2 mb-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-2"><Users className="h-4 w-4" style={{ color: "#E53935" }} />{lecture.instructor}</div>
+                    <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4" style={{ color: "#E53935" }} />{lecture.date} • {lecture.time}</div>
+                    <div className="flex items-center gap-2"><Star className="h-4 w-4" style={{ color: "#E53935" }} />{lecture.students} students enrolled</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Link to="/student/lectures" className="flex-1">
+                      <Button className="w-full" style={{ background: "#E53935", color: "white" }}>Join Live</Button>
+                    </Link>
+                    <Button variant="outline" className="border-2 border-gray-200 hover:border-[#E53935]">Details</Button>
+                    <ShareButton title={lecture.title} variant="icon" />
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {/* ===== PLACEMENTS SECTION (moved up) ===== */}
+      {/* 3. Learning Journey Section */}
+      <section className="py-20 bg-transparent relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Your Learning Journey</h2>
+            <p className="text-xl text-gray-600">From beginner to professional trader in 5 structured steps</p>
+          </div>
+          <div className="relative">
+            <div className="hidden md:block">
+              <div className="absolute top-1/2 left-0 right-0 h-1 -translate-y-1/2" style={{ background: "linear-gradient(to right, #E53935, #121212)" }} />
+              <div className="grid grid-cols-5 gap-4 relative">
+                {[
+                  { title: "Entrance Exam", desc: "Test your baseline knowledge", icon: CheckCircle },
+                  { title: "Course Learning", desc: "Structured curriculum & modules", icon: BookOpen },
+                  { title: "Monthly Exams", desc: "Track your progress", icon: Award },
+                  { title: "Trading Simulator", desc: "Practice with virtual capital", icon: LineChart },
+                  { title: "Placement", desc: "Join trading firms", icon: Trophy },
+                ].map((step, i) => (
+                  <div key={i} className="flex flex-col items-center">
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center mb-4 relative z-10 border-4 border-white shadow-lg" style={{ background: i <= 2 ? "#E53935" : "#121212" }}>
+                      <step.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="font-bold text-center mb-2" style={{ color: "#121212" }}>{step.title}</h3>
+                    <p className="text-sm text-gray-600 text-center">{step.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="md:hidden space-y-6">
+              {[
+                { title: "Entrance Exam", desc: "Test your baseline knowledge", icon: CheckCircle },
+                { title: "Course Learning", desc: "Structured curriculum & modules", icon: BookOpen },
+                { title: "Monthly Exams", desc: "Track your progress", icon: Award },
+                { title: "Trading Simulator", desc: "Practice with virtual capital", icon: LineChart },
+                { title: "Placement", desc: "Join trading firms", icon: Trophy },
+              ].map((step, i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: i <= 2 ? "#E53935" : "#121212" }}>
+                    <step.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold mb-1" style={{ color: "#121212" }}>{step.title}</h3>
+                    <p className="text-sm text-gray-600">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Vertical Video Section */}
+      <VerticalVideoSection />
+
+      {/* 5. Our Stories, Your Inspiration */}
+      <section className="py-24 relative z-10" style={{ background: "linear-gradient(to right, rgba(255,255,255,0.5), rgba(229, 57, 53, 0.03), rgba(255,255,255,0.5))" }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-block px-4 py-2 rounded-full mb-4 border border-[#E53935]/30" style={{ background: "rgba(229,57,53,0.08)" }}>
+              <span className="text-[#E53935] font-semibold text-sm">🎬 FinTrade in Action</span>
+            </div>
+            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Our Stories, Your Inspiration</h2>
+            <p className="text-xl text-gray-600">Short films, ads, and student journeys</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {showcaseVideos.map((vid, i) => (
+              <Card
+                key={i}
+                className="overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-2xl group cursor-pointer"
+                onClick={() => setActiveVideoIdx(i)}
+              >
+                <div className="relative h-52 overflow-hidden bg-gray-900">
+                  <img src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.35)" }}>
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-xl" style={{ background: "#E53935", boxShadow: "0 0 30px rgba(229,57,53,0.5)" }}>
+                      <Play className="h-7 w-7 text-white ml-1" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-3 right-3 px-2 py-1 rounded bg-black/70 text-white text-xs font-medium">{vid.duration}</div>
+                </div>
+                <div className="p-5 bg-white flex items-center justify-between">
+                  <div>
+                    <h3 className="font-bold text-base mb-1" style={{ color: "#121212" }}>{vid.title}</h3>
+                    <p className="text-sm text-gray-500">{vid.subtitle}</p>
+                  </div>
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <ShareButton title={vid.title} variant="icon" />
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Students Placement */}
       <section id="markets" className="py-20 relative z-10" style={{ background: "linear-gradient(135deg, #121212 0%, #1a1a1a 100%)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -521,274 +685,10 @@ export default function MarketingHome() {
         </div>
       </section>
 
-      {/* Featured Courses Section (Subtle Warm Section) */}
-      <section id="courses" className="py-24 relative z-10" style={{ background: "linear-gradient(to bottom, transparent, rgba(229, 57, 53, 0.02), transparent)" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Featured Courses</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Master trading with our structured curriculum designed for all skill levels
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { name: "Basic Trading", level: "Beginner", duration: "3 months", price: "₹25,000", description: "Foundation of markets, technical analysis, and risk management", icon: BookOpen },
-              { name: "Intermediate Trading", level: "Intermediate", duration: "3 months", price: "₹35,000", description: "Advanced chart patterns, indicators, and trading psychology", icon: LineChart },
-              { name: "Advanced Trading", level: "Advanced", duration: "3 months", price: "₹45,000", description: "Options, futures, derivatives, and portfolio management", icon: BarChart3 },
-              { name: "Master Trading", level: "Expert", duration: "3 months", price: "₹55,000", description: "Algorithmic trading, quantitative analysis, and institutional strategies", icon: Trophy },
-            ].map((course, i) => (
-              <Card key={i} className="group hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-gray-100 hover:border-[#E53935]">
-                <div className="h-2 w-full" style={{ background: "#E53935" }} />
-                <div className="p-6">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg mb-4" style={{ background: "rgba(229, 57, 53, 0.1)" }}>
-                    <course.icon className="h-6 w-6" style={{ color: "#E53935" }} />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2" style={{ color: "#121212" }}>{course.name}</h3>
-                  <div className="inline-block px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ background: "rgba(229, 57, 53, 0.1)", color: "#E53935" }}>
-                    {course.level}
-                  </div>
-                  <p className="text-gray-600 text-sm mb-4 min-h-[60px]">{course.description}</p>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <CheckCircle className="h-4 w-4" style={{ color: "#E53935" }} />
-                      Duration: {course.duration}
-                    </div>
-                    <div className="flex items-center gap-2 text-sm font-bold" style={{ color: "#121212" }}>
-                      <CheckCircle className="h-4 w-4" style={{ color: "#E53935" }} />
-                      {course.price}
-                    </div>
-                  </div>
-                  <Link to="/student/courses">
-                    <Button className="w-full group-hover:shadow-lg transition-all" style={{ background: "#E53935", color: "white" }}>
-                      View Course
-                    </Button>
-                  </Link>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 7. Student Stats */}
+      <StudentStats />
 
-      <CertificatePreview />
-      <EMIHighlight />
-
-      {/* Learning Journey Section */}
-      <section className="py-20 bg-transparent relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Your Learning Journey</h2>
-            <p className="text-xl text-gray-600">From beginner to professional trader in 5 structured steps</p>
-          </div>
-          <div className="relative">
-            <div className="hidden md:block">
-              <div className="absolute top-1/2 left-0 right-0 h-1 -translate-y-1/2" style={{ background: "linear-gradient(to right, #E53935, #121212)" }} />
-              <div className="grid grid-cols-5 gap-4 relative">
-                {[
-                  { title: "Entrance Exam", desc: "Test your baseline knowledge", icon: CheckCircle },
-                  { title: "Course Learning", desc: "Structured curriculum & modules", icon: BookOpen },
-                  { title: "Monthly Exams", desc: "Track your progress", icon: Award },
-                  { title: "Trading Simulator", desc: "Practice with virtual capital", icon: LineChart },
-                  { title: "Placement", desc: "Join trading firms", icon: Trophy },
-                ].map((step, i) => (
-                  <div key={i} className="flex flex-col items-center">
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center mb-4 relative z-10 border-4 border-white shadow-lg" style={{ background: i <= 2 ? "#E53935" : "#121212" }}>
-                      <step.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="font-bold text-center mb-2" style={{ color: "#121212" }}>{step.title}</h3>
-                    <p className="text-sm text-gray-600 text-center">{step.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="md:hidden space-y-6">
-              {[
-                { title: "Entrance Exam", desc: "Test your baseline knowledge", icon: CheckCircle },
-                { title: "Course Learning", desc: "Structured curriculum & modules", icon: BookOpen },
-                { title: "Monthly Exams", desc: "Track your progress", icon: Award },
-                { title: "Trading Simulator", desc: "Practice with virtual capital", icon: LineChart },
-                { title: "Placement", desc: "Join trading firms", icon: Trophy },
-              ].map((step, i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: i <= 2 ? "#E53935" : "#121212" }}>
-                    <step.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold mb-1" style={{ color: "#121212" }}>{step.title}</h3>
-                    <p className="text-sm text-gray-600">{step.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <ModuleRoadmap />
-      <VerticalVideoSection />
-
-      {/* Live Classes Section (Off-white contrast) */}
-      <section className="py-24 relative z-10" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(248,248,248,0.4) 100%)", backdropFilter: "blur(2px)" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Live Classes</h2>
-            <p className="text-xl text-gray-600">Learn from expert traders in real-time</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { title: "Technical Analysis Masterclass", instructor: "Amit Desai", date: "April 18, 2026", time: "10:00 AM IST", students: 145 },
-              { title: "Options Trading Strategies", instructor: "Priya Sharma", date: "April 19, 2026", time: "2:00 PM IST", students: 132 },
-              { title: "Risk Management Fundamentals", instructor: "Rajesh Kumar", date: "April 20, 2026", time: "4:00 PM IST", students: 178 },
-            ].map((lecture, i) => (
-              <Card key={i} className="overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl">
-                <div className="relative h-48 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
-                  <div className="absolute inset-0 opacity-20">
-                    <img src="https://images.unsplash.com/photo-1616587896649-79b16d8b173d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080" alt="Live class" className="w-full h-full object-cover" />
-                  </div>
-                  <div className="relative z-10">
-                    <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white">
-                      <Video className="h-8 w-8 text-white" />
-                    </div>
-                    <div className="absolute -top-2 -right-2 px-2 py-1 rounded-full text-xs font-bold text-white animate-pulse" style={{ background: "#E53935" }}>LIVE</div>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="font-bold text-lg mb-3" style={{ color: "#121212" }}>{lecture.title}</h3>
-                  <div className="space-y-2 mb-4 text-sm text-gray-600">
-                    <div className="flex items-center gap-2"><Users className="h-4 w-4" style={{ color: "#E53935" }} />{lecture.instructor}</div>
-                    <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4" style={{ color: "#E53935" }} />{lecture.date} • {lecture.time}</div>
-                    <div className="flex items-center gap-2"><Star className="h-4 w-4" style={{ color: "#E53935" }} />{lecture.students} students enrolled</div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Link to="/student/lectures" className="flex-1">
-                      <Button className="w-full" style={{ background: "#E53935", color: "white" }}>Join Live</Button>
-                    </Link>
-                    <Button variant="outline" className="border-2 border-gray-200 hover:border-[#E53935]">Details</Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <PlatformFeatures />
-
-      {/* ===== MARKET UPDATES (2-column) ===== */}
-      <section id="market-updates" className="py-20 bg-transparent relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Market Updates</h2>
-            <p className="text-xl text-gray-600">Stay updated with the latest market analysis and trading insights</p>
-          </div>
-          <div className="grid lg:grid-cols-5 gap-8">
-            {/* Left: Video Cards (wider) */}
-            <div className="lg:col-span-3">
-              <h3 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: "#121212" }}>
-                <Video className="h-5 w-5" style={{ color: "#E53935" }} /> Videos
-              </h3>
-              <div className="grid sm:grid-cols-2 gap-5">
-                {[
-                  { title: "NIFTY Market Analysis Today", source: "YouTube", views: "12K", thumbnail: "https://images.unsplash.com/photo-1612178991541-b48cc8e92a4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600" },
-                  { title: "Risk Management Strategies Explained", source: "Uploaded", views: "8.5K", thumbnail: "https://images.unsplash.com/photo-1612178991541-b48cc8e92a4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600" },
-                  { title: "Candlestick Patterns for Day Trading", source: "YouTube", views: "15K", thumbnail: "https://images.unsplash.com/photo-1612178991541-b48cc8e92a4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600" },
-                  { title: "Options Chain Analysis Tutorial", source: "YouTube", views: "9.2K", thumbnail: "https://images.unsplash.com/photo-1612178991541-b48cc8e92a4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600" },
-                ].map((news, i) => (
-                  <Card key={i} className="overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl group">
-                    <div className="relative h-36 bg-gray-900 overflow-hidden">
-                      <img src={news.thumbnail} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(229, 57, 53, 0.9)" }}>
-                          <Play className="h-6 w-6 text-white ml-0.5" />
-                        </div>
-                      </div>
-                      <div className="absolute top-2 right-2 px-2 py-0.5 rounded text-xs font-medium bg-black/70 text-white">{news.source}</div>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-bold text-sm mb-2 line-clamp-2" style={{ color: "#121212" }}>{news.title}</h3>
-                      <div className="flex items-center justify-between text-xs text-gray-600">
-                        <div className="flex items-center gap-1"><Video className="h-3 w-3" style={{ color: "#E53935" }} />{news.views} views</div>
-                        <div className="flex items-center gap-2">
-                          <ShareButton title={news.title} variant="icon" />
-                          <button className="font-medium hover:underline" style={{ color: "#E53935" }}>Watch</button>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-            {/* Right: Text News (narrower) */}
-            <div className="lg:col-span-2">
-              <h3 className="text-lg font-bold mb-5 flex items-center gap-2" style={{ color: "#121212" }}>
-                <FileText className="h-5 w-5" style={{ color: "#E53935" }} /> Latest Headlines
-              </h3>
-              <div className="space-y-4">
-                {marketNewsItems.map((item, i) => (
-                  <Card key={i} className="p-4 border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-md group cursor-pointer">
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 mt-1">
-                        <div className="w-2 h-2 rounded-full mt-1" style={{ background: "#E53935" }} />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(229,57,53,0.1)", color: "#E53935" }}>{item.tag}</span>
-                          <span className="text-xs text-gray-400">{item.time}</span>
-                        </div>
-                        <h4 className="font-semibold text-sm leading-snug group-hover:text-[#E53935] transition-colors" style={{ color: "#121212" }}>{item.headline}</h4>
-                        <div className="flex items-center justify-between mt-1">
-                          <p className="text-xs text-gray-500">{item.source}</p>
-                          <ShareButton title={item.headline} variant="icon" />
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== VIDEO SHOWCASE SECTION (Premium Dark/Glass Section) ===== */}
-      <section className="py-24 relative z-10" style={{ background: "linear-gradient(to right, rgba(255,255,255,0.5), rgba(229, 57, 53, 0.03), rgba(255,255,255,0.5))" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-block px-4 py-2 rounded-full mb-4 border border-[#E53935]/30" style={{ background: "rgba(229,57,53,0.08)" }}>
-              <span className="text-[#E53935] font-semibold text-sm">🎬 FinTrade in Action</span>
-            </div>
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Our Stories, Your Inspiration</h2>
-            <p className="text-xl text-gray-600">Short films, ads, and student journeys</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {showcaseVideos.map((vid, i) => (
-              <Card
-                key={i}
-                className="overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-2xl group cursor-pointer"
-                onClick={() => setActiveVideoIdx(i)}
-              >
-                <div className="relative h-52 overflow-hidden bg-gray-900">
-                  <img src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.35)" }}>
-                    <div className="w-16 h-16 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-xl" style={{ background: "#E53935", boxShadow: "0 0 30px rgba(229,57,53,0.5)" }}>
-                      <Play className="h-7 w-7 text-white ml-1" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-3 right-3 px-2 py-1 rounded bg-black/70 text-white text-xs font-medium">{vid.duration}</div>
-                </div>
-                <div className="p-5 bg-white">
-                  <h3 className="font-bold text-base mb-1" style={{ color: "#121212" }}>{vid.title}</h3>
-                  <p className="text-sm text-gray-500">{vid.subtitle}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <ExpertProfile />
-
-      {/* Why FinTrade */}
+      {/* 8. Why Choose FinTrade */}
       <section id="about" className="py-20 bg-transparent relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -814,7 +714,68 @@ export default function MarketingHome() {
         </div>
       </section>
 
-      <KeyInsights />
+
+      {/* 9. Student Success Stories */}
+      <section className="py-20 relative z-10 bg-transparent">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Student Success Stories</h2>
+            <p className="text-xl text-gray-600">Hear from our successful traders</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { name: "Rahul Sharma", city: "Mumbai", testimonial: "FinTrade helped me become a disciplined trader. The structured approach and real trading simulator gave me confidence to trade professionally.", rating: 5 },
+              { name: "Priya Verma", city: "Bengaluru", testimonial: "The AI tutor and live classes are game-changers. I went from zero knowledge to getting placed at a prop trading firm in just 9 months.", rating: 5 },
+              { name: "Amit Patel", city: "Ahmedabad", testimonial: "Best investment I made in my career. The curriculum is comprehensive and the monthly exams keep you accountable. Highly recommend!", rating: 5 },
+            ].map((testimonial, i) => (
+              <Card key={i} className="p-6 border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl bg-white">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-2" style={{ borderColor: "#E53935" }}>
+                    <img src="https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" alt={testimonial.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold" style={{ color: "#121212" }}>{testimonial.name}</h4>
+                    <p className="text-sm text-gray-600">{testimonial.city}</p>
+                  </div>
+                </div>
+                <div className="flex gap-1 mb-3">
+                  {[...Array(testimonial.rating)].map((_, i) => (<Star key={i} className="h-4 w-4 fill-current" style={{ color: "#E53935" }} />))}
+                </div>
+                <p className="text-gray-700 italic">"{testimonial.testimonial}"</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 relative z-10" style={{ background: "linear-gradient(135deg, #E53935 0%, #b71c1c 100%)" }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Start Your Trading Journey Today</h2>
+          <p className="text-xl text-white/90 mb-8">Join 1200+ students learning to trade professionally</p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/student/contract-kyc">
+              <Button size="lg" className="shadow-2xl hover:shadow-3xl transition-all text-lg px-8 py-6" style={{ background: "white", color: "#E53935", boxShadow: "0 0 40px rgba(255, 255, 255, 0.3)" }}>
+                Apply Now
+                <ArrowRight className="ml-2 h-6 w-6" />
+              </Button>
+            </Link>
+            <a href="#">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6 border-2 hover:bg-white/10 transition-colors"
+                style={{ background: "transparent", borderColor: "white", color: "white" }}
+              >
+                <Download className="mr-2 h-5 w-5" />
+                Download Brochure
+              </Button>
+            </a>
+          </div>
+        </div>
+      </section>
+
+
 
       {/* Testimonials */}
       <section className="py-20 relative z-10 bg-transparent">
