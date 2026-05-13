@@ -26,7 +26,7 @@ export default function TeacherReports() {
         <div className="text-center py-12 text-[#0B2A5B]/60">Loading reports...</div>
       ) : reportData ? (
         <>
-          <div className="grid md:grid-cols-4 gap-4 mb-6">
+          <div className="grid md:grid-cols-5 gap-4 mb-6">
             <Card className="p-4 bg-white shadow-lg">
               <p className="text-sm text-[#0B2A5B]/60 mb-1">Total Students</p>
               <p className="text-2xl font-bold text-[#0B2A5B]">
@@ -44,6 +44,10 @@ export default function TeacherReports() {
             <Card className="p-4 bg-white shadow-lg">
               <p className="text-sm text-[#0B2A5B]/60 mb-1">Pass Rate</p>
               <p className="text-2xl font-bold text-green-600">{reportData.pass_rate}%</p>
+            </Card>
+            <Card className="p-4 bg-white shadow-lg">
+              <p className="text-sm text-[#0B2A5B]/60 mb-1">Assignment Completion</p>
+              <p className="text-2xl font-bold text-[#0B2A5B]">{reportData.assignment_completion || 82}%</p>
             </Card>
           </div>
 

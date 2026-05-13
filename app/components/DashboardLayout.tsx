@@ -1,6 +1,6 @@
 import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router";
-import { Menu, X, LogOut, Home, Users, BookOpen, Video, FileQuestion, IndianRupee, Bot, TrendingUp, BarChart3, Settings, Award, GraduationCap, MessageCircle, LineChart, Target, Briefcase, Shield, Newspaper, FileText } from "lucide-react";
+import { Menu, X, LogOut, Home, Users, BookOpen, Video, FileQuestion, IndianRupee, Bot, TrendingUp, BarChart3, Settings, Award, GraduationCap, MessageCircle, LineChart, Target, Briefcase, Shield, Newspaper, FileText, Trophy } from "lucide-react";
 import { Button } from "./ui/button";
 import logo from "../../imports/fintrade_logo.png";
 
@@ -28,9 +28,11 @@ const getNavItemsByRole = (role: string): NavItem[] => {
         { label: "Courses", path: "/student/courses", icon: <BookOpen size={20} /> },
         { label: "Modules", path: "/student/modules", icon: <GraduationCap size={20} /> },
         { label: "Lectures", path: "/student/lectures", icon: <Video size={20} /> },
+        { label: "Assignments", path: "/student/assignments", icon: <FileText size={20} /> },
         { label: "AI Tutor", path: "/student/ai-tutor", icon: <Bot size={20} /> },
         { label: "Exams", path: "/student/exams", icon: <FileQuestion size={20} /> },
         { label: "Performance", path: "/student/performance", icon: <BarChart3 size={20} /> },
+        { label: "Leaderboard", path: "/student/leaderboard", icon: <Trophy size={20} /> },
         { label: "Simulator", path: "/student/simulator", icon: <LineChart size={20} /> },
         { label: "Placement", path: "/student/placement", icon: <Briefcase size={20} /> },
         { label: "Certificate", path: "/student/certificate", icon: <Award size={20} /> },
@@ -42,6 +44,7 @@ const getNavItemsByRole = (role: string): NavItem[] => {
         { label: "Students", path: "/teacher/students", icon: <Users size={20} /> },
         { label: "Lectures", path: "/teacher/lectures", icon: <Video size={20} /> },
         { label: "Doubt Sessions", path: "/teacher/doubt-sessions", icon: <MessageCircle size={20} /> },
+        { label: "Assignments", path: "/teacher/assignments", icon: <FileText size={20} /> },
         { label: "Exams", path: "/teacher/exams", icon: <FileQuestion size={20} /> },
         { label: "Reports", path: "/teacher/reports", icon: <BarChart3 size={20} /> },
       ];

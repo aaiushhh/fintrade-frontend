@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import DashboardLayout from "../../components/DashboardLayout";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Badge } from "../../components/ui/badge";
-import { Plus, X, BookOpen, Layers, FileText, ChevronDown, ChevronUp } from "lucide-react";
+import { Plus, X, BookOpen, Layers, FileText, ChevronDown, ChevronUp, FileQuestion } from "lucide-react";
 import api from "../../services/api";
 
 export default function TeacherCourses() {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedCourse, setExpandedCourse] = useState<number | null>(null);
@@ -25,6 +27,12 @@ export default function TeacherCourses() {
   const [showLessonModal, setShowLessonModal] = useState(false);
   const [lessonForModule, setLessonForModule] = useState<number | null>(null);
   const [newLesson, setNewLesson] = useState({ title: "", content: "", content_type: "text", video_url: "", duration_minutes: 15, order: 0, is_published: false });
+
+  // Quiz question fields (when content_type === "quiz")
+  const [quizQuestion, setQuizQuestion] = useState("");
+  const [quizType, setQuizType] = useState("mcq");
+  const [quizOptions, setQuizOptions] = useState(["", "", "", ""]);
+  const [quizCorrect, setQuizCorrect] = useState("a");
 
   const [saving, setSaving] = useState(false);
 
@@ -68,10 +76,32 @@ export default function TeacherCourses() {
   const handleCreateLesson = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true);
     try {
-      await api.post("/admin/lessons", { ...newLesson, module_id: lessonForModule, video_url: newLesson.video_url || undefined });
-      setShowLessonModal(false);
-      setNewLesson({ title: "", content: "", content_type: "text", video_url: "", duration_minutes: 15, order: 0, is_published: false });
-      // refresh the parent course
+      let lessonContent = newLesson.content;
+
+      // If quiz type, serialize question data as JSON content
+      if (newLesson.content_type === "quiz") {
+        const quizData: any = {
+          question: quizQuestion,
+          type: quizType,
+          correct_answer: quizCorrect,
+        };
+        if (quizType === "fill_blank") {
+          quizData.answer = quizOptions[0];
+        } else {
+          quizData.options = quizType === "true_false"
+            ? [{ text: "True", key: "a" }, { text: "False", key: "b" }]
+            : quizOptions.filter(o => o.trim()).map((o, i) => ({ text: o, key: String.fromCharCode(97 + i) }));
+        }
+        lessonContent = JSON.stringify(quizData);
+      }
+
+      await api.post("/admin/lessons", {
+        ...newLesson,
+        content: lessonContent,
+        module_id: lessonForModule,
+        video_url: newLesson.video_url || undefined,
+      });
+      resetLessonModal();
       const mod = courses.flatMap((c) => (c.modules || []).map((m: any) => ({ ...m, courseId: c.id }))).find((m: any) => m.id === lessonForModule);
       if (mod) fetchCourseDetail(mod.courseId);
     } catch (err: any) { alert("Error: " + (err.response?.data?.detail || err.message)); }
@@ -82,15 +112,19 @@ export default function TeacherCourses() {
     try {
       await api.put(`/admin/courses/${courseId}`, { is_published: !currentState });
       fetchCourses();
-    } catch (err: any) {
-      alert("Error: " + (err.response?.data?.detail || err.message));
-    }
+    } catch (err: any) { alert("Error: " + (err.response?.data?.detail || err.message)); }
   };
 
   const toggleExpand = (courseId: number) => {
     if (expandedCourse === courseId) { setExpandedCourse(null); return; }
     setExpandedCourse(courseId);
     fetchCourseDetail(courseId);
+  };
+
+  const resetLessonModal = () => {
+    setShowLessonModal(false);
+    setNewLesson({ title: "", content: "", content_type: "text", video_url: "", duration_minutes: 15, order: 0, is_published: false });
+    setQuizQuestion(""); setQuizOptions(["", "", "", ""]); setQuizCorrect("a"); setQuizType("mcq");
   };
 
   return (
@@ -137,14 +171,16 @@ export default function TeacherCourses() {
                 <Button size="sm" variant="outline" className={course.is_published ? "border-orange-400 text-orange-500" : "border-green-500 text-green-600"} onClick={(e) => { e.stopPropagation(); togglePublish(course.id, course.is_published); }}>
                   {course.is_published ? "Unpublish" : "Publish"}
                 </Button>
-                <Button size="sm" variant="outline" className="border-[#C2A86A] text-[#C2A86A]" onClick={(e) => { e.stopPropagation(); setModuleForCourse(course.id); setShowModuleModal(true); }}>
+                <Button size="sm" variant="outline" className="border-[#C2A86A] text-[#C2A86A] hover:bg-[#C2A86A]/10" onClick={(e) => { e.stopPropagation(); setModuleForCourse(course.id); setShowModuleModal(true); }}>
                   <Layers size={14} className="mr-1" />Add Module
+                </Button>
+                <Button size="sm" className="bg-[#0B2A5B] text-white hover:bg-[#1a3d7a]" onClick={(e) => { e.stopPropagation(); navigate("/teacher/exams"); }}>
+                  <FileQuestion size={14} className="mr-1" />Manage Exams
                 </Button>
                 {expandedCourse === course.id ? <ChevronUp size={20} className="text-[#0B2A5B]/40" /> : <ChevronDown size={20} className="text-[#0B2A5B]/40" />}
               </div>
             </div>
 
-            {/* Expanded: Modules & Lessons */}
             {expandedCourse === course.id && (
               <div className="border-t border-[#0B2A5B]/10 bg-[#F4F1EA]/30 p-6">
                 {(course.modules || []).length === 0 ? (
@@ -171,7 +207,13 @@ export default function TeacherCourses() {
                               <div key={lesson.id} className="flex items-center gap-3 p-2 bg-[#F4F1EA] rounded text-sm">
                                 <FileText size={14} className="text-[#C2A86A]" />
                                 <span className="flex-1 text-[#0B2A5B]">{lesson.title}</span>
-                                <Badge className="bg-gray-100 text-gray-600 text-xs">{lesson.content_type}</Badge>
+                                <Badge className={
+                                  lesson.content_type === "quiz" ? "bg-purple-100 text-purple-700 text-xs" :
+                                  lesson.content_type === "video" ? "bg-blue-100 text-blue-700 text-xs" :
+                                  lesson.content_type === "audio" ? "bg-teal-100 text-teal-700 text-xs" :
+                                  lesson.content_type === "pdf" ? "bg-orange-100 text-orange-700 text-xs" :
+                                  "bg-gray-100 text-gray-600 text-xs"
+                                }>{lesson.content_type}</Badge>
                                 {lesson.duration_minutes && <span className="text-xs text-[#0B2A5B]/50">{lesson.duration_minutes} min</span>}
                               </div>
                             ))}
@@ -229,17 +271,103 @@ export default function TeacherCourses() {
 
       {/* Create Lesson Modal */}
       {showLessonModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md p-6 bg-white shadow-xl relative">
-            <button onClick={() => setShowLessonModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-black"><X size={20} /></button>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <Card className="w-full max-w-lg p-6 bg-white shadow-xl relative my-8">
+            <button onClick={resetLessonModal} className="absolute top-4 right-4 text-gray-500 hover:text-black"><X size={20} /></button>
             <h2 className="text-2xl font-bold text-[#0B2A5B] mb-4">Add Lesson</h2>
             <form onSubmit={handleCreateLesson} className="space-y-4">
-              <div><label className="text-sm font-medium text-[#0B2A5B]">Title *</label><Input required value={newLesson.title} onChange={(e) => setNewLesson({ ...newLesson, title: e.target.value })} className="bg-[#F4F1EA]" /></div>
-              <div><label className="text-sm font-medium text-[#0B2A5B]">Content Type</label><select className="w-full p-2 border rounded mt-1 bg-[#F4F1EA]" value={newLesson.content_type} onChange={(e) => setNewLesson({ ...newLesson, content_type: e.target.value })}><option value="text">Text</option><option value="video">Video</option><option value="audio">Audio</option></select></div>
-              <div><label className="text-sm font-medium text-[#0B2A5B]">Content</label><textarea className="w-full p-2 border rounded mt-1 bg-[#F4F1EA]" rows={3} value={newLesson.content} onChange={(e) => setNewLesson({ ...newLesson, content: e.target.value })} /></div>
-              {(newLesson.content_type === "video" || newLesson.content_type === "audio") && (
-                <div><label className="text-sm font-medium text-[#0B2A5B]">Media URL</label><Input type="url" placeholder="https://..." value={newLesson.video_url} onChange={(e) => setNewLesson({ ...newLesson, video_url: e.target.value })} className="bg-[#F4F1EA]" /></div>
+              <div>
+                <label className="text-sm font-medium text-[#0B2A5B]">Title *</label>
+                <Input required value={newLesson.title} onChange={(e) => setNewLesson({ ...newLesson, title: e.target.value })} className="bg-[#F4F1EA]" />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-[#0B2A5B]">Content Type</label>
+                <select className="w-full p-2 border rounded mt-1 bg-[#F4F1EA]" value={newLesson.content_type} onChange={(e) => setNewLesson({ ...newLesson, content_type: e.target.value })}>
+                  <option value="text">Text</option>
+                  <option value="video">Video</option>
+                  <option value="audio">Audio</option>
+                  <option value="quiz">Quiz</option>
+                  <option value="pdf">PDF</option>
+                </select>
+              </div>
+
+              {/* ── QUIZ FIELDS ── */}
+              {newLesson.content_type === "quiz" && (
+                <div className="space-y-3 border border-purple-200 rounded-lg p-4 bg-purple-50/30">
+                  <div>
+                    <label className="text-sm font-medium text-[#0B2A5B]">Question Type</label>
+                    <select className="w-full p-2 border rounded mt-1 bg-white" value={quizType} onChange={(e) => { setQuizType(e.target.value); setQuizCorrect("a"); }}>
+                      <option value="mcq">Multiple Choice (A/B/C/D)</option>
+                      <option value="true_false">True / False</option>
+                      <option value="fill_blank">Fill in the Blank</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-[#0B2A5B]">Question *</label>
+                    <textarea className="w-full p-2 border rounded mt-1 bg-white" rows={2} placeholder="Enter question text..." value={quizQuestion} onChange={(e) => setQuizQuestion(e.target.value)} required />
+                  </div>
+
+                  {quizType === "mcq" && (
+                    <>
+                      <div className="grid grid-cols-1 gap-2">
+                        {["A", "B", "C", "D"].map((letter, i) => (
+                          <div key={letter} className="flex items-center gap-2">
+                            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${quizCorrect === letter.toLowerCase() ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"}`}>{letter}</span>
+                            <Input
+                              placeholder={`Option ${letter}`}
+                              value={quizOptions[i]}
+                              onChange={(e) => { const upd = [...quizOptions]; upd[i] = e.target.value; setQuizOptions(upd); }}
+                              className="bg-white flex-1"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-[#0B2A5B]">Correct Answer</label>
+                        <select className="w-full p-2 border rounded mt-1 bg-white" value={quizCorrect} onChange={(e) => setQuizCorrect(e.target.value)}>
+                          <option value="a">A</option>
+                          <option value="b">B</option>
+                          <option value="c">C</option>
+                          <option value="d">D</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
+
+                  {quizType === "true_false" && (
+                    <div>
+                      <label className="text-sm font-medium text-[#0B2A5B]">Correct Answer</label>
+                      <select className="w-full p-2 border rounded mt-1 bg-white" value={quizCorrect} onChange={(e) => setQuizCorrect(e.target.value)}>
+                        <option value="a">True</option>
+                        <option value="b">False</option>
+                      </select>
+                    </div>
+                  )}
+
+                  {quizType === "fill_blank" && (
+                    <div>
+                      <label className="text-sm font-medium text-[#0B2A5B]">Expected Answer</label>
+                      <Input placeholder="Type the correct answer..." value={quizOptions[0]} onChange={(e) => { const upd = [...quizOptions]; upd[0] = e.target.value; setQuizOptions(upd); }} className="bg-white" />
+                    </div>
+                  )}
+                </div>
               )}
+
+              {/* ── NON-QUIZ FIELDS ── */}
+              {newLesson.content_type !== "quiz" && (
+                <div>
+                  <label className="text-sm font-medium text-[#0B2A5B]">Content</label>
+                  <textarea className="w-full p-2 border rounded mt-1 bg-[#F4F1EA]" rows={3} value={newLesson.content} onChange={(e) => setNewLesson({ ...newLesson, content: e.target.value })} />
+                </div>
+              )}
+
+              {(newLesson.content_type === "video" || newLesson.content_type === "audio" || newLesson.content_type === "pdf") && (
+                <div>
+                  <label className="text-sm font-medium text-[#0B2A5B]">{newLesson.content_type === "pdf" ? "PDF URL" : "Media URL"}</label>
+                  <Input type="url" placeholder="https://..." value={newLesson.video_url} onChange={(e) => setNewLesson({ ...newLesson, video_url: e.target.value })} className="bg-[#F4F1EA]" />
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <div><label className="text-sm font-medium text-[#0B2A5B]">Duration (min)</label><Input type="number" min="1" value={newLesson.duration_minutes} onChange={(e) => setNewLesson({ ...newLesson, duration_minutes: parseInt(e.target.value) })} className="bg-[#F4F1EA]" /></div>
                 <div><label className="text-sm font-medium text-[#0B2A5B]">Order</label><Input type="number" min="0" value={newLesson.order} onChange={(e) => setNewLesson({ ...newLesson, order: parseInt(e.target.value) })} className="bg-[#F4F1EA]" /></div>

@@ -5,7 +5,117 @@ import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Progress } from "../../components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
-import { FileText, Play, FileAudio, FileVideo, Download, CheckCircle, Lock, Volume2, Settings } from "lucide-react";
+import { FileText, Play, FileAudio, FileVideo, Download, CheckCircle, Lock, Volume2, Settings, HelpCircle } from "lucide-react";
+import { Input } from "../../components/ui/input";
+
+// ── Inline quiz renderer for quiz-type lessons ──
+function QuizRenderer({ content }: { content: string }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const [fillAnswer, setFillAnswer] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+
+  let quiz: any = null;
+  try { quiz = JSON.parse(content); } catch { return <p className="text-[#0B2A5B]/60">Invalid quiz data.</p>; }
+  if (!quiz || !quiz.question) return <p className="text-[#0B2A5B]/60">No quiz data found.</p>;
+
+  const handleSubmit = () => {
+    if (quiz.type === "fill_blank") {
+      setIsCorrect(fillAnswer.trim().toLowerCase() === (quiz.answer || "").trim().toLowerCase());
+    } else {
+      setIsCorrect(selected === quiz.correct_answer);
+    }
+    setSubmitted(true);
+  };
+
+  const handleReset = () => {
+    setSelected(null); setFillAnswer(""); setSubmitted(false); setIsCorrect(false);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-2 mb-2">
+        <HelpCircle className="text-purple-500" size={20} />
+        <Badge className="bg-purple-100 text-purple-700">
+          {quiz.type === "mcq" ? "Multiple Choice" : quiz.type === "true_false" ? "True / False" : "Fill in the Blank"}
+        </Badge>
+      </div>
+
+      <h3 className="text-xl font-semibold text-[#0B2A5B] leading-relaxed">{quiz.question}</h3>
+
+      {/* MCQ or True/False */}
+      {(quiz.type === "mcq" || quiz.type === "true_false") && quiz.options && (
+        <div className="space-y-3">
+          {quiz.options.map((opt: any) => (
+            <div
+              key={opt.key}
+              onClick={() => !submitted && setSelected(opt.key)}
+              className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                submitted && opt.key === quiz.correct_answer
+                  ? "border-green-500 bg-green-50"
+                  : submitted && selected === opt.key && opt.key !== quiz.correct_answer
+                  ? "border-red-400 bg-red-50"
+                  : selected === opt.key
+                  ? "border-[#C2A86A] bg-[#C2A86A]/5"
+                  : "border-gray-200 hover:border-[#0B2A5B]/30 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex items-center gap-4">
+                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-bold ${
+                  submitted && opt.key === quiz.correct_answer ? "border-green-500 bg-green-500 text-white" :
+                  selected === opt.key ? "border-[#C2A86A] bg-[#C2A86A] text-white" :
+                  "border-gray-300 text-gray-500"
+                }`}>{opt.key.toUpperCase()}</div>
+                <span className="text-lg text-[#0B2A5B]">{opt.text}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Fill in the blank */}
+      {quiz.type === "fill_blank" && (
+        <div>
+          <Input
+            placeholder="Type your answer here..."
+            value={fillAnswer}
+            onChange={(e) => !submitted && setFillAnswer(e.target.value)}
+            className={`text-lg p-4 h-14 ${
+              submitted ? (isCorrect ? "border-green-500 bg-green-50" : "border-red-400 bg-red-50") : ""
+            }`}
+            disabled={submitted}
+          />
+          {submitted && !isCorrect && (
+            <p className="mt-2 text-sm text-green-700">Correct answer: <strong>{quiz.answer}</strong></p>
+          )}
+        </div>
+      )}
+
+      {/* Result feedback */}
+      {submitted && (
+        <div className={`p-4 rounded-lg font-semibold text-center ${isCorrect ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+          {isCorrect ? "✓ Correct! Well done." : "✗ Incorrect. Review and try again."}
+        </div>
+      )}
+
+      <div className="flex gap-3">
+        {!submitted ? (
+          <Button
+            onClick={handleSubmit}
+            disabled={quiz.type === "fill_blank" ? !fillAnswer.trim() : !selected}
+            className="bg-[#0B2A5B] text-white hover:bg-[#1a3d7a] px-8"
+          >
+            Check Answer
+          </Button>
+        ) : (
+          <Button onClick={handleReset} variant="outline" className="border-[#0B2A5B]/20 text-[#0B2A5B]">
+            Try Again
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
 import api from "../../services/api";
 
 export default function Modules() {
@@ -77,6 +187,8 @@ export default function Modules() {
     switch (type) {
       case "video": return <FileVideo className="text-[#C2A86A]" size={18} />;
       case "audio": return <FileAudio className="text-[#0B2A5B]" size={18} />;
+      case "quiz": return <HelpCircle className="text-purple-500" size={18} />;
+      case "pdf": return <Download className="text-orange-500" size={18} />;
       default: return <FileText className="text-[#1a3d7a]" size={18} />;
     }
   };
@@ -188,6 +300,8 @@ export default function Modules() {
                             </div>
                           )}
                         </div>
+                      ) : activeLesson.content_type === "quiz" ? (
+                        <QuizRenderer content={activeLesson.content} />
                       ) : activeLesson.content ? (
                         <div className="prose max-w-none text-[#0B2A5B]">
                           {/* Fallback for other content types with text */}

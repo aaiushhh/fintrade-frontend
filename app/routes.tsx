@@ -18,6 +18,10 @@ import Performance from "./pages/student/Performance";
 import Certificate from "./pages/student/Certificate";
 import TradingSimulator from "./pages/student/TradingSimulator";
 import Placement from "./pages/student/Placement";
+import CourseExamInterface from "./pages/student/CourseExamInterface";
+import StudentAssignments from "./pages/student/StudentAssignments";
+import Leaderboard from "./pages/student/Leaderboard";
+import ExamResultReview from "./pages/student/ExamResultReview";
 
 // Teacher Pages
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
@@ -26,7 +30,9 @@ import TeacherStudents from "./pages/teacher/TeacherStudents";
 import TeacherLectures from "./pages/teacher/TeacherLectures";
 import DoubtSessions from "./pages/teacher/DoubtSessions";
 import TeacherExams from "./pages/teacher/TeacherExams";
+import QuestionBuilder from "./pages/teacher/QuestionBuilder";
 import TeacherReports from "./pages/teacher/TeacherReports";
+import TeacherAssignments from "./pages/teacher/TeacherAssignments";
 
 // Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -72,6 +78,10 @@ export const router = createBrowserRouter([
     Component: EntranceExam,
   },
   {
+    path: "/student/exam/:examId",
+    Component: CourseExamInterface,
+  },
+  {
     path: "/student/courses",
     Component: CourseEnrollment,
   },
@@ -92,8 +102,20 @@ export const router = createBrowserRouter([
     Component: MonthlyExams,
   },
   {
+    path: "/student/exam/review/:attemptId",
+    Component: ExamResultReview,
+  },
+  {
+    path: "/student/assignments",
+    Component: StudentAssignments,
+  },
+  {
     path: "/student/performance",
     Component: Performance,
+  },
+  {
+    path: "/student/leaderboard",
+    Component: Leaderboard,
   },
   {
     path: "/student/certificate",
@@ -137,8 +159,16 @@ export const router = createBrowserRouter([
     Component: TeacherExams,
   },
   {
+    path: "/teacher/exams/:examId/questions",
+    Component: QuestionBuilder,
+  },
+  {
     path: "/teacher/reports",
     Component: TeacherReports,
+  },
+  {
+    path: "/teacher/assignments",
+    Component: TeacherAssignments,
   },
   // Admin Routes
   {
