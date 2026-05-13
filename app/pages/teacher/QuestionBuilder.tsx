@@ -96,7 +96,9 @@ export default function QuestionBuilder() {
     try {
       const formData = new FormData();
       formData.append("file", uploadedFile);
-      const res = await api.post("/admin/exams/preview-upload", formData);
+      const res = await api.post("/admin/exams/preview-upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
       setPreviewQuestions(res.data.questions);
       toast.success(`Parsed ${res.data.count} questions from file`);
     } catch (err: any) {
@@ -115,12 +117,17 @@ export default function QuestionBuilder() {
       const isCourse = examType === "course";
       const res = await api.post(
         `/admin/exams/upload-questions?exam_id=${examId}&is_course_exam=${isCourse}`,
-        formData
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       toast.success(res.data.message);
       navigate("/teacher/exams");
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || "Failed to upload questions");
+      const detail = err.response?.data?.detail;
+      const message = Array.isArray(detail) 
+        ? detail.map(d => `${d.loc.join('.')}: ${d.msg}`).join(', ') 
+        : typeof detail === 'string' ? detail : "Failed to upload questions";
+      toast.error(message);
     } finally {
       setIsUploading(false);
     }
@@ -211,7 +218,11 @@ export default function QuestionBuilder() {
       toast.success(`Saved ${valid.length} question(s) successfully!`);
       navigate("/teacher/exams");
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || "Failed to save questions");
+      const detail = error.response?.data?.detail;
+      const message = Array.isArray(detail) 
+        ? detail.map((d: any) => `${d.loc.join('.')}: ${d.msg}`).join(', ') 
+        : typeof detail === 'string' ? detail : "Failed to save questions";
+      toast.error(message);
     } finally {
       setIsSaving(false);
     }
