@@ -453,6 +453,7 @@ export default function MarketingHome() {
             </div>
           </div>
         </div>
+      </section>
       {/* 1. Featured Courses Section */}
       <section id="courses" className="py-24 relative z-10" style={{ background: "linear-gradient(to bottom, transparent, rgba(229, 57, 53, 0.02), transparent)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
