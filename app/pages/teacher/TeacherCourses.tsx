@@ -16,7 +16,7 @@ export default function TeacherCourses() {
 
   // Course modal
   const [showCourseModal, setShowCourseModal] = useState(false);
-  const [newCourse, setNewCourse] = useState({ title: "", description: "", short_description: "", price: 0, difficulty_level: "beginner", duration_hours: 0, is_published: false });
+  const [newCourse, setNewCourse] = useState({ title: "", description: "", short_description: "", difficulty_level: "beginner", duration_days: 0, is_published: false });
 
   // Module modal
   const [showModuleModal, setShowModuleModal] = useState(false);
@@ -56,7 +56,7 @@ export default function TeacherCourses() {
     try {
       await api.post("/admin/courses", newCourse);
       setShowCourseModal(false);
-      setNewCourse({ title: "", description: "", short_description: "", price: 0, difficulty_level: "beginner", duration_hours: 0, is_published: false });
+      setNewCourse({ title: "", description: "", short_description: "", difficulty_level: "beginner", duration_days: 0, is_published: false });
       fetchCourses();
     } catch (err: any) { alert("Error: " + (err.response?.data?.detail || err.message)); }
     finally { setSaving(false); }
@@ -161,8 +161,7 @@ export default function TeacherCourses() {
                   </div>
                   <p className="text-sm text-[#0B2A5B]/60 line-clamp-1">{course.short_description || course.description || "No description"}</p>
                   <div className="flex items-center gap-4 mt-2 text-xs text-[#0B2A5B]/50">
-                    <span>₹{course.price?.toLocaleString() || "0"}</span>
-                    {course.duration_hours && <span>{course.duration_hours} hours</span>}
+                    {course.duration_days && <span>{course.duration_days} Days</span>}
                     {course.modules && <span>{course.modules.length} modules</span>}
                   </div>
                 </div>
@@ -241,10 +240,9 @@ export default function TeacherCourses() {
               <div><label className="text-sm font-medium text-[#0B2A5B]">Short Description</label><Input value={newCourse.short_description} onChange={(e) => setNewCourse({ ...newCourse, short_description: e.target.value })} className="bg-[#F4F1EA]" /></div>
               <div><label className="text-sm font-medium text-[#0B2A5B]">Full Description</label><textarea className="w-full p-2 border rounded mt-1 bg-[#F4F1EA]" rows={3} value={newCourse.description} onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })} /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><label className="text-sm font-medium text-[#0B2A5B]">Difficulty</label><select className="w-full p-2 border rounded mt-1 bg-[#F4F1EA]" value={newCourse.difficulty_level} onChange={(e) => setNewCourse({ ...newCourse, difficulty_level: e.target.value })}><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div>
-                <div><label className="text-sm font-medium text-[#0B2A5B]">Price (₹)</label><Input type="number" min="0" value={newCourse.price} onChange={(e) => setNewCourse({ ...newCourse, price: parseFloat(e.target.value) || 0 })} className="bg-[#F4F1EA]" /></div>
+                <div><label className="text-sm font-medium text-[#0B2A5B]">Difficulty *</label><select className="w-full p-2 border rounded mt-1 bg-[#F4F1EA]" value={newCourse.difficulty_level} onChange={(e) => setNewCourse({ ...newCourse, difficulty_level: e.target.value })}><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div>
+                <div><label className="text-sm font-medium text-[#0B2A5B]">Duration (days) *</label><Input type="number" min="0" value={newCourse.duration_days} onChange={(e) => setNewCourse({ ...newCourse, duration_days: parseInt(e.target.value) || 0 })} className="bg-[#F4F1EA]" /></div>
               </div>
-              <div><label className="text-sm font-medium text-[#0B2A5B]">Duration (hours)</label><Input type="number" min="0" value={newCourse.duration_hours} onChange={(e) => setNewCourse({ ...newCourse, duration_hours: parseInt(e.target.value) || 0 })} className="bg-[#F4F1EA]" /></div>
               <div className="flex items-center gap-2"><input type="checkbox" checked={newCourse.is_published} onChange={(e) => setNewCourse({ ...newCourse, is_published: e.target.checked })} /><label className="text-sm text-[#0B2A5B]">Published (Visible to students)</label></div>
               <Button type="submit" disabled={saving} className="w-full bg-[#0B2A5B] text-white hover:bg-[#1a3d7a]">{saving ? "Creating..." : "Create Course"}</Button>
             </form>
@@ -261,8 +259,8 @@ export default function TeacherCourses() {
             <form onSubmit={handleCreateModule} className="space-y-4">
               <div><label className="text-sm font-medium text-[#0B2A5B]">Title *</label><Input required value={newModule.title} onChange={(e) => setNewModule({ ...newModule, title: e.target.value })} className="bg-[#F4F1EA]" /></div>
               <div><label className="text-sm font-medium text-[#0B2A5B]">Description</label><textarea className="w-full p-2 border rounded mt-1 bg-[#F4F1EA]" rows={2} value={newModule.description} onChange={(e) => setNewModule({ ...newModule, description: e.target.value })} /></div>
-              <div><label className="text-sm font-medium text-[#0B2A5B]">Order</label><Input type="number" min="0" value={newModule.order} onChange={(e) => setNewModule({ ...newModule, order: parseInt(e.target.value) })} className="bg-[#F4F1EA]" /></div>
-              <div className="flex items-center gap-2"><input type="checkbox" checked={newModule.is_published} onChange={(e) => setNewModule({ ...newModule, is_published: e.target.checked })} /><label className="text-sm text-[#0B2A5B]">Published</label></div>
+              <div><label className="text-sm font-medium text-[#0B2A5B]">Order *</label><Input type="number" min="0" value={newModule.order} onChange={(e) => setNewModule({ ...newModule, order: parseInt(e.target.value) })} className="bg-[#F4F1EA]" /></div>
+              <div className="flex items-center gap-2"><input type="checkbox" checked={newModule.is_published} onChange={(e) => setNewModule({ ...newModule, is_published: e.target.checked })} /><label className="text-sm text-[#0B2A5B]">Published (Visible to students)</label></div>
               <Button type="submit" disabled={saving} className="w-full bg-[#0B2A5B] text-white hover:bg-[#1a3d7a]">{saving ? "Creating..." : "Add Module"}</Button>
             </form>
           </Card>
@@ -281,7 +279,7 @@ export default function TeacherCourses() {
                 <Input required value={newLesson.title} onChange={(e) => setNewLesson({ ...newLesson, title: e.target.value })} className="bg-[#F4F1EA]" />
               </div>
               <div>
-                <label className="text-sm font-medium text-[#0B2A5B]">Content Type</label>
+                <label className="text-sm font-medium text-[#0B2A5B]">Content Type *</label>
                 <select className="w-full p-2 border rounded mt-1 bg-[#F4F1EA]" value={newLesson.content_type} onChange={(e) => setNewLesson({ ...newLesson, content_type: e.target.value })}>
                   <option value="text">Text</option>
                   <option value="video">Video</option>

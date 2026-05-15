@@ -107,48 +107,52 @@ export default function AdminLectures() {
 
       {/* Add Lecture Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md p-6 bg-white shadow-xl relative">
-            <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-black">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <Card className="w-full max-w-md p-6 bg-white shadow-2xl relative border-t-4 border-[#0B2A5B]">
+            <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
               <X size={20} />
             </button>
-            <h2 className="text-2xl font-bold mb-4">Schedule New Lecture</h2>
+            <h2 className="text-2xl font-bold mb-6 text-[#0B2A5B]">Schedule New Lecture</h2>
             <form onSubmit={handleAddLecture} className="space-y-4">
               <div>
-                <label className="text-sm font-medium">Title</label>
-                <Input required value={newLecture.title} onChange={(e) => setNewLecture({...newLecture, title: e.target.value})} />
+                <label className="text-sm font-semibold text-[#0B2A5B] mb-1 block">Lecture Title <span className="text-red-500">*</span></label>
+                <Input required placeholder="e.g. Technical Analysis Basics" value={newLecture.title} onChange={(e) => setNewLecture({...newLecture, title: e.target.value})} className="border-[#0B2A5B]/20" />
               </div>
               <div>
-                <label className="text-sm font-medium">Description</label>
+                <label className="text-sm font-semibold text-[#0B2A5B] mb-1 block">Description <span className="text-red-500">*</span></label>
                 <textarea 
-                  className="w-full p-2 border rounded mt-1 bg-gray-50"
-                  rows={2}
+                  required
+                  placeholder="What will students learn in this session?"
+                  className="w-full p-3 border border-[#0B2A5B]/20 rounded-md bg-white text-sm focus:ring-2 focus:ring-[#0B2A5B]/20 outline-none transition-all"
+                  rows={3}
                   value={newLecture.description} 
                   onChange={(e) => setNewLecture({...newLecture, description: e.target.value})}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Instructor Name</label>
-                <Input required value={newLecture.instructor_name} onChange={(e) => setNewLecture({...newLecture, instructor_name: e.target.value})} />
+                <label className="text-sm font-semibold text-[#0B2A5B] mb-1 block">Instructor Name <span className="text-red-500">*</span></label>
+                <Input required placeholder="Enter name" value={newLecture.instructor_name} onChange={(e) => setNewLecture({...newLecture, instructor_name: e.target.value})} className="border-[#0B2A5B]/20" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium">Start Time</label>
-                  <Input required type="datetime-local" value={newLecture.start_time} onChange={(e) => setNewLecture({...newLecture, start_time: e.target.value})} />
+                  <label className="text-sm font-semibold text-[#0B2A5B] mb-1 block">Start Time <span className="text-red-500">*</span></label>
+                  <Input required type="datetime-local" value={newLecture.start_time} onChange={(e) => setNewLecture({...newLecture, start_time: e.target.value})} className="border-[#0B2A5B]/20" />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">End Time</label>
-                  <Input required type="datetime-local" value={newLecture.end_time} onChange={(e) => setNewLecture({...newLecture, end_time: e.target.value})} />
+                  <label className="text-sm font-semibold text-[#0B2A5B] mb-1 block">End Time <span className="text-red-500">*</span></label>
+                  <Input required type="datetime-local" value={newLecture.end_time} onChange={(e) => setNewLecture({...newLecture, end_time: e.target.value})} className="border-[#0B2A5B]/20" />
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium">Meeting URL</label>
-                <Input type="url" placeholder="https://zoom.us/..." value={newLecture.meeting_url} onChange={(e) => setNewLecture({...newLecture, meeting_url: e.target.value})} />
+                <label className="text-sm font-semibold text-[#0B2A5B] mb-1 block">Google Meet / Zoom Link <span className="text-red-500">*</span></label>
+                <Input required type="url" placeholder="https://meet.google.com/..." value={newLecture.meeting_url} onChange={(e) => setNewLecture({...newLecture, meeting_url: e.target.value})} className="border-[#0B2A5B]/20" />
               </div>
 
-              <Button type="submit" className="w-full bg-[#0B2A5B] text-white hover:bg-[#1a3d7a]">
-                Schedule Lecture
-              </Button>
+              <div className="pt-4">
+                <Button type="submit" className="w-full bg-[#0B2A5B] text-white hover:bg-[#1a3d7a] h-12 text-lg shadow-lg shadow-[#0B2A5B]/20">
+                  Create & Notify Students
+                </Button>
+              </div>
             </form>
           </Card>
         </div>

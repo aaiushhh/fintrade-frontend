@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
-import { Play, TrendingUp, Award, Users, BookOpen, LineChart, Video, CheckCircle, Star, ArrowRight, BarChart3, Brain, Target, Trophy, X, FileText, Search, Phone, Download, Instagram, Youtube, Linkedin, Twitter } from "lucide-react";
+import { Play, TrendingUp, Award, Users, BookOpen, LineChart, Video, CheckCircle, Star, ArrowRight, BarChart3, Brain, Target, Trophy, X, FileText, Search, Phone, Download, Instagram, Youtube, Linkedin, Twitter, Facebook, ChevronRight, ChevronDown } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "../components/ui/input-otp";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/ui/accordion";
 import TickerStrip from "../components/TickerStrip";
 import ShareButton from "../components/ShareButton";
 import StudentStats from "../components/home/StudentStats";
@@ -172,6 +177,33 @@ export default function MarketingHome() {
   const [activeVideoIdx, setActiveVideoIdx] = useState<number | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
 
+  // Brochure Download Flow State
+  const [brochureOpen, setBrochureOpen] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [leadData, setLeadData] = useState({ name: "", email: "", contact: "", city: "" });
+
+  const handleDownloadClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setBrochureOpen(true);
+  };
+
+  const sendOTP = () => {
+    if (leadData.name && leadData.contact) {
+      setOtpSent(true);
+    }
+  };
+
+  const verifyAndDownload = () => {
+    if (otp.length === 6) {
+      alert("Verification successful! Your brochure download will start shortly.");
+      setBrochureOpen(false);
+      setOtpSent(false);
+      setOtp("");
+      // Trigger actual download logic here
+    }
+  };
+
   const showcaseVideos = [
     {
       title: "FinTrade Student Story",
@@ -250,10 +282,11 @@ export default function MarketingHome() {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 {[
-                  { icon: Instagram, href: "#", label: "Instagram" },
-                  { icon: Youtube, href: "#", label: "YouTube" },
-                  { icon: Linkedin, href: "#", label: "LinkedIn" },
-                  { icon: Twitter, href: "#", label: "Twitter" },
+                  { icon: Instagram, href: "https://www.instagram.com/the.fintrade/", label: "Instagram" },
+                  { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61589528075521", label: "Facebook" },
+                  { icon: Youtube, href: "https://www.youtube.com/@The_FinTrade", label: "YouTube" },
+                  { icon: Linkedin, href: "https://www.linkedin.com/in/the-fintrade-7230b040a/", label: "LinkedIn" },
+                  { icon: X, href: "#", label: "X" },
                 ].map((s) => (
                   <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded flex items-center justify-center text-gray-400 hover:text-[#E53935] transition-colors" title={s.label}>
                     <s.icon className="h-4 w-4" />
@@ -289,8 +322,8 @@ export default function MarketingHome() {
             <div className="hidden md:flex items-center gap-8">
               <a href="#courses" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Courses</a>
               <a href="#markets" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Markets</a>
-              <Link to="/category/technical-analysis" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Categories</Link>
-              <a href="#market-updates" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Market Updates</a>
+              <a href="#" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Categories</a>
+              <a href="#market-updates" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Update</a>
               <a href="#" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">Blog</a>
               <a href="#about" className="text-gray-700 hover:text-[#E53935] transition-colors font-medium">About</a>
             </div>
@@ -300,16 +333,6 @@ export default function MarketingHome() {
               </button>
               <Link to="/login" className="hidden sm:block">
                 <Button variant="ghost" className="text-gray-700 hover:text-[#E53935] hover:bg-red-50" size="lg">Login</Button>
-              </Link>
-              <Link to="/student/contract-kyc">
-                <Button
-                  variant="outline"
-                  className="border-2 border-[#E53935] text-[#E53935] hover:bg-red-50 hidden lg:flex"
-                  size="lg"
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  View Contract & KYC Demo
-                </Button>
               </Link>
               <Link to="/student/entrance-exam">
                 <Button
@@ -361,7 +384,7 @@ export default function MarketingHome() {
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <a href="#" className="block w-full sm:w-auto">
+                <a href="#" onClick={handleDownloadClick} className="block w-full sm:w-auto">
                   <Button
                     size="lg"
                     variant="outline"
@@ -430,23 +453,44 @@ export default function MarketingHome() {
             </div>
           </div>
         </div>
-      </section>
-
       {/* 1. Featured Courses Section */}
       <section id="courses" className="py-24 relative z-10" style={{ background: "linear-gradient(to bottom, transparent, rgba(229, 57, 53, 0.02), transparent)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Featured Courses</h2>
+            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Our Professional Programs</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Master trading with our structured curriculum designed for all skill levels
+              Master trading with our industry-leading certifications
             </p>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[
-              { name: "Basic Trading", level: "Beginner", duration: "3 months", price: "₹25,000", description: "Foundation of markets, technical analysis, and risk management", icon: BookOpen },
-              { name: "Intermediate Trading", level: "Intermediate", duration: "3 months", price: "₹35,000", description: "Advanced chart patterns, indicators, and trading psychology", icon: LineChart },
-              { name: "Advanced Trading", level: "Advanced", duration: "3 months", price: "₹45,000", description: "Options, futures, derivatives, and portfolio management", icon: BarChart3 },
-              { name: "Master Trading", level: "Expert", duration: "3 months", price: "₹55,000", description: "Algorithmic trading, quantitative analysis, and institutional strategies", icon: Trophy },
+              { 
+                name: "Financial Market Foundation (FMF)", 
+                level: "Foundation", 
+                duration: "30 Days", 
+                originalPrice: "₹20,000",
+                price: "₹12,000 + GST", 
+                description: "Master the fundamentals of financial markets and start your trading journey with confidence.", 
+                icon: BookOpen 
+              },
+              { 
+                name: "Certified Analyst and Research Program (CARP)", 
+                level: "Intermediate", 
+                duration: "60 Days", 
+                originalPrice: "₹50,000",
+                price: "₹30,000 + GST", 
+                description: "Deep dive into research methodologies, technical analysis, and fundamental research.", 
+                icon: LineChart 
+              },
+              { 
+                name: "Certified Professional Trading Program (CPTP)", 
+                level: "Professional", 
+                duration: "90 Days", 
+                originalPrice: "₹75,000",
+                price: "₹45,000 + GST", 
+                description: "Professional grade trading strategies, advanced risk management, and portfolio construction.", 
+                icon: Trophy 
+              },
             ].map((course, i) => (
               <Card key={i} className="min-w-[280px] snap-center shrink-0 md:min-w-0 md:w-auto group hover:shadow-2xl transition-all duration-300 overflow-hidden border-2 border-gray-100 hover:border-[#E53935]">
                 <div className="h-2 w-full" style={{ background: "#E53935" }} />
@@ -455,7 +499,7 @@ export default function MarketingHome() {
                     <course.icon className="h-6 w-6" style={{ color: "#E53935" }} />
                   </div>
                   <h3 className="text-xl font-bold mb-2" style={{ color: "#121212" }}>{course.name}</h3>
-                  <div className="inline-block px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ background: "rgba(229, 57, 53, 0.1)", color: "#E53935" }}>
+                  <div className="inline-block px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ background: "rgba(229,57,53,0.1)", color: "#E53935" }}>
                     {course.level}
                   </div>
                   <p className="text-gray-600 text-sm mb-4 min-h-[60px]">{course.description}</p>
@@ -464,14 +508,18 @@ export default function MarketingHome() {
                       <CheckCircle className="h-4 w-4" style={{ color: "#E53935" }} />
                       Duration: {course.duration}
                     </div>
-                    <div className="flex items-center gap-2 text-sm font-bold" style={{ color: "#121212" }}>
-                      <CheckCircle className="h-4 w-4" style={{ color: "#E53935" }} />
-                      {course.price}
+                    <div className="mt-4">
+                      <div className="text-sm text-gray-400 line-through mb-0.5">
+                        {course.originalPrice}
+                      </div>
+                      <div className="text-2xl font-bold" style={{ color: "#121212" }}>
+                        {course.price}
+                      </div>
                     </div>
                   </div>
                   <Link to="/student/courses">
-                    <Button className="w-full group-hover:shadow-lg transition-all" style={{ background: "#E53935", color: "white" }}>
-                      View Course
+                    <Button className="w-full mt-4 group-hover:shadow-lg transition-all" style={{ background: "#E53935", color: "white" }}>
+                      View Program Details
                     </Button>
                   </Link>
                 </div>
@@ -480,6 +528,57 @@ export default function MarketingHome() {
           </div>
         </div>
       </section>
+
+      {/* Course Curriculum Modules Accordion */}
+      <section className="py-20 bg-white relative z-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4" style={{ color: "#121212" }}>Program Curriculum</h2>
+            <p className="text-lg text-gray-600">Deep dive into our comprehensive learning modules</p>
+          </div>
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {[
+              {
+                title: "1. Trading Fundamentals",
+                lessons: ["Introduction to Stock Markets", "Types of Instruments (Equity, Debt, Hybrid)", "Market Participants & Regulators", "The Demat & Trading Ecosystem", "Order Types & Execution"]
+              },
+              {
+                title: "2. Technical Analysis Mastery",
+                lessons: ["Basics of Charting & Timeframes", "Support & Resistance Dynamics", "Trend Identification & Trendlines", "Advanced Candlestick Patterns", "Essential Indicators (RSI, MACD, Moving Averages)"]
+              },
+              {
+                title: "3. Risk & Capital Management",
+                lessons: ["The 2% Rule & Position Sizing", "Risk-to-Reward Ratio Optimization", "Stop Loss & Take Profit Management", "Managing Drawdowns & Equity Curves", "Portfolio Diversification Strategies"]
+              },
+              {
+                title: "4. Advanced Trading Strategies",
+                lessons: ["Price Action Trading Strategies", "Introduction to Options & Derivatives", "Option Greeks & Pricing Models", "Iron Condor & Straddle Strategies", "Intraday vs Swing Trading Frameworks"]
+              },
+              {
+                title: "5. Trading Psychology & Professionalism",
+                lessons: ["Overcoming FOMO & Revenge Trading", "Building a Disciplined Trading Plan", "The Trader's Journal & Analysis", "Simulated Trading vs Real Market Execution", "Professional Trading Ethics & Standards"]
+              }
+            ].map((mod, i) => (
+              <AccordionItem key={i} value={`item-${i}`} className="border-2 border-gray-100 rounded-xl px-4 overflow-hidden">
+                <AccordionTrigger className="hover:no-underline py-6">
+                  <span className="text-left font-bold text-lg text-gray-800">{mod.title}</span>
+                </AccordionTrigger>
+                <AccordionContent className="pb-6">
+                  <ul className="space-y-3">
+                    {mod.lessons.map((lesson, j) => (
+                      <li key={j} className="flex items-center gap-3 text-gray-600">
+                        <CheckCircle className="h-4 w-4 text-[#E53935] shrink-0" />
+                        <span>{lesson}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
 
       {/* 2. Live Classes Section */}
       <section className="py-24 relative z-10" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(248,248,248,0.4) 100%)", backdropFilter: "blur(2px)" }}>
@@ -490,9 +589,9 @@ export default function MarketingHome() {
           </div>
           <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[
-              { title: "Technical Analysis Masterclass", instructor: "Amit Desai", date: "April 18, 2026", time: "10:00 AM IST", students: 145 },
-              { title: "Options Trading Strategies", instructor: "Priya Sharma", date: "April 19, 2026", time: "2:00 PM IST", students: 132 },
-              { title: "Risk Management Fundamentals", instructor: "Rajesh Kumar", date: "April 20, 2026", time: "4:00 PM IST", students: 178 },
+              { title: "Technical Analysis Masterclass", instructor: "Amit Desai", date: "April 18, 2026", time: "10:00 AM IST", students: 145, status: "live" },
+              { title: "Options Trading Strategies", instructor: "Priya Sharma", date: "April 19, 2026", time: "2:00 PM IST", students: 132, status: "upcoming" },
+              { title: "Risk Management Fundamentals", instructor: "Rajesh Kumar", date: "April 20, 2026", time: "4:00 PM IST", students: 178, status: "upcoming" },
             ].map((lecture, i) => (
               <Card key={i} className="min-w-[300px] snap-center shrink-0 md:min-w-0 md:w-auto overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl">
                 <div className="relative h-48 bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
@@ -503,7 +602,7 @@ export default function MarketingHome() {
                     <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white">
                       <Video className="h-8 w-8 text-white" />
                     </div>
-                    <div className="absolute -top-2 -right-2 px-2 py-1 rounded-full text-xs font-bold text-white animate-pulse" style={{ background: "#E53935" }}>LIVE</div>
+                    {lecture.status === "live" && <div className="absolute -top-2 -right-2 px-2 py-1 rounded-full text-xs font-bold text-white animate-pulse" style={{ background: "#E53935" }}>LIVE</div>}
                   </div>
                 </div>
                 <div className="p-6">
@@ -515,10 +614,10 @@ export default function MarketingHome() {
                   </div>
                   <div className="flex gap-2">
                     <Link to="/student/lectures" className="flex-1">
-                      <Button className="w-full" style={{ background: "#E53935", color: "white" }}>Join Live</Button>
+                      <Button className="w-full" style={{ background: "#E53935", color: "white" }}>
+                        {lecture.status === "live" ? "Join Now" : "Enroll Now"}
+                      </Button>
                     </Link>
-                    <Button variant="outline" className="border-2 border-gray-200 hover:border-[#E53935]">Details</Button>
-                    <ShareButton title={lecture.title} variant="icon" />
                   </div>
                 </div>
               </Card>
@@ -581,111 +680,113 @@ export default function MarketingHome() {
       {/* 4. Vertical Video Section */}
       <VerticalVideoSection />
 
-      {/* 5. Our Stories, Your Inspiration */}
+      {/* 5. FinTrade Blog Section */}
       <section className="py-24 relative z-10" style={{ background: "linear-gradient(to right, rgba(255,255,255,0.5), rgba(229, 57, 53, 0.03), rgba(255,255,255,0.5))" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-block px-4 py-2 rounded-full mb-4 border border-[#E53935]/30" style={{ background: "rgba(229,57,53,0.08)" }}>
-              <span className="text-[#E53935] font-semibold text-sm">🎬 FinTrade in Action</span>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-block px-4 py-2 rounded-full mb-4 border border-[#E53935]/30" style={{ background: "rgba(229,57,53,0.08)" }}>
+                <span className="text-[#E53935] font-semibold text-sm">✍️ Latest from Blog</span>
+              </div>
+              <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Market Insights & Articles</h2>
+              <p className="text-xl text-gray-600">Stay updated with our research and trading strategies</p>
             </div>
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Our Stories, Your Inspiration</h2>
-            <p className="text-xl text-gray-600">Short films, ads, and student journeys</p>
+            <Link to="/category/technical-analysis">
+              <Button variant="outline" className="border-2 border-[#E53935] text-[#E53935] hover:bg-red-50">
+                View All Articles
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {showcaseVideos.map((vid, i) => (
-              <Card
-                key={i}
-                className="min-w-[280px] snap-center shrink-0 md:min-w-0 md:w-auto overflow-hidden border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-2xl group cursor-pointer"
-                onClick={() => setActiveVideoIdx(i)}
-              >
-                <div className="relative h-52 overflow-hidden bg-gray-900">
-                  <img src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute inset-0 flex items-center justify-center" style={{ background: "rgba(0,0,0,0.35)" }}>
-                    <div className="w-16 h-16 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-xl" style={{ background: "#E53935", boxShadow: "0 0 30px rgba(229,57,53,0.5)" }}>
-                      <Play className="h-7 w-7 text-white ml-1" />
+          
+          <div className="grid lg:grid-cols-12 gap-8 items-start">
+            {/* Featured Video (Left Side) */}
+            <div className="lg:col-span-5">
+              <Card className="overflow-hidden border-0 shadow-2xl relative group h-full">
+                <div className="relative h-[300px] lg:h-[450px]">
+                  <img 
+                    src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    alt="Featured Video"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-xl" style={{ background: "#E53935", boxShadow: "0 0 30px rgba(229,57,53,0.5)" }}>
+                      <Play className="h-8 w-8 text-white ml-1" />
                     </div>
                   </div>
-                  <div className="absolute bottom-3 right-3 px-2 py-1 rounded bg-black/70 text-white text-xs font-medium">{vid.duration}</div>
                 </div>
-                <div className="p-5 bg-white flex items-center justify-between">
-                  <div>
-                    <h3 className="font-bold text-base mb-1" style={{ color: "#121212" }}>{vid.title}</h3>
-                    <p className="text-sm text-gray-500">{vid.subtitle}</p>
-                  </div>
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <ShareButton title={vid.title} variant="icon" />
-                  </div>
+                <div className="p-6 bg-white">
+                  <h3 className="text-2xl font-bold mb-2" style={{ color: "#121212" }}>FinTrade: Master the Market Dynamics</h3>
+                  <p className="text-gray-600">Watch our exclusive masterclass on market analysis and risk management techniques for 2026.</p>
                 </div>
               </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Students Placement */}
-      <section id="markets" className="py-20 relative z-10" style={{ background: "linear-gradient(135deg, #121212 0%, #1a1a1a 100%)" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-block px-4 py-2 rounded-full mb-4 border border-[#E53935]/40" style={{ background: "rgba(229,57,53,0.1)" }}>
-              <span className="text-[#E53935] font-semibold text-sm">🏆 Placement Highlights</span>
             </div>
-            <h2 className="text-4xl font-bold mb-4 text-white">Our Students Get Placed</h2>
-            <p className="text-xl text-gray-400">Top performers join India's leading prop trading firms</p>
-          </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-4 md:gap-6 md:mb-12 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {[
-              { stat: "₹8-12 LPA", label: "Average Starting Package", icon: TrendingUp },
-              { stat: "85%", label: "Placement Rate (Top Batch)", icon: Award },
-              { stat: "30+", label: "Partner Trading Firms", icon: Users },
-              { stat: "9 Mo", label: "Avg. Time to Placement", icon: Trophy },
-            ].map((item, i) => (
-              <Card key={i} className="min-w-[240px] snap-center shrink-0 md:min-w-0 md:w-auto p-5 md:p-6 text-center border border-[#E53935]/20" style={{ background: "rgba(255,255,255,0.05)" }}>
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full mb-4" style={{ background: "rgba(229,57,53,0.15)" }}>
-                  <item.icon className="h-7 w-7" style={{ color: "#E53935" }} />
-                </div>
-                <div className="text-[2rem] font-bold text-white mb-1">{item.stat}</div>
-                <div className="text-gray-400 text-sm">{item.label}</div>
-              </Card>
-            ))}
-          </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-6 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {[
-              { name: "Rahul Sharma", role: "Junior Trader", firm: "Nuvama Wealth", city: "Mumbai", package: "₹10 LPA", img: "https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" },
-              { name: "Priya Verma", role: "Equity Analyst", firm: "Zerodha Capital", city: "Bengaluru", package: "₹9.5 LPA", img: "https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" },
-              { name: "Amit Patel", role: "Options Trader", firm: "SAMCO Securities", city: "Ahmedabad", package: "₹11 LPA", img: "https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" },
-            ].map((p, i) => (
-              <Card key={i} className="min-w-[280px] snap-center shrink-0 md:min-w-0 md:w-auto p-5 md:p-6 border border-[#E53935]/20 hover:border-[#E53935]/50 transition-all" style={{ background: "rgba(255,255,255,0.06)" }}>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 rounded-full overflow-hidden border-2" style={{ borderColor: "#E53935" }}>
-                    <img src={p.img} alt={p.name} className="w-full h-full object-cover" />
+
+            {/* Blog Stories (4 Cards) */}
+            <div className="lg:col-span-7 grid md:grid-cols-2 gap-6">
+              {[
+                {
+                  title: "How to Start Option Trading in India",
+                  category: "Options",
+                  readTime: "8 min read",
+                  img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
+                  desc: "A comprehensive guide for beginners looking to enter the derivative markets safely."
+                },
+                {
+                  title: "Mastering Risk Management in 2026",
+                  category: "Strategies",
+                  readTime: "12 min read",
+                  img: "https://images.unsplash.com/photo-1612178991541-b48cc8e92a4d?auto=format&fit=crop&w=800&q=80",
+                  desc: "Why protecting your capital is more important than chasing profits."
+                },
+                {
+                  title: "Top 5 Chart Patterns for NIFTY 50",
+                  category: "Technical",
+                  readTime: "6 min read",
+                  img: "https://images.unsplash.com/photo-1642390192305-67c805260177?auto=format&fit=crop&w=800&q=80",
+                  desc: "Learn the most reliable candlestick formations used by professional traders."
+                },
+                {
+                  title: "Psychology of a Consistent Trader",
+                  category: "Mindset",
+                  readTime: "10 min read",
+                  img: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
+                  desc: "Overcoming emotional biases and building a disciplined trading routine."
+                }
+              ].map((blog, i) => (
+                <Card key={i} className="group overflow-hidden border-0 bg-white hover:shadow-xl transition-all duration-300 cursor-pointer">
+                  <div className="relative h-32 overflow-hidden">
+                    <img src={blog.img} alt={blog.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   </div>
-                  <div>
-                    <div className="font-bold text-white">{p.name}</div>
-                    <div className="text-gray-400 text-sm">{p.role}</div>
+                  <div className="p-4">
+                    <div className="flex items-center justify-between text-[10px] text-gray-500 mb-2 uppercase font-bold tracking-widest">
+                      <span className="text-[#E53935]">{blog.category}</span>
+                      <span>{blog.readTime}</span>
+                    </div>
+                    <h3 className="text-sm font-bold mb-2 group-hover:text-[#E53935] transition-colors line-clamp-2" style={{ color: "#121212" }}>{blog.title}</h3>
+                    <p className="text-xs text-gray-500 line-clamp-2">{blog.desc}</p>
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Firm</span>
-                    <span className="text-white font-medium">{p.firm}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Location</span>
-                    <span className="text-white">{p.city}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">Package</span>
-                    <span className="font-bold" style={{ color: "#E53935" }}>{p.package}</span>
-                  </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 7. Student Stats */}
-      <StudentStats />
+
+
+      {/* 6. Curriculum Roadmap Section */}
+      <section className="py-20 relative z-10" style={{ background: "#121212" }}>
+        <ModuleRoadmap />
+      </section>
+
+      {/* 6.5 Certification Section (Moved below Modules) */}
+      <CertificatePreview />
+
+      {/* 7. EMI Options Section */}
+      <EMIHighlight />
+
+
 
       {/* 8. Why Choose FinTrade */}
       <section id="about" className="py-20 bg-transparent relative z-10">
@@ -714,7 +815,7 @@ export default function MarketingHome() {
       </section>
 
 
-      {/* 9. Student Success Stories */}
+      {/* Student Success Stories */}
       <section className="py-20 relative z-10 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -747,69 +848,7 @@ export default function MarketingHome() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 relative z-10" style={{ background: "linear-gradient(135deg, #E53935 0%, #b71c1c 100%)" }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Start Your Trading Journey Today</h2>
-          <p className="text-xl text-white/90 mb-8">Join 1200+ students learning to trade professionally</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/student/contract-kyc">
-              <Button size="lg" className="shadow-2xl hover:shadow-3xl transition-all text-lg px-8 py-6" style={{ background: "white", color: "#E53935", boxShadow: "0 0 40px rgba(255, 255, 255, 0.3)" }}>
-                Apply Now
-                <ArrowRight className="ml-2 h-6 w-6" />
-              </Button>
-            </Link>
-            <a href="#">
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 border-2 hover:bg-white/10 transition-colors"
-                style={{ background: "transparent", borderColor: "white", color: "white" }}
-              >
-                <Download className="mr-2 h-5 w-5" />
-                Download Brochure
-              </Button>
-            </a>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* Testimonials */}
-      <section className="py-20 relative z-10 bg-transparent">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#121212" }}>Student Success Stories</h2>
-            <p className="text-xl text-gray-600">Hear from our successful traders</p>
-          </div>
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-3 md:gap-8 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {[
-              { name: "Rahul Sharma", city: "Mumbai", testimonial: "FinTrade helped me become a disciplined trader. The structured approach and real trading simulator gave me confidence to trade professionally.", rating: 5 },
-              { name: "Priya Verma", city: "Bengaluru", testimonial: "The AI tutor and live classes are game-changers. I went from zero knowledge to getting placed at a prop trading firm in just 9 months.", rating: 5 },
-              { name: "Amit Patel", city: "Ahmedabad", testimonial: "Best investment I made in my career. The curriculum is comprehensive and the monthly exams keep you accountable. Highly recommend!", rating: 5 },
-            ].map((testimonial, i) => (
-              <Card key={i} className="min-w-[280px] snap-center shrink-0 md:min-w-0 md:w-auto p-5 md:p-6 border-2 border-gray-100 hover:border-[#E53935] transition-all hover:shadow-xl bg-white">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-full overflow-hidden border-2" style={{ borderColor: "#E53935" }}>
-                    <img src="https://images.unsplash.com/photo-1659353221405-29b7d087f9e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200" alt={testimonial.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold" style={{ color: "#121212" }}>{testimonial.name}</h4>
-                    <p className="text-sm text-gray-600">{testimonial.city}</p>
-                  </div>
-                </div>
-                <div className="flex gap-1 mb-3">
-                  {[...Array(testimonial.rating)].map((_, i) => (<Star key={i} className="h-4 w-4 fill-current" style={{ color: "#E53935" }} />))}
-                </div>
-                <p className="text-gray-700 italic">"{testimonial.testimonial}"</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
+      {/* CTA Section */}
       <section className="py-20 relative z-10" style={{ background: "linear-gradient(135deg, #E53935 0%, #b71c1c 100%)" }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Start Your Trading Journey Today</h2>
@@ -829,7 +868,7 @@ export default function MarketingHome() {
                 style={{ background: "transparent", borderColor: "white", color: "white" }}
               >
                 <FileText className="mr-2 h-5 w-5" />
-                View Contract & KYC Demo
+                View Contract & KYC
               </Button>
             </Link>
           </div>
@@ -875,9 +914,14 @@ export default function MarketingHome() {
                 <li className="flex items-center gap-2"><CheckCircle className="h-4 w-4" style={{ color: "#E53935" }} />Mumbai, India</li>
               </ul>
               <div className="flex gap-3 mt-4">
-                {["𝕏", "in", "f"].map((s, i) => (
-                  <a key={i} href="#" className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors" style={{ background: "rgba(229, 57, 53, 0.2)" }}>
-                    <span className="text-white">{s}</span>
+                {[
+                  { icon: Instagram, href: "https://www.instagram.com/the.fintrade/", label: "Instagram" },
+                  { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61589528075521", label: "Facebook" },
+                  { icon: Youtube, href: "https://www.youtube.com/@The_FinTrade", label: "YouTube" },
+                  { icon: Linkedin, href: "https://www.linkedin.com/in/the-fintrade-7230b040a/", label: "LinkedIn" },
+                ].map((s, i) => (
+                  <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors" style={{ background: "rgba(229, 57, 53, 0.2)" }} title={s.label}>
+                    <s.icon className="h-5 w-5 text-white" />
                   </a>
                 ))}
               </div>
@@ -889,6 +933,66 @@ export default function MarketingHome() {
         </div>
       </footer>
       </div>
+      {/* Brochure Modal */}
+      <Dialog open={brochureOpen} onOpenChange={setBrochureOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{otpSent ? "Verify Mobile" : "Download Brochure"}</DialogTitle>
+            <DialogDescription>
+              {otpSent 
+                ? `Enter the 6-digit OTP sent to ${leadData.contact}` 
+                : "Enter your details to receive the comprehensive course brochure."}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {!otpSent ? (
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" placeholder="John Doe" value={leadData.name} onChange={(e) => setLeadData({...leadData, name: e.target.value})} />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="contact">Mobile Number</Label>
+                <Input id="contact" placeholder="+91 98765 43210" value={leadData.contact} onChange={(e) => setLeadData({...leadData, contact: e.target.value})} />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input id="email" type="email" placeholder="john@example.com" value={leadData.email} onChange={(e) => setLeadData({...leadData, email: e.target.value})} />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="city">City</Label>
+                <Input id="city" placeholder="Mumbai" value={leadData.city} onChange={(e) => setLeadData({...leadData, city: e.target.value})} />
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-6 py-8">
+              <InputOTP maxLength={6} value={otp} onChange={setOtp}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+              <Button variant="link" className="text-xs text-[#E53935]" onClick={() => setOtpSent(false)}>Edit Mobile Number</Button>
+            </div>
+          )}
+
+          <DialogFooter>
+            {!otpSent ? (
+              <Button className="w-full" style={{ background: "#E53935", color: "white" }} onClick={sendOTP} disabled={!leadData.name || !leadData.contact}>
+                Get OTP
+              </Button>
+            ) : (
+              <Button className="w-full" style={{ background: "#E53935", color: "white" }} onClick={verifyAndDownload} disabled={otp.length !== 6}>
+                Verify & Download
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
