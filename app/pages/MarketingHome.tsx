@@ -477,7 +477,6 @@ export default function MarketingHome() {
                 savings: "₹8,000",
                 description: "Master the fundamentals of financial markets and start your trading journey with confidence.", 
                 icon: BookOpen,
-                features: ["Market Fundamentals", "Chart Reading Basics", "Risk Introduction", "Live Sessions"],
               },
               { 
                 name: "Certified Analyst & Research Program (CARP)", 
@@ -488,7 +487,6 @@ export default function MarketingHome() {
                 savings: "₹20,000",
                 description: "Deep dive into research methodologies, technical analysis, and fundamental research.", 
                 icon: LineChart,
-                features: ["Technical Analysis", "Fundamental Research", "Strategy Building", "Mentorship Access"],
               },
               { 
                 name: "Certified Professional Trading Program (CPTP)", 
@@ -499,7 +497,6 @@ export default function MarketingHome() {
                 savings: "₹30,000",
                 description: "Professional grade trading strategies, advanced risk management, and portfolio construction.", 
                 icon: Trophy,
-                features: ["Advanced Strategies", "Portfolio Management", "Prop Firm Prep", "Placement Support"],
               },
             ].map((course, i) => (
               <Card 
@@ -522,17 +519,7 @@ export default function MarketingHome() {
 
                 {/* Card Body */}
                 <div className="flex flex-col flex-1 p-6 bg-white">
-                  <p className="text-gray-600 text-sm mb-5 leading-relaxed">{course.description}</p>
-                  
-                  {/* Features */}
-                  <div className="space-y-2.5 mb-6">
-                    {course.features.map((f, fi) => (
-                      <div key={fi} className="flex items-center gap-2.5 text-sm text-gray-700">
-                        <CheckCircle className="h-4 w-4 flex-shrink-0" style={{ color: "#E53935" }} />
-                        <span>{f}</span>
-                      </div>
-                    ))}
-                  </div>
+                  <p className="text-gray-600 text-sm mb-6 leading-relaxed">{course.description}</p>
 
                   {/* Spacer to push price + button to bottom */}
                   <div className="flex-1" />
@@ -569,55 +556,6 @@ export default function MarketingHome() {
         </div>
       </section>
 
-      {/* Course Curriculum Modules Accordion */}
-      <section className="py-20 bg-white relative z-10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4" style={{ color: "#121212" }}>Program Curriculum</h2>
-            <p className="text-lg text-gray-600">Deep dive into our comprehensive learning modules</p>
-          </div>
-          <Accordion type="single" collapsible className="w-full space-y-4">
-            {[
-              {
-                title: "1. Trading Fundamentals",
-                lessons: ["Introduction to Stock Markets", "Types of Instruments (Equity, Debt, Hybrid)", "Market Participants & Regulators", "The Demat & Trading Ecosystem", "Order Types & Execution"]
-              },
-              {
-                title: "2. Technical Analysis Mastery",
-                lessons: ["Basics of Charting & Timeframes", "Support & Resistance Dynamics", "Trend Identification & Trendlines", "Advanced Candlestick Patterns", "Essential Indicators (RSI, MACD, Moving Averages)"]
-              },
-              {
-                title: "3. Risk & Capital Management",
-                lessons: ["The 2% Rule & Position Sizing", "Risk-to-Reward Ratio Optimization", "Stop Loss & Take Profit Management", "Managing Drawdowns & Equity Curves", "Portfolio Diversification Strategies"]
-              },
-              {
-                title: "4. Advanced Trading Strategies",
-                lessons: ["Price Action Trading Strategies", "Introduction to Options & Derivatives", "Option Greeks & Pricing Models", "Iron Condor & Straddle Strategies", "Intraday vs Swing Trading Frameworks"]
-              },
-              {
-                title: "5. Trading Psychology & Professionalism",
-                lessons: ["Overcoming FOMO & Revenge Trading", "Building a Disciplined Trading Plan", "The Trader's Journal & Analysis", "Simulated Trading vs Real Market Execution", "Professional Trading Ethics & Standards"]
-              }
-            ].map((mod, i) => (
-              <AccordionItem key={i} value={`item-${i}`} className="border-2 border-gray-100 rounded-xl px-4 overflow-hidden">
-                <AccordionTrigger className="hover:no-underline py-6">
-                  <span className="text-left font-bold text-lg text-gray-800">{mod.title}</span>
-                </AccordionTrigger>
-                <AccordionContent className="pb-6">
-                  <ul className="space-y-3">
-                    {mod.lessons.map((lesson, j) => (
-                      <li key={j} className="flex items-center gap-3 text-gray-600">
-                        <CheckCircle className="h-4 w-4 text-[#E53935] shrink-0" />
-                        <span>{lesson}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </section>
 
 
       {/* 2. Live Classes Section */}
