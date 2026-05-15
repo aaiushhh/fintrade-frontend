@@ -470,7 +470,6 @@ export default function MarketingHome() {
             {[
               { 
                 name: "Financial Market Foundation (FMF)", 
-                shortName: "FMF",
                 level: "Foundation", 
                 duration: "30 Days", 
                 originalPrice: "₹20,000",
@@ -479,11 +478,9 @@ export default function MarketingHome() {
                 description: "Master the fundamentals of financial markets and start your trading journey with confidence.", 
                 icon: BookOpen,
                 features: ["Market Fundamentals", "Chart Reading Basics", "Risk Introduction", "Live Sessions"],
-                popular: false,
               },
               { 
                 name: "Certified Analyst & Research Program (CARP)", 
-                shortName: "CARP",
                 level: "Intermediate", 
                 duration: "60 Days", 
                 originalPrice: "₹50,000",
@@ -492,11 +489,9 @@ export default function MarketingHome() {
                 description: "Deep dive into research methodologies, technical analysis, and fundamental research.", 
                 icon: LineChart,
                 features: ["Technical Analysis", "Fundamental Research", "Strategy Building", "Mentorship Access"],
-                popular: true,
               },
               { 
                 name: "Certified Professional Trading Program (CPTP)", 
-                shortName: "CPTP",
                 level: "Professional", 
                 duration: "90 Days", 
                 originalPrice: "₹75,000",
@@ -505,28 +500,14 @@ export default function MarketingHome() {
                 description: "Professional grade trading strategies, advanced risk management, and portfolio construction.", 
                 icon: Trophy,
                 features: ["Advanced Strategies", "Portfolio Management", "Prop Firm Prep", "Placement Support"],
-                popular: false,
               },
             ].map((course, i) => (
               <Card 
                 key={i} 
-                className={`min-w-[300px] snap-center shrink-0 md:min-w-0 md:w-auto flex flex-col group transition-all duration-500 overflow-hidden rounded-2xl ${
-                  course.popular 
-                    ? "border-2 border-[#E53935] shadow-2xl scale-[1.02] md:scale-105 relative z-10" 
-                    : "border border-gray-200 hover:border-[#E53935]/50 hover:shadow-2xl"
-                }`}
+                className="min-w-[300px] snap-center shrink-0 md:min-w-0 md:w-auto flex flex-col group transition-all duration-500 overflow-hidden rounded-2xl border border-gray-200 hover:border-[#E53935]/50 hover:shadow-2xl"
               >
-                {/* Popular Badge */}
-                {course.popular && (
-                  <div className="absolute -top-0 left-1/2 -translate-x-1/2 z-20">
-                    <div className="px-6 py-1.5 rounded-b-xl text-xs font-bold text-white tracking-wider uppercase" style={{ background: "linear-gradient(135deg, #E53935, #b71c1c)" }}>
-                      ⭐ Most Popular
-                    </div>
-                  </div>
-                )}
-                
                 {/* Gradient Header */}
-                <div className="relative px-6 pt-8 pb-6" style={{ background: course.popular ? "linear-gradient(135deg, #E53935 0%, #c62828 100%)" : "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)" }}>
+                <div className="relative px-6 pt-8 pb-6" style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)" }}>
                   <div className="flex items-start justify-between mb-4">
                     <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(10px)" }}>
                       <course.icon className="h-7 w-7 text-white" />
@@ -575,11 +556,7 @@ export default function MarketingHome() {
                   <Link to="/student/courses" className="block">
                     <Button 
                       className="w-full h-12 text-base font-semibold rounded-xl transition-all duration-300 group-hover:shadow-lg"
-                      style={{ 
-                        background: course.popular ? "linear-gradient(135deg, #E53935, #b71c1c)" : "#121212", 
-                        color: "white",
-                        boxShadow: course.popular ? "0 8px 30px rgba(229,57,53,0.3)" : "none"
-                      }}
+                      style={{ background: "#121212", color: "white" }}
                     >
                       View Program Details
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
